@@ -45,7 +45,8 @@
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.3",
     "react-navigation-material-bottom-tabs": "^2.3.3",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "expo-image-picker": "~9.2.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
