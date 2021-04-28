@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, RefreshControl, Alert } from 'react-native';
+import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, RefreshControl, Alert, Button } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import DatePicker from 'react-native-datepicker'
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import { usePermissions } from 'expo-permissions';
+import { TextInputMask } from 'react-native-masked-text'
 
 const moment = require('moment');
 
@@ -16,10 +20,14 @@ export default function EditarPerfil() {
     const [idUsuario, setIdUsuario] = useState("");
     const [tokenUsuario, setTokenUsuario] = useState("");
     const [showLoader, setShowLoader] = React.useState(false);
+    const [permission, askForPermission] = usePermissions(Permissions.MEDIA_LIBRARY, { ask: true });
+    const [image, setImage] = useState(require('../../imgs/perfil.png'));
 
     const navigation = useNavigation();
 
     let token, userId;
+
+    
 
     const getUsuario = async () => {
         return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + userId, {
@@ -43,7 +51,7 @@ export default function EditarPerfil() {
             body: JSON.stringify({
                 nome: nome,
                 email: email,
-                telefone: telefone,
+                telefone: telefone.replace('(','').replace(')','').replace('-',''),
                 dataNascimento: moment(data, "DD/MM/YYYY").format("YYYY-MM-DD")
             })
         });
@@ -157,6 +165,21 @@ export default function EditarPerfil() {
         )
     }
 
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          setImage(result.uri);
+        }
+      };
+
     return (
         <View style={styles.container}>
             <Modal
@@ -186,8 +209,15 @@ export default function EditarPerfil() {
                 }
             >
                 <View style={styles.conteudo}>
-                    <TouchableOpacity>
-                        <Image source={require('../../imgs/perfil.png')} style={styles.fotoPerfil} />
+                    <TouchableOpacity onPress={() => {
+                        /** COLOCAR AQUI CODIGO DA SELEÇÃO DE FOTO */
+                        pickImage()
+                    }}>
+                        { 
+                            image !== ''
+                            ? (<Image source={image} style={styles.fotoPerfil} />)
+                            : (<Image source={require('../../imgs/perfil.png')} style={styles.fotoPerfil} />)                       
+                        }
                     </TouchableOpacity>
                     <TextInput placeholder={"Nome"} value={nome} style={styles.input}
                         onChangeText={text => onChangeTextNome(text)} />
@@ -200,8 +230,19 @@ export default function EditarPerfil() {
                         minDate="01/01/1900"
                         onDateChange={data => onChangeTextData(data)}
                     />
-                    <TextInput placeholder={"Telefone"} value={telefone} style={styles.input}
-                        onChangeText={text => onChangeTextTelefone(text)} />
+                    <TextInputMask
+                        type={'cel-phone'}
+                        options={{
+                            maskType: 'BRL',
+                            withDDD: true,
+                            dddMask: '(99) '
+                        }}
+                        value={telefone}
+                        style={styles.input}
+                        onChangeText={text => {
+                            onChangeTextTelefone(text)
+                        }}
+                    />
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('AlterarSenha', { userId: idUsuario, token: tokenUsuario })
                     }

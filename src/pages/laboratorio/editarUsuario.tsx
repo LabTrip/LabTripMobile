@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import DatePicker from 'react-native-datepicker'
 const moment = require('moment');
+import { TextInputMask } from 'react-native-masked-text'
 
 interface Usuario {
   id: string,
@@ -154,9 +155,19 @@ export default function EditarUsuario({ route }) {
               minDate="01/01/1900"
               onDateChange={data => setDataNasc(moment(data, 'DD/MM/YYYY'))} />
           </View>
-          <TextInput placeholder={"Celular"} style={styles.inputDataCelular}
-            keyboardType='numeric'
-            onChangeText={text => onChangeTextTelefone(text.trim())} value={telefone} />
+          <TextInputMask
+              type={'cel-phone'}
+              options={{
+                  maskType: 'BRL',
+                  withDDD: true,
+                  dddMask: '(99) '
+              }}
+              value={telefone}
+              style={styles.input}
+              onChangeText={text => {
+                  onChangeTextTelefone(text)
+              }}
+          />
           <Text style={styles.label}>Tipo de usuário:</Text>
           <Picker style={styles.pickerComponente}
             prompt="Tipo de usuário"
@@ -182,7 +193,7 @@ export default function EditarUsuario({ route }) {
                 nome: nomeUsuario,
                 email: email,
                 dataNascimento: moment(dataNasc, 'DD/MM/YYYY').format("YYYY-MM-DD"),
-                telefone: telefone,
+                telefone: telefone.replace('(','').replace(')','').replace('-',''),
                 perfilId: selectedValue
               });
               let json = await response.json();
