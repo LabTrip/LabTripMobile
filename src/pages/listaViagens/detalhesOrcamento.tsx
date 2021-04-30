@@ -11,7 +11,7 @@ export default function DetalhesOrcamento({route}) {
     const navigation = useNavigation();
     const rota = route.name;
     let botaoChat;
-    if (rota == 'Geral') {
+    if (rota == 'Geral' || rota == 'Orçamento') {
         botaoChat = <TouchableOpacity style={{marginTop:'5%'}} onPress={() => alert('clicou na messagem')}>
                         <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={40} />
                     </TouchableOpacity>;
