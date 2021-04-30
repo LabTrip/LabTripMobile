@@ -43,8 +43,8 @@ export default function ListaPropostaDeRoteiro() {
         {
             id: '2',
             descricao: 'Roteiro 2',
-            dataInicio: new Date,
-            dataFim: new Date,
+            dataInicio: new Date(1995, 5, 26),
+            dataFim: new Date(1995, 10, 26),
             statusId: 6
         },
         {
@@ -111,7 +111,7 @@ export default function ListaPropostaDeRoteiro() {
                 {
                     listaRoteiros?.map((a) => {
                         return <CardRoteiro key={a.id} nome={a.descricao} dataInicio={moment(a.dataInicio).format('DD/MM/yyyy')} dataFim={moment(a.dataFim).format('DD/MM/yyyy')} 
-                        status={a.statusId} item={a} navigate={'CriarRoteiro'} />
+                        status={a.statusId} item={a} navigate={'EditarRoteiro'} />
                     })
                 }
             </ScrollView>
