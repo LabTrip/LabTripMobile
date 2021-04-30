@@ -30,7 +30,7 @@ export default function DetalhesRoteiro() {
             horario: "22:00",
         },
     ];
-
+    
     return (
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>
@@ -47,10 +47,11 @@ export default function DetalhesRoteiro() {
                     <Picker.Item label="22/01/2021" value="22/01/2021" />
 
                 </Picker>
-                <TouchableOpacity style={styles.botaoBaixar} onPress={() => Linking.openURL('https://dl.dropbox.com/s/0skuwdlhg6q4fol/History%20of%20GIF.gif?dl=1')}>
-                    <Text style={[styles.texto, {color: '#fff', fontSize: 20}]}>Baixar roteiro</Text>
-                    <MaterialCommunityIcons name={'file-download'} color={'#fff'} size={25} />
-
+                <TouchableOpacity style={styles.botaoIconeTop} onPress={() => Linking.openURL('https://dl.dropbox.com/s/0skuwdlhg6q4fol/History%20of%20GIF.gif?dl=1')}>
+                    <MaterialCommunityIcons name={'file-download'} color={'#575757'} size={30} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.botaoIconeTop} onPress={() => alert('clicou no chat')}>
+                    <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
                 </TouchableOpacity>
             </View>
             <ScrollViewFlat>
@@ -81,12 +82,7 @@ const styles = StyleSheet.create({
         color: '#999999',
         fontSize: 18,
     },
-    botaoBaixar: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        backgroundColor: '#3385FF',
-        borderRadius: 40,
-        padding: 8
-
+    botaoIconeTop: {
+        marginLeft: '5%'
     }
 });
