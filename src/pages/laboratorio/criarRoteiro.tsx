@@ -8,57 +8,48 @@ import DatePicker from 'react-native-datepicker'
 const moment = require('moment');
 
 
-export default function CriarRoteiro() {
+export default function CriarRoteiro({ route }) {
     const navigation = useNavigation();
-    const [dataInicio, onChangeTextDataInicio] = useState(moment());
-    const [dataFim, onChangeTextDataFim] = useState(moment());
-
-    let participantesData = [
-        {
-            id: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
-            nome: "Ednaldo Pereira",
-            dono: true,
-            proprietario: true
-        },
-    ];
+    const [apelido, onChangeApelido] = useState(route.params?.roteiro.descricao || "");
+    const [dataInicio, onChangeTextDataInicio] = useState(route.params?.roteiro.dataInicio || moment());
+    const [dataFim, onChangeTextDataFim] = useState(route.params?.roteiro.dataFim || moment());
 
     return (
-      
-            <View style={styles.container}>
-                <View style={styles.containerTop}>
-                    <Text style={styles.tituloTop}>Propostas de roteiro</Text>
-                </View>
-                <TextInput placeholder={"Apelido do roteiro"} style={styles.input} />
-                <View style={styles.containerData}>
-                    <Text style={styles.labelData}>Data de Inicio</Text>
-                    <Text style={styles.labelData}>Data de Fim</Text>
-                </View>
-                <View style={styles.containerData}>
-                    <DatePicker
-                        style={styles.inputDataCelular}
-                        placeholder={"Data início"}
-                        date={moment(dataInicio, 'DD/MM/YYYY')}
-                        format="DD/MM/yyyy"
-                        minDate="01/01/1900"
-                        onDateChange={data => onChangeTextDataInicio(data)}
-                    />
-                    <DatePicker
-                        style={styles.inputDataCelular}
-                        placeholder={"Data fim"}
-                        date={moment(dataFim, 'DD/MM/YYYY')}
-                        format="DD/MM/yyyy"
-                        minDate="01/01/1900"
-                        onDateChange={data => onChangeTextDataFim(data)}
-                    />
-                </View>
-                <TouchableOpacity style={styles.botaoCriar} onPress={() => {
-                    alert('Clicou em criar roteiro!')
-                    navigation.goBack();
-                }}>
-                    <Text style={styles.botaoCriarTexto}>Criar roteiro</Text>
-                </TouchableOpacity>
+        <View style={styles.container}>
+            <View style={styles.containerTop}>
+                <Text style={styles.tituloTop}>Propostas de roteiro</Text>
             </View>
- 
+            <TextInput placeholder={"Apelido do roteiro"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
+            <View style={styles.containerData}>
+                <Text style={styles.labelData}>Data de Inicio</Text>
+                <Text style={styles.labelData}>Data de Fim</Text>
+            </View>
+            <View style={styles.containerData}>
+                <DatePicker
+                    style={styles.inputDataCelular}
+                    placeholder={"Data início"}
+                    date={moment(dataInicio, 'DD/MM/YYYY')}
+                    format="DD/MM/yyyy"
+                    minDate="01/01/1900"
+                    onDateChange={data => onChangeTextDataInicio(data)}
+                />
+                <DatePicker
+                    style={styles.inputDataCelular}
+                    placeholder={"Data fim"}
+                    date={moment(dataFim, 'DD/MM/YYYY')}
+                    format="DD/MM/yyyy"
+                    minDate="01/01/1900"
+                    onDateChange={data => onChangeTextDataFim(data)}
+                />
+            </View>
+            <TouchableOpacity style={styles.botaoCriar} onPress={() => {
+                alert(apelido)
+                navigation.goBack();
+            }}>
+                <Text style={styles.botaoCriarTexto}>Salvar</Text>
+            </TouchableOpacity>
+        </View>
+
     );
 }
 
@@ -102,7 +93,7 @@ const styles = StyleSheet.create({
     },
     botaoCriar: {
         backgroundColor: '#3385FF',
-        width: 180,
+        width: 150,
         height: 50,
         padding: 10,
         borderRadius: 40,

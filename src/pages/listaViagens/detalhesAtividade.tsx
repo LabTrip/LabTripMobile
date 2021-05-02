@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function DetalhesAtividade({ route }) {
 
@@ -20,8 +21,11 @@ export default function DetalhesAtividade({ route }) {
                 <Text style={styles.textoDetalhes}>{route.params.atividade.local}</Text>
                 <Text style={styles.textoDetalhes}>Ensolarado, 25°</Text>
             </View>
+            <TouchableOpacity onPress={() => alert('clicou na messagem')}>
+                <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
+            </TouchableOpacity>
             <Text style={styles.tituloDetalhes}>Custo R$ 500,00</Text>
-            <View style={[styles.containerDetalhes, { height: '40%', flexDirection: 'row', justifyContent: 'space-between' }]}>
+            <View style={[styles.containerDetalhes, { height: '40%', flexDirection: 'row', justifyContent: 'space-between', padding: '3%' }]}>
                 <Text style={styles.tituloDetalhes}>
                     Midias
                 </Text>
@@ -56,6 +60,7 @@ const styles = StyleSheet.create({
         marginBottom: '3%',
         backgroundColor: '#F2F2F2',
         width: '96%',
+        borderRadius: 7,
     },
     containerDataStatus: {
         flexDirection: 'row',

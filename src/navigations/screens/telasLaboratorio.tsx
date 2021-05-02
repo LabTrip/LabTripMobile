@@ -15,6 +15,7 @@ import EditarOrcamentoPlanejado from '../../pages/listaViagens/editarOrcamentoPl
 import AdicionarDespesa from '../../pages/listaViagens/adicionarDespesa';
 import ConvidarParticipantes from '../../pages/listaViagens/convidarParticipante';
 import CriarRoteiro from '../../pages/laboratorio/criarRoteiro';
+import MenuDetalhesRoteiroAgencia from '../menu/menuDetalhesRoteiroAgencia';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -24,6 +25,7 @@ export default function TelasLaboratorio() {
       <Screen name="Laboratorio" options={{ headerShown: false }} component={MenuLaboratorio} />
       <Screen name="CriarViagem" options={{ title: 'Criar viagem' }} component={CriarViagem} />
       <Screen name="EditarViagem" options={{ title: 'Editar viagem' }} component={EditarViagem} />
+      <Screen name="EditarRoteiro" options={{ title: 'Editar roteiro' }} component={MenuDetalhesRoteiroAgencia} />
       <Screen name="CadastrarAgencia" component={CadastroAgencias} />
       <Screen name="CadastrarUsuario" component={CadastroUsuarios} />
       <Screen name="CriarAgencia" options={{ title: 'Criar agência' }} component={CriarAgencia} />
