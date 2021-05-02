@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ActivityIndicator, Text, View, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { Modal, ActivityIndicator, Text, View, StyleSheet, TextInput, TouchableOpacity, Image, Platform, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CardAgente from '../../components/cardAgente'
@@ -12,6 +12,7 @@ import { Picker } from '@react-native-picker/picker';
 import DatePicker from 'react-native-datepicker'
 const moment = require('moment');
 import { TextInputMask } from 'react-native-masked-text'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Usuario {
   id: string,
@@ -48,6 +49,36 @@ export default function EditarUsuario({ route }) {
   const [telefone, onChangeTextTelefone] = useState(usuario.telefone);
   const [showLoader, setShowLoader] = React.useState(false);
   const [dataNasc, setDataNasc] = useState(usuario.dataNascimento)
+
+
+  /************************************************************* */
+
+  const [date, setDate] = useState(new Date(usuario.dataNascimento));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    console.log(currentDate)
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
+
+  /************************************************************* */
 
   const editaUsuario = async (corpo) => {
     return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + usuario.id, {
@@ -141,20 +172,29 @@ export default function EditarUsuario({ route }) {
       </Modal>
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
+        <Text style={styles.label}>Nome:</Text>
           <TextInput placeholder='Nome do usuário' style={styles.input}
             onChangeText={texto => setNomeUsuario(texto)} value={nomeUsuario} />
+          <Text style={styles.label}>E-mail:</Text>
           <TextInput placeholder={"E-mail"} style={styles.input}
             keyboardType="email-address"
             onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'} />
           <Text style={styles.label}>Data de nascimento:</Text>
-          <View style={styles.containerDataCelular}>
-            <DatePicker
-              placeholder={"Data Nascimento"} style={styles.inputDataCelular}
-              date={moment(dataNasc, 'DD/MM/YYYY')}
-              format="DD/MM/YYYY"
-              minDate="01/01/1900"
-              onDateChange={data => setDataNasc(moment(data, 'DD/MM/YYYY'))} />
-          </View>
+
+          <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+            <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+            keyboardType="default" value={moment(date).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false}/>
+            {show && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                display="default"
+                onChange={onChange}
+              />
+            )}
+          </TouchableOpacity>
+
+          <Text style={styles.label}>Celular:</Text>
           <TextInputMask
               type={'cel-phone'}
               options={{
@@ -192,7 +232,7 @@ export default function EditarUsuario({ route }) {
               let response = await editaUsuario({
                 nome: nomeUsuario,
                 email: email,
-                dataNascimento: moment(dataNasc, 'DD/MM/YYYY').format("YYYY-MM-DD"),
+                dataNascimento: date,
                 telefone: telefone.replace('(','').replace(')','').replace('-',''),
                 perfilId: selectedValue
               });
@@ -240,6 +280,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderRadius: 41,
     backgroundColor: '#EBEBEB',
+    color: '#333333'
+  },
+  inputDate: {
+    marginTop: '3%',
+    width: '95%',
+    padding: 15,
+    fontSize: 16,
+    borderRadius: 41,
+    backgroundColor: '#EBEBEB',
+    textAlign: 'center',
     color: '#333333'
   },
   inputDataCelular: {

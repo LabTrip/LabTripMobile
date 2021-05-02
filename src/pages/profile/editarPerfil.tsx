@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, RefreshControl, Alert, Button } from 'react-native';
+import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, RefreshControl, Alert, Button, Platform } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions, useNavigation } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import { usePermissions } from 'expo-permissions';
 import { TextInputMask } from 'react-native-masked-text'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const moment = require('moment');
 
@@ -22,6 +23,31 @@ export default function EditarPerfil() {
     const [showLoader, setShowLoader] = React.useState(false);
     const [permission, askForPermission] = usePermissions(Permissions.MEDIA_LIBRARY, { ask: true });
     const [image, setImage] = useState(require('../../imgs/perfil.png'));
+
+    /************************************************************* */
+
+  const [date, setDate] = useState(new Date('1900-01-01T00:00:00.000Z'));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    console.log(currentDate)
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+
+  /************************************************************* */
 
     const navigation = useNavigation();
 
@@ -52,7 +78,7 @@ export default function EditarPerfil() {
                 nome: nome,
                 email: email,
                 telefone: telefone.replace('(','').replace(')','').replace('-',''),
-                dataNascimento: moment(data, "DD/MM/YYYY").format("YYYY-MM-DD")
+                dataNascimento: date.toString()
             })
         });
     }
@@ -74,7 +100,7 @@ export default function EditarPerfil() {
             if (response.status == 200) {
                 onChangeTextNome(json.nome);
                 onChangeTextEmail(json.email);
-                onChangeTextData(moment(json.dataNascimento).add(1, 'days').format('DD/MM/yyyy'));
+                setDate(new Date(json.dataNascimento));
                 onChangeTextTelefone(json.telefone);
             }
         }
@@ -113,7 +139,7 @@ export default function EditarPerfil() {
                 if (response.status == 200) {
                     onChangeTextNome(json.nome);
                     onChangeTextEmail(json.email);
-                    onChangeTextData(moment(json.dataNascimento).add(1, 'days').format('DD/MM/yyyy'));
+                    setDate(new Date(json.dataNascimento));
                     onChangeTextTelefone(json.telefone);
                 }
             }
@@ -223,13 +249,20 @@ export default function EditarPerfil() {
                         onChangeText={text => onChangeTextNome(text)} />
                     <TextInput placeholder={"Email"} value={email} style={styles.input}
                         onChangeText={text => onChangeTextEmail(text)} />
-                    <DatePicker
-                        placeholder={"Data Nascimento"} style={styles.input}
-                        date={moment(data, 'DD/MM/YYYY')}
-                        format="DD/MM/yyyy"
-                        minDate="01/01/1900"
-                        onDateChange={data => onChangeTextData(data)}
-                    />
+
+                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+                        <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                        keyboardType="default" value={moment(date).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false}/>
+                        {show && (
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                display="default"
+                                onChange={onChange}
+                            />
+                        )}
+                    </TouchableOpacity>
+
                     <TextInputMask
                         type={'cel-phone'}
                         options={{
@@ -387,5 +420,15 @@ const styles = StyleSheet.create({
         color: "black",
         fontWeight: "bold",
         textAlign: "center"
-    }
+    },
+    inputDate: {
+      marginTop: '3%',
+      width: '95%',
+      padding: 15,
+      fontSize: 16,
+      borderRadius: 41,
+      backgroundColor: '#EBEBEB',
+      textAlign: 'center',
+      color: '#333333'
+    },
 });
