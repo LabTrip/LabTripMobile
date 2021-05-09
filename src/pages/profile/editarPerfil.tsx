@@ -26,34 +26,34 @@ export default function EditarPerfil() {
 
     /************************************************************* */
 
-  const [date, setDate] = useState(new Date('1900-01-01T00:00:00.000Z'));
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
+    const [date, setDate] = useState(new Date('1900-01-01T00:00:00.000Z'));
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-    console.log(currentDate)
-  };
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+        console.log(currentDate)
+    };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
 
-  const showDatepicker = () => {
-    showMode('date');
-  };
+    const showDatepicker = () => {
+        showMode('date');
+    };
 
 
-  /************************************************************* */
+    /************************************************************* */
 
     const navigation = useNavigation();
 
     let token, userId;
 
-    
+
 
     const getUsuario = async () => {
         return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + userId, {
@@ -77,7 +77,7 @@ export default function EditarPerfil() {
             body: JSON.stringify({
                 nome: nome,
                 email: email,
-                telefone: telefone.replace('(','').replace(')','').replace('-',''),
+                telefone: telefone.replace('(', '').replace(')', '').replace('-', ''),
                 dataNascimento: date.toString()
             })
         });
@@ -193,18 +193,18 @@ export default function EditarPerfil() {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
         });
-    
+
         console.log(result);
-    
+
         if (!result.cancelled) {
-          setImage(result.uri);
+            setImage(result.uri);
         }
-      };
+    };
 
     return (
         <View style={styles.container}>
@@ -239,10 +239,10 @@ export default function EditarPerfil() {
                         /** COLOCAR AQUI CODIGO DA SELEÇÃO DE FOTO */
                         pickImage()
                     }}>
-                        { 
+                        {
                             image !== ''
-                            ? (<Image source={image} style={styles.fotoPerfil} />)
-                            : (<Image source={require('../../imgs/perfil.png')} style={styles.fotoPerfil} />)                       
+                                ? (<Image source={image} style={styles.fotoPerfil} />)
+                                : (<Image source={require('../../imgs/perfil.png')} style={styles.fotoPerfil} />)
                         }
                     </TouchableOpacity>
                     <TextInput placeholder={"Nome"} value={nome} style={styles.input}
@@ -252,7 +252,7 @@ export default function EditarPerfil() {
 
                     <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
                         <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                        keyboardType="default" value={moment(date).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false}/>
+                            keyboardType="default" value={moment(date).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
                         {show && (
                             <DateTimePicker
                                 testID="dateTimePicker"
@@ -422,13 +422,13 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     inputDate: {
-      marginTop: '3%',
-      width: '95%',
-      padding: 15,
-      fontSize: 16,
-      borderRadius: 41,
-      backgroundColor: '#EBEBEB',
-      textAlign: 'center',
-      color: '#333333'
+        marginTop: '3%',
+        width: '90%',
+        padding: 15,
+        fontSize: 16,
+        borderRadius: 41,
+        backgroundColor: '#EBEBEB',
+        textAlign: 'center',
+        color: '#333333'
     },
 });
