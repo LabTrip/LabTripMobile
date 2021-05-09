@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ScrollViewFlat from '../../components/scrollViewFlat';
+import { Picker } from '@react-native-picker/picker';
 import normalize from '../../components/fontSizeResponsive';
 import DatePicker from 'react-native-datepicker'
 
@@ -13,6 +13,26 @@ export default function CriarRoteiro({ route }) {
     const [apelido, onChangeApelido] = useState(route.params?.roteiro.descricao || "");
     const [dataInicio, onChangeTextDataInicio] = useState(route.params?.roteiro.dataInicio || moment());
     const [dataFim, onChangeTextDataFim] = useState(route.params?.roteiro.dataFim || moment());
+    const [selectedValue, setSelectedValue] = useState(route.params?.roteiro.statusId);
+
+    let comboBox;
+
+    //Adiciona combobox para status do roteiro se o usuário clicar para editar roteiro.
+    if (route.name == 'Roteiro') {
+        comboBox =
+            <Picker
+                prompt="Status do roteiro"
+                mode="dropdown"
+                selectedValue={selectedValue}
+                style={{ height: 50, width: '50%' }}
+                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+            >
+                <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
+                <Picker.Item label="Aprovado" value={6} color="#0FD06F" />
+                <Picker.Item label="Reprovado" value={7} color="#D12323" />
+            </Picker>;
+    }
+
 
     return (
         <View style={styles.container}>
@@ -42,6 +62,7 @@ export default function CriarRoteiro({ route }) {
                     onDateChange={data => onChangeTextDataFim(data)}
                 />
             </View>
+            {comboBox}
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
                 alert(apelido)
                 navigation.goBack();
@@ -119,6 +140,15 @@ const styles = StyleSheet.create({
         borderRadius: 32,
         padding: 15,
         fontSize: 16,
+    },
+    pickerComponente: {
+        marginTop: '3%',
+        width: '95%',
+        padding: 15,
+        fontSize: 16,
+        borderRadius: 41,
+        backgroundColor: '#EBEBEB',
+        color: '#333333'
     }
 
 });
