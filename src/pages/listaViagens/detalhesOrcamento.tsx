@@ -7,21 +7,24 @@ import { useNavigation } from '@react-navigation/native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
-export default function DetalhesOrcamento({route}) {
+export default function DetalhesOrcamento({ route }) {
     const navigation = useNavigation();
     const rota = route.name;
     let botaoChat;
     if (rota == 'Geral' || rota == 'Orçamento') {
-        botaoChat = <TouchableOpacity style={{marginTop:'5%'}} onPress={() => alert('clicou na messagem')}>
-                        <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={40} />
-                    </TouchableOpacity>;
+        botaoChat = <TouchableOpacity style={{ marginTop: '4%' }} onPress={() => alert('clicou na messagem')}>
+            <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
+        </TouchableOpacity>;
     }
     return (
         <View style={styles.container}>
-            <BotaoMais onPress={() =>
-                navigation.navigate('AdicionarDespesa')} />
+            <View style={styles.containerTop}>
+                <BotaoMais onPress={() =>
+                    navigation.navigate('AdicionarDespesa')} />
+                {botaoChat}
+            </View>
             <CardOrcamento planejado={30000} saldoAtual={10000} />
-            {botaoChat}
+
             <Text style={styles.label}>Despesas adicionais: </Text>
             <CardDespesasAdicionais data={'12/03/2021'} descricao={'Dogão na praça'} valor={458} />
 
@@ -48,5 +51,9 @@ const styles = StyleSheet.create({
         width: '90%',
         backgroundColor: '#F2F2F2',
         borderRadius: 7,
+    },
+    containerTop: {
+        flexDirection: 'row',
+
     }
 })

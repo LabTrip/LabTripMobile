@@ -11,8 +11,8 @@ const moment = require('moment');
 export default function CriarRoteiro({ route }) {
     const navigation = useNavigation();
     const [apelido, onChangeApelido] = useState(route.params?.roteiro.descricao || "");
-    const [dataInicio, onChangeTextDataInicio] = useState(route.params?.roteiro.dataInicio || moment());
-    const [dataFim, onChangeTextDataFim] = useState(route.params?.roteiro.dataFim || moment());
+    const [dataInicio, onChangeTextDataInicio] = useState(moment(route.params?.roteiro.dataInicio) || moment());
+    const [dataFim, onChangeTextDataFim] = useState(moment(route.params?.roteiro.dataFim) || moment());
     const [selectedValue, setSelectedValue] = useState(route.params?.roteiro.statusId);
 
     let comboBox;
