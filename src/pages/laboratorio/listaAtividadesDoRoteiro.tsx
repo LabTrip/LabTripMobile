@@ -7,10 +7,11 @@ import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 
-interface Roteiro {
+interface Atividade {
     id: string,
-    nome: string,
+    descricao: string,
     local: string,
+    data: string,
     horario: string,
     statusId: number
 }
@@ -19,7 +20,7 @@ export default function ListaAtividadesDoRoteiro() {
     const moment = require('moment');
     const navigation = useNavigation();
     let token;
-    const [roteiros, setRoteiros] = useState<Roteiro[]>([])
+    const [atividades, setAtividades] = useState<Atividade[]>([])
     const [refreshing, setRefreshing] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState('');
 
@@ -34,59 +35,48 @@ export default function ListaAtividadesDoRoteiro() {
         });
     }
 
-    let listaRoteiros = [
+    let listaAtividade = [
         {
             id: '1',
-            nome: 'Roteiro 1 ',
-            local: 'Rua wagner de souza ferreira, 38b - Osasco - Brasil',
-            horario: '11/01/2020',
+            descricao: 'Parque aquático',
+            local: 'Rua eusébio de frança, 320',
+            data: '17/02/2021',
+            horario: '18:00',
             statusId: 1
         },
         {
             id: '2',
-            nome: 'Roteiro 2',
-            local: 'rua wagner de souza ferreira, 38b - Osasco - Brasil',
-            horario: '12/01/2020',
-            statusId: 6
+            descricao: 'Trilha no mato ',
+            local: 'Rua eusébio de frança, 320',
+            data: '17/02/2021',
+            horario: '18:00',
+            statusId: 1
         },
         {
             id: '3',
-            nome: 'Roteiro 3',
-            local: 'rua wagner de souza ferreira, 38b - Osasco - Brasil',
-            horario: '11/01/2020',
-            statusId: 7
+            descricao: 'Almoço no Mamma Júlia',
+            local: 'Rua eusébio de frança, 320',
+            data: '18/02/2021',
+            horario: '18:00',
+            statusId: 1
         },
         {
             id: '4',
-            nome: 'Roteiro 4',
-            local: 'rua wagner de souza ferreira, 38b - Osasco - Brasil',
-            horario: '11/01/2020',
-            statusId: 2
+            descricao: 'Apresentação cultural ',
+            local: 'Rua eusébio de frança, 320',
+            data: '19/02/2021',
+            horario: '18:00',
+            statusId: 1
         }
     ];
 
     useEffect(() => {
-        const request = async () => {
-            try {
-                const value = await AsyncStorage.getItem('AUTH');
-                if (value != null) {
-                    token = JSON.parse(value)
-                    const response = await getViagens();
-                    const json = await response.json();
-                    if (response.status == 200) {
-                        setRoteiros(json);
-                    }
-                }
-            }
-            catch (e) {
-                alert(e)
-            }
-        }
-        request()
-    }, [refreshing]);
+        setAtividades(listaAtividade)
+    }, []);
+
 
     let datas = new Array();
-    listaRoteiros.forEach((a) => datas.push(a.horario))
+    listaAtividade.forEach((a) => datas.push(a.data))
     var filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
 
 
@@ -108,9 +98,9 @@ export default function ListaAtividadesDoRoteiro() {
 
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, value) => {
-                        setSelectedValue(itemValue)
-                        setRoteiros(listaRoteiros.filter(a => a.horario == itemValue));
-                        
+                        setSelectedValue(itemValue);
+                        console.log(atividades.filter(a => a.data == itemValue))
+                        setAtividades(listaAtividade.filter(a => a.data == itemValue));
                     }}>
                     {
                         filtroDatas?.map((a) => {
@@ -128,8 +118,8 @@ export default function ListaAtividadesDoRoteiro() {
                     />
                 }>
                 {
-                    roteiros?.map((a) => {
-                        return <CardAtividadeAgencia key={a.id} nome={a.nome} local={a.local} horario={a.horario} />
+                    atividades?.map((a) => {
+                        return <CardAtividadeAgencia key={a.id} nome={a.descricao} local={a.local} horario={a.horario} />
                     })
                 }
             </ScrollView>
