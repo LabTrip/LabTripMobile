@@ -21,17 +21,6 @@ export default function ListaPropostaDeRoteiro() {
     const [roteiros, setRoteiros] = useState<Roteiro[]>([])
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const getViagens = async () => {
-        return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'x-access-token': token
-            }
-        });
-    }
-
     let listaRoteiros = [
         {
             id: '1',
@@ -59,31 +48,15 @@ export default function ListaPropostaDeRoteiro() {
             descricao: 'Roteiro 4',
             dataInicio: new Date,
             dataFim: new Date,
-            statusId: null
+            statusId: 10
         }
     ];
 
 
 
     useEffect(() => {
-        const request = async () => {
-            try {
-                const value = await AsyncStorage.getItem('AUTH');
-                if (value != null) {
-                    token = JSON.parse(value)
-                    const response = await getViagens();
-                    const json = await response.json();
-                    if (response.status == 200) {
-                        setRoteiros(json);
-                    }
-                }
-            }
-            catch (e) {
-                alert(e)
-            }
-        }
-        request()
-    }, [refreshing]);
+        setRoteiros(listaRoteiros)
+    }, []);
 
 
 
