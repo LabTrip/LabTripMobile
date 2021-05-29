@@ -32,8 +32,8 @@ export default function CardAtividade(props) {
 
     //muda cor e desativa botões se o usuário não for o dono da viagem.
     if (props.viagem.usuarioDonoId != idUsuario) {
-        corBotaoConfimar = '#000';
-        corBotaoCancelar = '#000';
+        corBotaoConfimar = '#d3d3d3';
+        corBotaoCancelar = '#d3d3d3';
         disabled = true;
     }
 
