@@ -5,10 +5,9 @@ import CardAtividade from '../../components/cardAtividade';
 import ScrollViewFlat from '../../components/scrollViewFlat';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function DetalhesRoteiro() {
+export default function DetalhesRoteiro({route}) {
     const [selectedValue, setSelectedValue] = useState();
-
-
+    const viagem  = route.params;
 
     let participantesData = [
         {
@@ -59,7 +58,7 @@ export default function DetalhesRoteiro() {
                     data={participantesData}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <CardAtividade nome={item.nome} local={item.local} horario={item.horario} item={item} data={selectedValue} />
+                        <CardAtividade nome={item.nome} local={item.local} horario={item.horario} item={item} viagem={viagem} data={selectedValue} />
                     )}
                 />
             </ScrollViewFlat>

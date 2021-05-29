@@ -2,19 +2,52 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CardAtividade(props) {
     const navigation = useNavigation();
+
+    const [idUsuario, setIdUsuario] = React.useState('');
+
+    const getUserId = async () => {
+        //captura o id do usuário armazenado no dispositivo
+        const id = await AsyncStorage.getItem('USER_ID') || "";
+        if (id == "") {
+            alert("Erro ao capturar informações do usuário. Por favor reinicie a aplicação.")
+        }
+        else {
+            //remove aspas
+            setIdUsuario(id.toString().replace(/"/g, ''));
+        }
+    };
+
+    //propriedades do botao confimar e cancelar atividade.
+    let corBotaoConfimar = '#0FD06F';
+    let corBotaoCancelar = '#FF2424';
+    let disabled = false;
+
+
+    getUserId();
+
+
+    //muda cor e desativa botões se o usuário não for o dono da viagem.
+    if (props.viagem.usuarioDonoId != idUsuario) {
+        corBotaoConfimar = '#000';
+        corBotaoCancelar = '#000';
+        disabled = true;
+    }
+
+
     return (
         <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.item, data: props.data })}>
             <Text style={styles.textoTitulo}>{props.nome} </Text>
             <View style={styles.detalhes}>
                 <Text style={styles.textoDetalhes}>Local: {props.local}{"\n"}Horário: {props.horario}</Text>
-                <TouchableOpacity>
-                    <MaterialCommunityIcons name="check-bold" color={'#0FD06F'} size={29} />
+                <TouchableOpacity disabled={disabled}>
+                    <MaterialCommunityIcons name="check-bold" color={corBotaoConfimar} size={29} />
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <MaterialCommunityIcons name="close-thick" color={'#FF2424'} size={29} />
+                <TouchableOpacity disabled={disabled}>
+                    <MaterialCommunityIcons name="close-thick" color={corBotaoCancelar} size={29} />
                 </TouchableOpacity>
             </View>
         </TouchableOpacity>
@@ -45,3 +78,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     }
 });
+
+function usetState(): { idUsuario: any; setIdUsuario: any; } {
+    throw new Error('Function not implemented.');
+}

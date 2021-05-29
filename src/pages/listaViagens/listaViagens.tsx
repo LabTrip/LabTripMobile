@@ -15,7 +15,8 @@ interface Viagem {
 export default function ListaViagens() {
   const moment = require('moment');
   let token;
-  const [viagens, setViagens] = useState<Viagem[]>([])
+  const [viagens, setViagens] = useState<Viagem[]>([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const getViagens = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
@@ -46,14 +47,14 @@ export default function ListaViagens() {
       }
     }
     request()
-  }, []);
+  }, [refreshing]);
 
-  const [refreshing, setRefreshing] = React.useState(false);
+
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     setRefreshing(false)
-}, [refreshing]);
+  }, [refreshing]);
 
 
   return (
@@ -67,7 +68,7 @@ export default function ListaViagens() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         renderItem={({ item }) => (
           <CardViagem nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')}
-            dataFim={moment(item.dataFim).format('DD/MM/yyyy')}
+            dataFim={moment(item.dataFim).format('DD/MM/yyyy')} viagem={item}
             local={""} status={item.statusId} navigate={"MenuDetalhesViagem"} item={item} />
         )}
       />

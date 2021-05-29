@@ -84,7 +84,6 @@ export default function DetalhesParticipantes() {
               const json = await response.json();
               if (response.status == 200) {
                 setParticipantes(json);
-                console.log(json)
               }
             }
           }
