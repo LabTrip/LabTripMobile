@@ -22,7 +22,7 @@ export default function EditarPerfil() {
     const [tokenUsuario, setTokenUsuario] = useState("");
     const [showLoader, setShowLoader] = React.useState(false);
     const [permission, askForPermission] = usePermissions(Permissions.MEDIA_LIBRARY, { ask: true });
-    const [image, setImage] = useState(require('../../imgs/perfil.png'));
+    const [image, setImage] = useState('');
 
     /************************************************************* */
 
@@ -94,7 +94,6 @@ export default function EditarPerfil() {
 
                 userId = JSON.parse(user)
             }
-            console.log(user)
             const response = await getUsuario();
             const json = await response.json();
             if (response.status == 200) {
@@ -150,9 +149,7 @@ export default function EditarPerfil() {
                 setShowLoader(false);
             }
         }
-
         request()
-
     }, [])
 
     const [refreshing, setRefreshing] = React.useState(false);
@@ -193,16 +190,15 @@ export default function EditarPerfil() {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
+            base64: true
         });
-
-        console.log(result);
-
         if (!result.cancelled) {
             setImage(result.uri);
+            console.log(result.uri)
         }
     };
 
@@ -237,11 +233,11 @@ export default function EditarPerfil() {
                 <View style={styles.conteudo}>
                     <TouchableOpacity onPress={() => {
                         /** COLOCAR AQUI CODIGO DA SELEÇÃO DE FOTO */
-                        pickImage()
+                        pickImage();
                     }}>
                         {
                             image !== ''
-                                ? (<Image source={image} style={styles.fotoPerfil} />)
+                                ? (<Image source={{ uri: image, }} style={styles.fotoPerfil} />)
                                 : (<Image source={require('../../imgs/perfil.png')} style={styles.fotoPerfil} />)
                         }
                     </TouchableOpacity>

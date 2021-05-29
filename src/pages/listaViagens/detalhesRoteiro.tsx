@@ -9,7 +9,7 @@ export default function DetalhesRoteiro({route}) {
     const [selectedValue, setSelectedValue] = useState();
     const viagem  = route.params;
 
-    let participantesData = [
+    let atividades = [
         {
             id: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
             nome: "Visita ao IFSP",
@@ -39,7 +39,7 @@ export default function DetalhesRoteiro({route}) {
                     selectedValue={selectedValue}
                     style={{ height: 48, width: 150 }}
                     onValueChange={(itemValue) => {
-                        setSelectedValue(itemValue)
+                        setSelectedValue(itemValue);
                     }}
                 >
                     <Picker.Item label="21/01/2021" value="21/01/2021" />
@@ -55,7 +55,7 @@ export default function DetalhesRoteiro({route}) {
             </View>
             <ScrollViewFlat>
                 <FlatList
-                    data={participantesData}
+                    data={atividades}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <CardAtividade nome={item.nome} local={item.local} horario={item.horario} item={item} viagem={viagem} data={selectedValue} />
