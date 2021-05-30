@@ -83,6 +83,18 @@ export default function EditarPerfil() {
         });
     }
 
+    const atualizaFoto = async (file) => {
+        return await fetch('https://labtrip-backend.herokuapp.com/usuarios/fotoperfil/' + idUsuario, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'x-access-token': tokenUsuario
+            },
+            body:JSON.stringify({'file': file}) 
+        });
+    }
+
     const buscaPreencheUsuario = async () => {
         try {
             const value = await AsyncStorage.getItem('AUTH');
@@ -126,6 +138,7 @@ export default function EditarPerfil() {
                 const user = await AsyncStorage.getItem('USER_ID');
                 if (value !== null) {
                     token = JSON.parse(value)
+                    console.log(token)
                     setTokenUsuario(JSON.parse(value))
                 }
                 if (user !== null) {
@@ -197,8 +210,15 @@ export default function EditarPerfil() {
             base64: true
         });
         if (!result.cancelled) {
-            setImage(result.uri);
-            console.log(result.uri)
+            setImage(result.uri)
+            console.log(result)
+            const fileToUpload = result;
+            const file = new FormData();
+            file.append(fileToUpload.uri, 'file');
+            file.append('name', 'guigon.jpeg');
+            const response = await atualizaFoto(file);
+            console.log(response.status)
+
         }
     };
 
