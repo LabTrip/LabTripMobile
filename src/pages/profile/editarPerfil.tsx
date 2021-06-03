@@ -9,7 +9,7 @@ import * as Permissions from 'expo-permissions';
 import { usePermissions } from 'expo-permissions';
 import { TextInputMask } from 'react-native-masked-text'
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import mime from 'mime';
 const moment = require('moment');
 
 
@@ -80,18 +80,6 @@ export default function EditarPerfil() {
                 telefone: telefone.replace('(', '').replace(')', '').replace('-', ''),
                 dataNascimento: date.toString()
             })
-        });
-    }
-
-    const atualizaFoto = async (file) => {
-        return await fetch('https://labtrip-backend.herokuapp.com/usuarios/fotoperfil/' + idUsuario, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'multipart/form-data',
-                'x-access-token': tokenUsuario
-            },
-            body:JSON.stringify({'file': file}) 
         });
     }
 
@@ -207,20 +195,39 @@ export default function EditarPerfil() {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
-            base64: true
+            base64: false
         });
         if (!result.cancelled) {
             setImage(result.uri)
-            console.log(result)
-            const fileToUpload = result;
-            const file = new FormData();
-            file.append(fileToUpload.uri, 'file');
-            file.append('name', 'guigon.jpeg');
-            const response = await atualizaFoto(file);
-            console.log(response.status)
+            let imageURI = "file:///" + result.uri.split("file:/").join("");
+            const fileToUpload = {
+                uri: imageURI,
+                name: result.uri.split("/").pop(),
+                type: mime.getType(imageURI)
+            };
+            
+            console.log(fileToUpload)
+            atualizaFoto(fileToUpload);
 
         }
     };
+
+        const atualizaFoto = async (file) => {
+        const form = new FormData();
+        form.append('file', file);
+         
+        const request = await fetch('https://labtrip-backend.herokuapp.com/usuarios/fotoperfil/' + idUsuario, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'x-access-token': tokenUsuario
+            },
+            body: form
+        });
+
+        return request;
+    }
 
     return (
         <View style={styles.container}>
