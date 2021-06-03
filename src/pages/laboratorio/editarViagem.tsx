@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ScrollViewFlat from '../../components/scrollViewFlat';
 import CardParticipante from '../../components/cardParticipante';
 import BotaoLupa from '../../components/botaoLupa';
 import DatePicker from 'react-native-datepicker'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const moment = require('moment');
 
 export default function EditarViagem({ route }) {
     const navigation = useNavigation();
-
-    const [apelidoViagem, onChangeTextApelidoViagem] = useState(route.params.viagem.nome);
+    const { viagem } = route.params;
+    const [apelidoViagem, onChangeTextApelidoViagem] = useState(route.params.viagem.descricao);
     const [dataInicio, onChangeTextDataInicio] = useState(route.params.viagem.dataInicio);
     const [dataFim, onChangeTextDataFim] = useState(route.params.viagem.dataFim);
     const [localViagem, onChangeTextLocalViagem] = useState(route.params.viagem.local);
+    const [date, setDate] = useState(new Date('1900-01-01T00:00:00.000Z'));
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
 
     let participantesData = [
         {
@@ -31,6 +35,22 @@ export default function EditarViagem({ route }) {
         },
     ];
 
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+        console.log(currentDate)
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+
+    const showDatepicker = () => {
+        showMode('date');
+    };
+
     return (
         <ScrollViewFlat>
             <View style={styles.container}>
@@ -41,25 +61,31 @@ export default function EditarViagem({ route }) {
                     <Text style={styles.labelData}>Data de Fim</Text>
                 </View>
                 <View style={styles.containerData}>
-                    <DatePicker
-                        style={styles.inputDataCelular}
-                        placeholder={"Data início"}
-                        date={moment(dataInicio, 'DD/MM/YYYY')}
-                        format="DD/MM/yyyy"
-                        minDate="01/01/1900"
-                        onDateChange={data => onChangeTextDataInicio(data)}
-                    />
-                    <DatePicker
-                        style={styles.inputDataCelular}
-                        placeholder={"Data fim"}
-                        date={moment(dataFim, 'DD/MM/YYYY')}
-                        format="DD/MM/yyyy"
-                        minDate="01/01/1900"
-                        onDateChange={data => onChangeTextDataFim(data)}
-                    />
+                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+                        <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                                keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                            {show && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={date}
+                                    display="default"
+                                    onChange={onChange}
+                                />
+                            )}
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+                        <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                                keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                            {show && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={date}
+                                    display="default"
+                                    onChange={onChange}
+                                />
+                            )}
+                    </TouchableOpacity> 
                 </View>
-                <TextInput placeholder={"Local da viagem"} value={localViagem} style={styles.input}
-                    onChangeText={text => onChangeTextLocalViagem(text)} />
                     
                 <TouchableOpacity style={styles.botaoCriar} onPress={() => {
                     alert('Clicou em criar viagem!')
@@ -79,6 +105,8 @@ const styles = StyleSheet.create({
     },
     containerData: {
         flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-around',
     },
     containerAddFuncionarios: {
         width: '90%',
@@ -128,7 +156,7 @@ const styles = StyleSheet.create({
     botaoCriar: {
         backgroundColor: '#3385FF',
         width: 180,
-        height: 50,
+        height: 80,
         padding: 10,
         borderRadius: 40,
         marginTop: '5%',
@@ -166,5 +194,19 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#999999',
         width: '45%'
+    },
+    containerDataCelular: {
+        flexDirection: 'row',
+    },
+    inputDate: {
+        marginTop: '3%',
+        flex: 0,
+        paddingHorizontal: 30,
+        padding: 15,
+        fontSize: 16,
+        borderRadius: 41,
+        backgroundColor: '#EBEBEB',
+        textAlign: 'center',
+        color: '#333333'
     },
 });

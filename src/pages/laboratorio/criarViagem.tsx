@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CardParticipante from '../../components/cardParticipante';
 import ScrollViewFlat from '../../components/scrollViewFlat';
 import BotaoLupa from '../../components/botaoLupa';
 import DatePicker from 'react-native-datepicker'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const moment = require('moment');
 
 
 export default function CriarViagem() {
+    let token;
     const navigation = useNavigation();
+    const [viagens, setViagens] = useState([]);
     const [dataInicio, onChangeTextDataInicio] = useState(moment());
     const [dataFim, onChangeTextDataFim] = useState(moment());
+    const [refreshing, setRefreshing] = React.useState(false);
 
     let participantesData = [
         {

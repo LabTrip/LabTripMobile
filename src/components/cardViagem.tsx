@@ -4,6 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 
 let corDoCard, corBordaDoCard, status, corDoStatus;
 
+interface Viagem {
+    id: string,
+    descricao: string,
+    dataInicio: Date,
+    dataFim: Date,
+    statusId: number,
+    dono: string
+  }
+
 export default function CardViagem(props) {
 
     const navigation = useNavigation();
@@ -56,6 +65,9 @@ export default function CardViagem(props) {
             <Text>
                 <Text style={styles.label}>Status: </Text>
                 <Text style={{ color: corDoStatus }}>{status}</Text>
+            </Text>
+            <Text>
+                <Text style={styles.label}>Dono: </Text> {props.dono}
             </Text>
         </TouchableOpacity>
     )

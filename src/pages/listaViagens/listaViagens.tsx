@@ -9,7 +9,8 @@ interface Viagem {
   descricao: string,
   dataInicio: Date,
   dataFim: Date,
-  statusId: number
+  statusId: number,
+  dono: string
 }
 
 export default function ListaViagens() {
@@ -40,6 +41,7 @@ export default function ListaViagens() {
           if (response.status == 200) {
             setViagens(json);
           }
+          console.log(viagens)
         }
       }
       catch (e) {
@@ -68,7 +70,7 @@ export default function ListaViagens() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         renderItem={({ item }) => (
           <CardViagem nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')}
-            dataFim={moment(item.dataFim).format('DD/MM/yyyy')} viagem={item}
+            dataFim={moment(item.dataFim).format('DD/MM/yyyy')} viagem={item} dono={item.dono}
             local={""} status={item.statusId} navigate={"MenuDetalhesViagem"} item={item} />
         )}
       />
