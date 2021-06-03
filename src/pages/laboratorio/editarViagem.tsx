@@ -11,14 +11,15 @@ const moment = require('moment');
 
 export default function EditarViagem({ route }) {
     const navigation = useNavigation();
-    const { viagem } = route.params;
-    const [apelidoViagem, onChangeTextApelidoViagem] = useState(route.params.viagem.descricao);
-    const [dataInicio, onChangeTextDataInicio] = useState(route.params.viagem.dataInicio);
-    const [dataFim, onChangeTextDataFim] = useState(route.params.viagem.dataFim);
+    const [viagemId, setViagemId ] = useState(route.params.viagem.id);
+    const [descricao, onChangeDescricao] = useState(route.params.viagem.descricao);
+    const [dataInicio, setDataInicio] = useState(new Date(route.params.viagem.dataInicio));
+    const [dataFim, setDataFim] = useState(new Date(route.params.viagem.dataFim));
     const [localViagem, onChangeTextLocalViagem] = useState(route.params.viagem.local);
-    const [date, setDate] = useState(new Date('1900-01-01T00:00:00.000Z'));
+    const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
+    const [showDataInicio, setShowDataInicio] = useState(false);
+    const [showDataFim, setShowDataFim] = useState(false);
 
     let participantesData = [
         {
@@ -35,53 +36,77 @@ export default function EditarViagem({ route }) {
         },
     ];
 
-    const onChange = (event, selectedDate) => {
+    const onChangeDataInicio = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-        setDate(currentDate);
+        setShowDataInicio(Platform.OS === 'ios');
+        setDataInicio(currentDate);
         console.log(currentDate)
     };
 
-    const showMode = (currentMode) => {
-        setShow(true);
-        setMode(currentMode);
+    const onChangeTextDataFim = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShowDataFim(Platform.OS === 'ios');
+        setDataFim(currentDate);
+        console.log(currentDate)
     };
 
-    const showDatepicker = () => {
-        showMode('date');
+    const showDatepickerDataInicio = () => {
+        setShowDataInicio(true);
+        setMode('date');
     };
+
+    const showDatepickerDataFim = () => {
+        setShowDataFim(true);
+        setMode('date');
+    };
+
+    const atualizaViagem = async () => {
+        return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + viagemId, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': ""
+            },
+            body: JSON.stringify({
+                descricao: descricao,
+                dataInicio: dataInicio,
+                dataFim: dataFim,
+            })
+        });
+    }
 
     return (
         <ScrollViewFlat>
             <View style={styles.container}>
-                <TextInput placeholder={"Apelido da viagem"} value={apelidoViagem} style={styles.input}
-                    onChangeText={text => onChangeTextApelidoViagem(text)} />
+                <TextInput placeholder={"Apelido da viagem"} value={descricao} style={styles.input}
+                    onChangeText={text => onChangeDescricao(text)} />
                 <View style={styles.containerData}>
                     <Text style={styles.labelData}>Data de Inicio</Text>
                     <Text style={styles.labelData}>Data de Fim</Text>
                 </View>
                 <View style={styles.containerData}>
-                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataInicio}>
                         <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
                                 keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                            {show && (
+                            {showDataInicio && (
                                 <DateTimePicker
                                     testID="dateTimePicker"
-                                    value={date}
+                                    value={dataInicio}
                                     display="default"
-                                    onChange={onChange}
+                                    onChange={onChangeDataInicio}
                                 />
                             )}
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataFim}>
                         <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
                                 keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                            {show && (
+                            {showDataFim && (
                                 <DateTimePicker
                                     testID="dateTimePicker"
-                                    value={date}
+                                    value={dataFim}
                                     display="default"
-                                    onChange={onChange}
+                                    onChange={onChangeTextDataFim}
                                 />
                             )}
                     </TouchableOpacity> 
