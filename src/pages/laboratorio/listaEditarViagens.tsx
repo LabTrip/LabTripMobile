@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import BarraPesquisa from '../../components/barraPesquisa';
@@ -114,7 +114,14 @@ export default function ListaEditarViagens() {
   }, [refreshing]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}
+      refreshControl={
+        <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+        />
+      }
+    >
       <BarraPesquisa texto={'Pesquisar viagem...'} />
       
         <View style={{ alignItems: 'center' }}>
@@ -135,7 +142,7 @@ export default function ListaEditarViagens() {
             )}
           />
       
-    </View >
+    </ScrollView >
   );
 }
 
