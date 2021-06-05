@@ -22,10 +22,9 @@ export default function EditarViagem({ route }) {
     const navigation = useNavigation();
     const [viagem, setViagem ] = useState(route.params.viagem.id);
     const [viagemId, setViagemId ] = useState(route.params.viagem.id);
-    const [descricao, onChangeDescricao] = useState(route.params.viagem.descricao);
-    const [dataInicio, setDataInicio] = useState(route.params.viagem.dataInicio);
-    const [dataFim, setDataFim] = useState(route.params.viagem.dataFim);
-    const [date, setDate] = useState(new Date());
+    const [descricao, onChangeDescricao] = useState("");
+    const [dataInicio, setDataInicio] = useState("");
+    const [dataFim, setDataFim] = useState("");
     const [mode, setMode] = useState('date');
     const [showDataInicio, setShowDataInicio] = useState(false);
     const [showDataFim, setShowDataFim] = useState(false);
@@ -58,12 +57,12 @@ export default function EditarViagem({ route }) {
               token = valueRead;
               setToken(valueRead)
             }
-            const viagem = await buscaViagem();
-            setViagem(viagem);
-            setViagemId(viagem.id)
-            onChangeDescricao(viagem.descricao)
-            setDataInicio(viagem.dataInicio)
-            setDataFim(viagem.dataFim)
+            const json = await buscaViagem();
+            setViagem(json);
+            setViagemId(json.id)
+            onChangeDescricao(json.descricao)
+            setDataInicio(json.dataInicio)
+            setDataFim(json.dataFim)
             setTimeout(()=>{
 
             }, 1000)
@@ -158,32 +157,32 @@ export default function EditarViagem({ route }) {
     }, []);
 
     return (
-        <ScrollViewFlat>
-            <Modal animationType="fade" transparent={true}  visible={showLoader}
-                onRequestClose={() => {
-                setShowLoader(!showLoader)
-            }}>
-                <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
-                    <Text style={styles.textStyle}>
-                    Aguarde...
-                    </Text>
-                </View>
-                </View>
-
-            </Modal>
-            <ScrollView 
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-            >
+        <ScrollView style={{backgroundColor: 'white'}}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            }
+        >
                 <View style={styles.container}>
+                    <Modal animationType="fade" transparent={true}  visible={showLoader}
+                        onRequestClose={() => {
+                        setShowLoader(!showLoader)
+                    }}>
+                        <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
+                            <Text style={styles.textStyle}>
+                            Aguarde...
+                            </Text>
+                        </View>
+                        </View>
+
+                    </Modal>
+                
                     <TextInput placeholder={"Apelido da viagem"} style={styles.input} keyboardType="default"
-                        onChangeText={text => onChangeDescricao(text.trim())} value={descricao}/>
+                        onChangeText={(text) => { onChangeDescricao(text)}} value={descricao}/>
                     <View style={styles.containerData}>
                         <Text style={styles.labelData}>Data de Inicio</Text>
                         <Text style={styles.labelData}>Data de Fim</Text>
@@ -218,8 +217,8 @@ export default function EditarViagem({ route }) {
                         <Text style={styles.botaoCriarTexto}>Salvar viagem</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
-        </ScrollViewFlat>
+        </ScrollView>
+        
     );
 }
 
