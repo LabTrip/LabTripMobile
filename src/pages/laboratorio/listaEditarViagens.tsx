@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BarraPesquisa from '../../components/barraPesquisa';
 import CardViagem from '../../components/cardViagem';
@@ -63,14 +63,7 @@ export default function ListaEditarViagens() {
   }, [refreshing]);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-    >
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <BarraPesquisa texto={'Pesquisar viagem...'} />
 
       <View style={{ alignItems: 'center' }}>
@@ -82,6 +75,12 @@ export default function ListaEditarViagens() {
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
         data={viagens}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -90,8 +89,7 @@ export default function ListaEditarViagens() {
             navigate={"MenuDetalhesViagemAgencia"} item={item} />
         )}
       />
-
-    </ScrollView >
+    </View>
   );
 }
 
