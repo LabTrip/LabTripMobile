@@ -18,6 +18,7 @@ export default function ListaViagens() {
   let token;
   const [viagens, setViagens] = useState<Viagem[]>([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  let ListaViagens = [];
 
   const getViagens = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
@@ -39,9 +40,11 @@ export default function ListaViagens() {
           const response = await getViagens();
           const json = await response.json();
           if (response.status == 200) {
-            setViagens(json);
+            //filtrando para lista apenas viagens que estejam com o status diferente de 2 - Em planejamento.
+            setViagens(json.filter(function (e) {
+              return e.statusId != 1
+            }));
           }
-          console.log(viagens)
         }
       }
       catch (e) {
