@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, RefreshControl, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, RefreshControl, ScrollView, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BotaoMais from '../../components/botaoMais';
 import CardRoteiro from '../../components/cardRoteiro';
@@ -55,8 +55,8 @@ export default function ListaPropostaDeRoteiro() {
 
 
     useEffect(() => {
-        setRoteiros(listaRoteiros)
-    }, []);
+        setRoteiros(listaRoteiros);
+    }, [refreshing]);
 
 
 
@@ -73,21 +73,17 @@ export default function ListaPropostaDeRoteiro() {
             <View style={styles.containerTop}>
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
             </View>
-            <ScrollView
-            contentContainerStyle={{flexGrow: 1}}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }>
-                {
-                    listaRoteiros?.map((a) => {
-                        return <CardRoteiro key={a.id} nome={a.descricao} dataInicio={moment(a.dataInicio).format('DD/MM/yyyy')} dataFim={moment(a.dataFim).format('DD/MM/yyyy')} 
-                        status={a.statusId} item={a} navigate={'EditarRoteiro'} />
-                    })
-                }
-            </ScrollView>
+            <FlatList
+                //style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
+                contentContainerStyle={{ alignItems: 'center' }}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                data={listaRoteiros}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <CardRoteiro key={item.id} nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')} dataFim={moment(item.dataFim).format('DD/MM/yyyy')}
+                        status={item.statusId} item={item} navigate={'EditarRoteiro'} />
+                )}
+            />
         </View>
     )
 }
