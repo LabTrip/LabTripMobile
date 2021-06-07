@@ -69,7 +69,6 @@ export default function ListaPropostaDeRoteiro() {
 
     return (
         <View style={styles.conteudo}>
-            <BotaoMais onPress={() => navigation.navigate('CriarRoteiro')} />
             <View style={styles.containerTop}>
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
             </View>
@@ -98,6 +97,7 @@ const styles = StyleSheet.create({
     containerTop: {
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: '3%',
         width: '92%',
         backgroundColor: '#F2F2F2',
         borderRadius: 7,

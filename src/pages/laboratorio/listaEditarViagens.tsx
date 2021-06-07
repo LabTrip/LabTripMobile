@@ -19,7 +19,7 @@ export default function ListaEditarViagens() {
   const moment = require('moment');
   const navigation = useNavigation();
   const [viagens, setViagens] = useState<Viagem[]>([]);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getViagens = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
@@ -32,46 +32,41 @@ export default function ListaEditarViagens() {
     });
   }
 
-  useEffect(() => {
-    const request = async () => {
-      try {
-        const value = await AsyncStorage.getItem('AUTH');
-        if (value != null) {
-          token = JSON.parse(value)
-          const response = await getViagens();
-          const json = await response.json();
-          if (response.status == 200) {
-            //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
-            setViagens(json.filter(function (e) {
-              return e.statusId = 2
-            }));
-          }
+  const request = async () => {
+    try {
+      const value = await AsyncStorage.getItem('AUTH');
+      if (value != null) {
+        token = JSON.parse(value)
+        const response = await getViagens();
+        const json = await response.json();
+        if (response.status == 200) {
+          //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
+          setViagens(json.filter(function (e) {
+            return e.statusId = 2
+          }));
         }
       }
-      catch (e) {
-        alert(e)
-      }
     }
+    catch (e) {
+      alert(e)
+    }
+  }
+
+  useEffect(() => {
     request()
-  }, [refreshing]);
+  }, []);
 
 
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
+    request()
     setRefreshing(false)
   }, [refreshing]);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <BarraPesquisa texto={'Pesquisar viagem...'} />
-
-      <View style={{ alignItems: 'center' }}>
-        <TouchableOpacity style={styles.botaoMais} onPress={() => navigation.navigate('CriarViagem')}>
-          <Image source={require('../../imgs/plus-circle.png')} />
-        </TouchableOpacity>
-      </View>
-
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}
@@ -81,6 +76,7 @@ export default function ListaEditarViagens() {
             onRefresh={onRefresh}
           />
         }
+        extraData={viagens}
         data={viagens}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
