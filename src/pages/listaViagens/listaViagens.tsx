@@ -17,7 +17,7 @@ export default function ListaViagens() {
   const moment = require('moment');
   let token;
   const [viagens, setViagens] = useState<Viagem[]>([]);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   let ListaViagens = [];
 
   const getViagens = async () => {
@@ -31,26 +31,27 @@ export default function ListaViagens() {
     });
   }
 
-  useEffect(() => {
-    const request = async () => {
-      try {
-        const value = await AsyncStorage.getItem('AUTH');
-        if (value != null) {
-          token = JSON.parse(value)
-          const response = await getViagens();
-          const json = await response.json();
-          if (response.status == 200) {
-            //filtrando para lista apenas viagens que estejam com o status diferente de 2 - Em planejamento.
-            setViagens(json.filter(function (e) {
-              return e.statusId != 1
-            }));
-          }
+  const request = async () => {
+    try {
+      const value = await AsyncStorage.getItem('AUTH');
+      if (value != null) {
+        token = JSON.parse(value)
+        const response = await getViagens();
+        const json = await response.json();
+        if (response.status == 200) {
+          //filtrando para lista apenas viagens que estejam com o status diferente de 2 - Em planejamento.
+          setViagens(json.filter(function (e) {
+            return e.statusId != 1
+          }));
         }
       }
-      catch (e) {
-        alert(e)
-      }
     }
+    catch (e) {
+      alert(e)
+    }
+  }
+
+  useEffect(() => {
     request()
   }, [refreshing]);
 
@@ -58,13 +59,14 @@ export default function ListaViagens() {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    setRefreshing(false)
+    request();
+    setRefreshing(false);
   }, [refreshing]);
 
 
   return (
     <View style={styles.conteudo}>
-      <BarraPesquisa texto="Pesquisar Viagem..." />
+      <BarraPesquisa texto="Pesquisar Viagem..." viagens={viagens} callbackFunction={setViagens} />
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}

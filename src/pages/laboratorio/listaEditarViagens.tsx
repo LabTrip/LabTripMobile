@@ -66,7 +66,7 @@ export default function ListaEditarViagens() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <BarraPesquisa texto={'Pesquisar viagem...'} />
+      <BarraPesquisa texto={'Pesquisar viagem...'} viagens={viagens} callbackFunction={setViagens} />
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}
