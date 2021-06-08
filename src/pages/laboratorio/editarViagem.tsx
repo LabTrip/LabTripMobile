@@ -20,8 +20,8 @@ interface Status {
 export default function EditarViagem({ route }) {
     let token;
     const navigation = useNavigation();
-    const [viagem, setViagem ] = useState(route.params.viagem.id);
-    const [viagemId, setViagemId ] = useState(route.params.viagem.id);
+    const [viagem, setViagem] = useState(route.params.viagem.id);
+    const [viagemId, setViagemId] = useState(route.params.viagem.id);
     const [descricao, onChangeDescricao] = useState("");
     const [dataInicio, setDataInicio] = useState("");
     const [dataFim, setDataFim] = useState("");
@@ -49,33 +49,33 @@ export default function EditarViagem({ route }) {
 
     useEffect(() => {
         const request = async () => {
-          try {
-            setShowLoader(true);
-            const value = await AsyncStorage.getItem('AUTH');
-            if (value != null) {
-              const valueRead = JSON.parse(value)
-              token = valueRead;
-              setToken(valueRead)
-            }
-            const json = await buscaViagem();
-            setViagem(json);
-            setViagemId(json.id)
-            onChangeDescricao(json.descricao)
-            setDataInicio(json.dataInicio)
-            setDataFim(json.dataFim)
-            setTimeout(()=>{
+            try {
+                setShowLoader(true);
+                const value = await AsyncStorage.getItem('AUTH');
+                if (value != null) {
+                    const valueRead = JSON.parse(value)
+                    token = valueRead;
+                    setToken(valueRead)
+                }
+                const json = await buscaViagem();
+                setViagem(json);
+                setViagemId(json.id)
+                onChangeDescricao(json.descricao)
+                setDataInicio(json.dataInicio)
+                setDataFim(json.dataFim)
+                setTimeout(() => {
 
-            }, 1000)
-          }
-          catch (e) {
-            console.log(e)
-          }
-          finally {
-            setShowLoader(false);
-          }
+                }, 1000)
+            }
+            catch (e) {
+                console.log(e)
+            }
+            finally {
+                setShowLoader(false);
+            }
         }
         request()
-    
+
     }, [refreshing]);
 
     const onChangeDataInicio = (event, selectedDate) => {
@@ -111,7 +111,7 @@ export default function EditarViagem({ route }) {
                 'x-access-token': token
             }
         });
-        
+
         return response.json();
     }
 
@@ -119,8 +119,8 @@ export default function EditarViagem({ route }) {
         try {
             setShowLoader(true);
             const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/' + viagemId, {
-                    method: 'PUT',
-                    headers: {
+                method: 'PUT',
+                headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'x-access-token': Token
@@ -157,7 +157,7 @@ export default function EditarViagem({ route }) {
     }, []);
 
     return (
-        <ScrollView style={{backgroundColor: 'white'}}
+        <ScrollView style={{ backgroundColor: 'white' }}
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
@@ -165,60 +165,60 @@ export default function EditarViagem({ route }) {
                 />
             }
         >
-                <View style={styles.container}>
-                    <Modal animationType="fade" transparent={true}  visible={showLoader}
-                        onRequestClose={() => {
+            <View style={styles.container}>
+                <Modal animationType="fade" transparent={true} visible={showLoader}
+                    onRequestClose={() => {
                         setShowLoader(!showLoader)
                     }}>
-                        <View style={styles.centeredView}>
+                    <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                             <Text style={styles.textStyle}>
-                            Aguarde...
+                                Aguarde...
                             </Text>
                         </View>
-                        </View>
+                    </View>
 
-                    </Modal>
-                
-                    <TextInput placeholder={"Apelido da viagem"} style={styles.input} keyboardType="default"
-                        onChangeText={(text) => { onChangeDescricao(text)}} value={descricao}/>
-                    <View style={styles.containerData}>
-                        <Text style={styles.labelData}>Data de Inicio</Text>
-                        <Text style={styles.labelData}>Data de Fim</Text>
-                    </View>
-                    <View style={styles.containerData}>
-                        <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataInicio}>
-                            <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                                    keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                                {showDataInicio && (
-                                    <DateTimePicker
-                                        testID="dateTimePickerInicio"
-                                        value={new Date(dataInicio)}
-                                        display="default"
-                                        onChange={onChangeDataInicio}
-                                    />
-                                )}
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataFim}>
-                            <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate} 
-                                    keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                                {showDataFim && (
-                                    <DateTimePicker
-                                        testID="dateTimePickerFim"
-                                        value={new Date(dataFim)}
-                                        display="default"
-                                        onChange={onChangeTextDataFim}
-                                    />
-                                )}
-                        </TouchableOpacity> 
-                    </View>
-                    <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaViagem}>
-                        <Text style={styles.botaoCriarTexto}>Salvar viagem</Text>
+                </Modal>
+                <Text style={styles.labelData}>Apelido da viagem</Text>
+                <TextInput placeholder={"Nome dado a viagem"} style={styles.input} keyboardType="default"
+                    onChangeText={(text) => { onChangeDescricao(text) }} value={descricao} />
+                <View style={styles.containerData}>
+                    <Text style={styles.labelData}>Data de Inicio</Text>
+                    <Text style={styles.labelData}>Data de Fim</Text>
+                </View>
+                <View style={styles.containerData}>
+                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataInicio}>
+                        <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                            keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                        {showDataInicio && (
+                            <DateTimePicker
+                                testID="dateTimePickerInicio"
+                                value={new Date(dataInicio)}
+                                display="default"
+                                onChange={onChangeDataInicio}
+                            />
+                        )}
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataFim}>
+                        <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                            keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                        {showDataFim && (
+                            <DateTimePicker
+                                testID="dateTimePickerFim"
+                                value={new Date(dataFim)}
+                                display="default"
+                                onChange={onChangeTextDataFim}
+                            />
+                        )}
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaViagem}>
+                    <Text style={styles.botaoCriarTexto}>Salvar viagem</Text>
+                </TouchableOpacity>
+            </View>
         </ScrollView>
-        
+
     );
 }
 
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     botaoCriar: {
         backgroundColor: '#3385FF',
         width: 180,
-        height: 80,
+        height: 50,
         padding: 10,
         borderRadius: 40,
         marginTop: '5%',
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     botaoCriarTexto: {
         textAlign: 'center',
         color: '#FFFFFF',
-        fontSize: 24
+        fontSize: 19
     },
     headerCardParticipante: {
         flexDirection: 'column',
@@ -335,44 +335,44 @@ const styles = StyleSheet.create({
         color: '#333333'
     },
     pickerComponente: {
-      marginTop: '3%',
-      width: '95%',
-      padding: 15,
-      fontSize: 16,
-      borderRadius: 41,
-      backgroundColor: '#EBEBEB',
-      color: '#333333'
+        marginTop: '3%',
+        width: '95%',
+        padding: 15,
+        fontSize: 16,
+        borderRadius: 41,
+        backgroundColor: '#EBEBEB',
+        color: '#333333'
     },
     loader: {
-      flexDirection: 'column',
-      alignContent: 'center',
-      justifyContent: 'center',
+        flexDirection: 'column',
+        alignContent: 'center',
+        justifyContent: 'center',
     },
     centeredView: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: 22
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
     },
     modalView: {
-      margin: 20,
-      backgroundColor: "white",
-      opacity: 0.9,
-      borderRadius: 20,
-      padding: '20%',
-      alignItems: "center",
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5
+        margin: 20,
+        backgroundColor: "white",
+        opacity: 0.9,
+        borderRadius: 20,
+        padding: '20%',
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     },
     textStyle: {
-      color: "black",
-      fontWeight: "bold",
-      textAlign: "center"
+        color: "black",
+        fontWeight: "bold",
+        textAlign: "center"
     }
 });

@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import BarraPesquisa from '../../components/barraPesquisa';
 import CardViagem from '../../components/cardViagem';
-import ScrollViewFlat from '../../components/scrollViewFlat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-const Tab = createMaterialBottomTabNavigator();
 
 interface Viagem {
   id: string,
@@ -24,55 +19,7 @@ export default function ListaEditarViagens() {
   const moment = require('moment');
   const navigation = useNavigation();
   const [viagens, setViagens] = useState<Viagem[]>([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  let viagensData = [
-    {
-      id: 'a6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
-      nome: "Fim de semana em Ubatuba",
-      dataInicio: "26/02/2021",
-      dataFim: "28/02/2021",
-      local: "Ubatuba - SP",
-      status: 1,
-      navigate: "MenuDetalhesViagemAgencia"
-    },
-    {
-      id: 'a6b86b273ff34fce19d6b804efaaaf5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
-      nome: "Fim de semana em Ubatuba",
-      dataInicio: "26/02/2021",
-      dataFim: "28/02/2021",
-      local: "Ubatuba - SP",
-      status: 2,
-      navigate: "MenuDetalhesViagemAgencia"
-    },
-    {
-      id: '4e07408562bedb8b60aaaace05c1decfe3ad16b72230967de01f640b7e4729b49fce',
-      nome: "Fim de semana em Ubatuba",
-      dataInicio: "26/02/2021",
-      dataFim: "28/02/2021",
-      local: "Ubatuba - SP",
-      status: 3,
-      navigate: "MenuDetalhesViagemAgencia"
-    },
-    {
-      id: '4e07408562bedb8b60ce05c1decfe3ad16b72230961fe01f640b7e4729baaa49fce',
-      nome: "Fim de semana em Ubatuba",
-      dataInicio: "26/02/2021",
-      dataFim: "28/02/2021",
-      local: "Ubatuba - SP",
-      status: 5,
-      navigate: "MenuDetalhesViagemAgencia"
-    },
-    {
-      id: '4e07428562bedb8b60ce05c1decfe3ad16b72230961fe01f640b7e4729baaa49fce',
-      nome: "Fim de semana em Ubatuba",
-      dataInicio: "26/02/2021",
-      dataFim: "28/02/2021",
-      local: "Ubatuba - SP",
-      status: 4,
-      navigate: "MenuDetalhesViagemAgencia"
-    }
-  ];
+  const [refreshing, setRefreshing] = useState(false);
 
   const getViagens = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
@@ -85,64 +32,60 @@ export default function ListaEditarViagens() {
     });
   }
 
-  useEffect(() => {
-    const request = async () => {
-      try {
-        const value = await AsyncStorage.getItem('AUTH');
-        if (value != null) {
-          token = JSON.parse(value)
-          const response = await getViagens();
-          const json = await response.json();
-          if (response.status == 200) {
-            setViagens(json);
-          }
+  const request = async () => {
+    try {
+      const value = await AsyncStorage.getItem('AUTH');
+      if (value != null) {
+        token = JSON.parse(value)
+        const response = await getViagens();
+        const json = await response.json();
+        if (response.status == 200) {
+          //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
+          setViagens(json.filter(function (e) {
+            return e.statusId = 2
+          }));
         }
       }
-      catch (e) {
-        alert(e)
-      }
     }
+    catch (e) {
+      alert(e)
+    }
+  }
+
+  useEffect(() => {
     request()
-  }, [refreshing]);
+  }, []);
 
 
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    setTimeout(()=>{
-
-    }, 2000)
-    setRefreshing(false);
+    request()
+    setRefreshing(false)
   }, [refreshing]);
 
   return (
-      <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <BarraPesquisa texto={'Pesquisar viagem...'} />
-      
-        <View style={{ alignItems: 'center' }}>
-          <TouchableOpacity style={styles.botaoMais} onPress={() => navigation.navigate('CriarViagem')}>
-            <Image source={require('../../imgs/plus-circle.png')} />
-          </TouchableOpacity>
-        </View>
-        
-          <FlatList
-            style={{ flexGrow: 1, flex: 1, flexDirection: 'column'}}
-            refreshControl={
-              <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefresh}
-              />
-            }
-            contentContainerStyle={{alignItems: 'center'}}
-            data={viagens}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <CardViagem nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')} 
-              dataFim={moment(item.dataFim).format('DD/MM/yyyy')} dono={item.dono} local={""} status={item.statusId} 
-              navigate={"MenuDetalhesViagemAgencia"} item={item} />
-            )}
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <BarraPesquisa texto={'Pesquisar viagem...'} viagens={viagens} callbackFunction={setViagens} />
+      <FlatList
+        style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
+        contentContainerStyle={{ alignItems: 'center' }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
           />
-      </View>
+        }
+        extraData={viagens}
+        data={viagens}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <CardViagem nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')}
+            dataFim={moment(item.dataFim).format('DD/MM/yyyy')} dono={item.dono} local={""} status={item.statusId}
+            navigate={"MenuDetalhesViagemAgencia"} item={item} />
+        )}
+      />
+    </View>
   );
 }
 

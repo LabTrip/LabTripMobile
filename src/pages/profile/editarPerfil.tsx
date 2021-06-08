@@ -3,7 +3,6 @@ import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, Tou
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import DatePicker from 'react-native-datepicker'
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import { usePermissions } from 'expo-permissions';
@@ -53,6 +52,34 @@ export default function EditarPerfil() {
 
     let token, userId;
 
+    const atualizaFoto = async (file) => {
+        const form = new FormData();
+        form.append('file', file);
+
+        const request = await fetch('https://labtrip-backend.herokuapp.com/usuarios/fotoperfil/' + idUsuario, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'x-access-token': tokenUsuario
+            },
+            body: form
+        });
+
+        return request;
+    }
+
+    /*request para ver foto de perfil*/
+    const buscaFoto = async () => {
+        return await fetch('https://labtrip-backend.herokuapp.com/usuarios/fotoperfil/' + userId, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'image/jpeg',
+                'x-access-token': token
+            }
+        });
+    }
 
 
     const getUsuario = async () => {
@@ -136,11 +163,25 @@ export default function EditarPerfil() {
                 console.log(userId)
                 const response = await getUsuario();
                 const json = await response.json();
+                const responseFoto = await buscaFoto();
+                const blob = await responseFoto.blob();
                 if (response.status == 200) {
                     onChangeTextNome(json.nome);
                     onChangeTextEmail(json.email);
                     setDate(new Date(json.dataNascimento));
                     onChangeTextTelefone(json.telefone);
+                }
+                if (responseFoto.status == 200) {
+                    console.log("tipo: " + blob.type + ", tamanho: " + blob.size);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = function () {
+                        var base64data = reader.result?.toString() || "";
+                        setImage(base64data)
+                    }
+                    console.log("o request retornou 200");
+                    /*var objectURL = URL.createObjectURL(blob);
+                    console.log(objectURL)*/
                 }
             }
             catch (e) {
@@ -205,29 +246,10 @@ export default function EditarPerfil() {
                 name: result.uri.split("/").pop(),
                 type: mime.getType(imageURI)
             };
-            
-            console.log(fileToUpload)
             atualizaFoto(fileToUpload);
 
         }
     };
-
-        const atualizaFoto = async (file) => {
-        const form = new FormData();
-        form.append('file', file);
-         
-        const request = await fetch('https://labtrip-backend.herokuapp.com/usuarios/fotoperfil/' + idUsuario, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'multipart/form-data',
-                'x-access-token': tokenUsuario
-            },
-            body: form
-        });
-
-        return request;
-    }
 
     return (
         <View style={styles.container}>
