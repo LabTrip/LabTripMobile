@@ -4,6 +4,7 @@ import BotaoMais from '../../components/botaoMais';
 import CardParticipante from '../../components/cardParticipante';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface Viagem {
     id: string,
@@ -17,35 +18,21 @@ interface Viagem {
     ]
   }
 
-export default function DetalhesParticipantes() {
+  interface Participante {
+    usuarioId: string,
+    nome: string,
+    viagemId: string,
+    permissaoViagemId: string,
+    descricao: string
+  }
+
+export default function DetalhesParticipantes({ route }) {
     const navigation = useNavigation();
-    let token;
-    const [refreshing, setRefreshing] = React.useState(false);
-
-
-    let participantesData = [
-        {
-            id: '1',
-            nome: "Ednaldo Pereira",
-            dono: true,
-            proprietario: true
-        },
-        {
-            id: '2',
-            nome: "Fabiana Andrade",
-            dono: false,
-            proprietario: true
-        },
-        {
-            id: '3',
-            nome: "Edson Fernandes",
-            dono: false,
-            proprietario: false
-        }
-    ];
-
-    let [listData, setListData] = React.useState(participantesData);
-    const [participantes, setParticipantes] = React.useState<Viagem[]>([]);
+    let Token;
+    const [token, setToken] = useState(Token);
+    const [refreshing, setRefreshing] = useState(false);
+    const [participantes, setParticipantes] = useState<Participante[]>([]);
+    const [viagem, setViagem] = useState(route.params.viagem);
     const [id, setId] = useState(4);
 
     let [addUser, setAddUser] = React.useState({
@@ -59,31 +46,59 @@ export default function DetalhesParticipantes() {
 
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
-        setListData(participantesData.concat(addUser));
+        setTimeout(()=>{
+
+        }, 2000)
         setRefreshing(false)
     }, [refreshing]);
 
     const getViagem = async () => {
+      let localToken = retornaToken();
         return await fetch('https://labtrip-backend.herokuapp.com/viagens/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            'x-access-token': token
+            'x-access-token': localToken
           }
         });
       }
+
+    const getParticipantesViagem = async () => {
+      let localToken = retornaToken();
+      
+      return await fetch('https://labtrip-backend.herokuapp.com/viagens/participantes/' + viagem.id, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': localToken
+        }
+      });
+    }
+
+    const retornaToken = () => {
+      let localToken;
+      if(Token){
+        localToken = Token;
+      }
+      else{
+        localToken = token;
+      }
+
+      return localToken;
+    }
     
       useEffect(() => {
         const request = async () => {
           try {
             const value = await AsyncStorage.getItem('AUTH');
             if (value != null) {
-              token = JSON.parse(value)
-              const response = await getViagem();
+              Token = JSON.parse(value)
+              const response = await getParticipantesViagem();
               const json = await response.json();
               if (response.status == 200) {
-                setParticipantes(json);
+                setParticipantes(json.participantes);
               }
             }
           }
@@ -92,32 +107,36 @@ export default function DetalhesParticipantes() {
           }
         }
         request()
-      }, []);
+      }, [refreshing]);
 
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
             <BotaoMais onPress={() => {
                navigation.navigate('ConvidarParticipantes');
             }} />
             <FlatList
                 contentContainerStyle={{ alignItems: 'center' }}
-                data={listData}
-
-                keyExtractor={(item) => item.id}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                data={participantes}
+                refreshControl={
+                  <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                  />
+                }
+                keyExtractor={(item) => item.usuarioId}
                 renderItem={({ item }) => {
-                    const backgroundColor = item.proprietario === true ? "#CCEEFF" : "#787878";
+                    const backgroundColor = item.usuarioId === viagem.usuarioDonoId ? "#CCEEFF" : "#787878";
+                    const dono = item.usuarioId === viagem.usuarioDonoId;
                     return (
-                        <CardParticipante nome={item.nome} dono={item.dono} proprietario={item.proprietario}
-                            style={{ backgroundColor }}
+                        <CardParticipante nome={item.nome} dono={dono} proprietario={true}
+                            style={{ backgroundColor: "#CCEEFF" }}
                         />
                     )
                 }
                 }
-
-
             />
-        </View>
+        
+      </View>
     );
 }
 

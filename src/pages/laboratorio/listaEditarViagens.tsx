@@ -96,7 +96,6 @@ export default function ListaEditarViagens() {
           if (response.status == 200) {
             setViagens(json);
           }
-          console.log(viagens)
         }
       }
       catch (e) {
@@ -110,18 +109,14 @@ export default function ListaEditarViagens() {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    setRefreshing(false)
+    setTimeout(()=>{
+
+    }, 2000)
+    setRefreshing(false);
   }, [refreshing]);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}
-      refreshControl={
-        <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-        />
-      }
-    >
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <BarraPesquisa texto={'Pesquisar viagem...'} />
       
         <View style={{ alignItems: 'center' }}>
@@ -132,6 +127,12 @@ export default function ListaEditarViagens() {
         
           <FlatList
             style={{ flexGrow: 1, flex: 1, flexDirection: 'column'}}
+            refreshControl={
+              <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+              />
+            }
             contentContainerStyle={{alignItems: 'center'}}
             data={viagens}
             keyExtractor={(item) => item.id}
@@ -141,8 +142,7 @@ export default function ListaEditarViagens() {
               navigate={"MenuDetalhesViagemAgencia"} item={item} />
             )}
           />
-      
-    </ScrollView >
+      </View>
   );
 }
 

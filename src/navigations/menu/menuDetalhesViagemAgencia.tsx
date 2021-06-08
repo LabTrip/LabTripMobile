@@ -20,9 +20,9 @@ export default function MenuDetalhesViagemAgencia({ route }) {
             tabStyle: { flexWrap: 'nowrap' }
         }}>
             <Tab.Screen name="Viagem" initialParams={route.params} component={EditarViagem} />
-            <Tab.Screen name="Roteiro" component={ListaPropostaDeRoteiro} />
-            <Tab.Screen name="Orçamento" component={DetalhesOrcamento} />
-            <Tab.Screen name="Participantes" component={DetalhesParticipantes} />
+            <Tab.Screen name="Roteiro" initialParams={route.params} component={ListaPropostaDeRoteiro} />
+            <Tab.Screen name="Orçamento" initialParams={route.params} component={DetalhesOrcamento} />
+            <Tab.Screen name="Participantes" initialParams={route.params} component={DetalhesParticipantes} />
         </Tab.Navigator>
     );
 }

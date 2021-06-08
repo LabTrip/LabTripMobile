@@ -5,6 +5,21 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function CardParticipante(props) {
     let icon, color;
     const [isEnabled, setIsEnabled] = useState(props.proprietario);
+    const [permissoes, setPermissoes] = useState([
+        {
+            "id": 1,
+            "descricao": "Proprietário"
+        },
+        {
+            "id": 2,
+            "descricao": "Membro"
+        },
+        {
+            "id": 3,
+            "descricao": "Agente"
+        }
+    ]);
+
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     if (props.dono == true) {
         icon = 'crown';
