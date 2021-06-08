@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, Image, View, Switch, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 
 export default function CardParticipante(props) {
     let icon, color;
     const [isEnabled, setIsEnabled] = useState(props.proprietario);
+    const [selectedValue, setSelectedValue] = useState(props.permissaoViagemId);
     const [permissoes, setPermissoes] = useState([
         {
             "id": 1,
@@ -17,6 +19,10 @@ export default function CardParticipante(props) {
         {
             "id": 3,
             "descricao": "Agente"
+        },
+        {
+            "id": 4,
+            "descricao": "Gerente de agencia"
         }
     ]);
 
@@ -37,12 +43,24 @@ export default function CardParticipante(props) {
             
                 </Text>
                 <View style={styles.containerProprietarioSwitch}>
-                    <Switch trackColor={{ false: "#767577", true: "#ff809b" }}
-                        thumbColor={isEnabled ? "#db0a38" : "#f4f3f4"}
-                        onValueChange={toggleSwitch}
-                        value={isEnabled}
-                    />
-                    <Text style={styles.textoParticipante}>Proprietário</Text>
+                <Text style={styles.label}>Tipo de usuário:</Text>
+                    <Picker style={styles.pickerComponente}
+                        prompt="Tipo de usuário"
+                        mode="dropdown"
+
+                        selectedValue={selectedValue}
+                        onValueChange={(itemValue, value) => {
+                        setSelectedValue(itemValue)
+                        }}>
+                        {
+                        permissoes.map(p => {
+                            return (
+                            <Picker.Item key={p.id} label={p.descricao} value={p.id} />
+                            )
+                        })
+                        }
+
+                    </Picker>
                 </View>
             </View>
 
@@ -59,20 +77,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
         padding: '3%',
-        width: '95%',
+        width: '90%',
         borderStyle: 'solid',
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 26,
         marginTop: '3%',
         marginBottom: '3%',
+        marginHorizontal: '5%'
     },
     containerProprietarioSwitch: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-around',
+        width: '90%'
     },
-
     textoParticipante: {
         color: 'black',
         fontSize: 18,
@@ -84,7 +103,7 @@ const styles = StyleSheet.create({
 
     xis: {
         color: 'red',
-        fontSize: 22,
+        fontSize: 20,
     },
     fotoPerfil: {
         borderRadius: 50,
@@ -95,5 +114,19 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-around',
         alignItems: 'center',
+        width: "50%"
+    },
+    pickerComponente: {
+      alignSelf: 'center',
+      width: '100%',
+      fontSize: 10,
+      backgroundColor: '#F5F5F5',
+      color: '#333333'
+    },
+    label: {
+      textAlign: 'center',
+      fontSize: 10,
+      color: '#999999',
+      width: '100%'
     }
 });
