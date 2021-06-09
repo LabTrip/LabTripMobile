@@ -53,7 +53,29 @@ export default function ListaEditarViagens() {
   }
 
   useEffect(() => {
-    request()
+    const req = async () => {
+      try {
+        const value = await AsyncStorage.getItem('AUTH');
+        if (value != null) {
+          token = JSON.parse(value)
+          const response = await getViagens();
+          const json = await response.json();
+          setTimeout(() => {
+
+          }, 2000)
+          if (response.status == 200) {
+            //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
+            setViagens(json.filter(function (e) {
+              return e.statusId = 2
+            }));
+          }
+        }
+      }
+      catch (e) {
+        alert(e)
+      }
+    }
+    req()
   }, []);
 
 
