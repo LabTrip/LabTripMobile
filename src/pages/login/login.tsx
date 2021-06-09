@@ -73,15 +73,9 @@ export default function Login() {
           if (response.status == 200) {
             const responseUser = await getUsuario(JSON.parse(value), JSON.parse(user));
             const json = await responseUser.json();
-            if (json.perfilId == 4) {
-              navigation.dispatch(
-                StackActions.replace('MenuPrincipalCliente')
-              )
-            } else {
               navigation.dispatch(
                 StackActions.replace('MenuPrincipal')
               )
-            }
           }
         }
         else {
@@ -139,15 +133,9 @@ export default function Login() {
             if (response.status == 200) {
               storeData(json.token, "AUTH");
               storeData(json.id, "USER_ID");
-              if (json.perfilId == 4) {
-                navigation.dispatch(
-                  StackActions.replace('MenuPrincipalCliente')
-                )
-              } else {
                 navigation.dispatch(
                   StackActions.replace('MenuPrincipal')
                 )
-              }
               setShowLoader(false)
             }
             else {

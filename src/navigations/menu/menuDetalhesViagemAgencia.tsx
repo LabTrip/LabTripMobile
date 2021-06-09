@@ -21,7 +21,7 @@ export default function MenuDetalhesViagemAgencia({ route }) {
         }}>
             <Tab.Screen name="Viagem" initialParams={route.params} component={EditarViagem} />
             <Tab.Screen name="Roteiro" initialParams={route.params} component={ListaPropostaDeRoteiro} />
-            <Tab.Screen name="Orçamento" initialParams={route.params} component={DetalhesOrcamento} />
+            <Tab.Screen name="Orçamento" initialParams={route.params} component={MenuOrcamento} />
             <Tab.Screen name="Participantes" initialParams={route.params} component={DetalhesParticipantes} />
         </Tab.Navigator>
     );

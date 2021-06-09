@@ -41,7 +41,7 @@ export default function ConvidarParticipantes({route}) {
     const getPermissoesViagem = async () => {
         let localToken = await retornaToken() || '';
         
-        const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/permissoes-viagem', {
+        const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/permissoes-viagem/'+viagem.id, {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -151,7 +151,7 @@ export default function ConvidarParticipantes({route}) {
             </Modal>
             <Text style={styles.texto}>Digite o email do participante que deseja inserir na viagem.</Text>
             <TextInput placeholder='Email do convidado' autoCapitalize={'none'}
-            autoCompleteType={'email'} style={styles.input} onChangeText={(text) => {setEmail(text)}} />
+            autoCompleteType={'email'} style={styles.input} onChangeText={(text) => {setEmail(text.trim())}} value={email} />
             <Text style={styles.label}>Permissao do usuário:</Text>
                     <Picker style={styles.pickerComponente}
                         itemStyle={styles.pickerComponente}

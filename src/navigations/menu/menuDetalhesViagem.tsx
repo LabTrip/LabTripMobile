@@ -10,9 +10,9 @@ export default function MenuDetalhesViagem({ route }) {
   const viagem = route.params.viagem;
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Roteiro" initialParams={viagem} component={DetalhesRoteiro} />
-      <Tab.Screen name="Orçamento" initialParams={viagem} component={MenuOrcamento} />
-      <Tab.Screen name="Participantes" initialParams={viagem} component={DetalhesParticipantes} />
+      <Tab.Screen name="Roteiro" initialParams={route.params} component={DetalhesRoteiro} />
+      <Tab.Screen name="Orçamento" initialParams={route.params} component={MenuOrcamento} />
+      <Tab.Screen name="Participantes" initialParams={route.params} component={DetalhesParticipantes} />
     </Tab.Navigator>
   );
 }

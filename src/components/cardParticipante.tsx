@@ -13,12 +13,16 @@ export default function CardParticipante(props) {
     let icon, color;
     const [isEnabled, setIsEnabled] = useState(props.proprietario);
     const [selectedValue, setSelectedValue] = useState(props.permissaoViagemId);
+    const [permissoesGerais, setPermissoesGerais] = useState<Permissoes[]>([]);
     const [permissoes, setPermissoes] = useState<Permissoes[]>([]);
+    const [editar, setEditar] = useState(false);
 
     useEffect(() => {
         const request = async () => {
           try {
             const response = await getPermissoesViagem();
+            const responseGeral = await getPermissoesViagemGeral();
+            permitirEdicaoUsuario(response);
           }
           catch (e) {
             console.log(e)
@@ -28,6 +32,27 @@ export default function CardParticipante(props) {
     }, []);
 
     const getPermissoesViagem = async () => {
+        let localToken = await retornaToken() || '';
+        
+        const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/permissoes-viagem/'+props.item.viagemId, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': localToken
+          }
+        });
+  
+        const json = await response.json();
+        if (response.status == 200) {
+            setPermissoes([]);
+          setPermissoes(json.permissoes);
+        }
+
+        return json.permissoes;
+      }
+
+      const getPermissoesViagemGeral = async () => {
         let localToken = await retornaToken() || '';
         
         const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/permissoes-viagem', {
@@ -42,8 +67,10 @@ export default function CardParticipante(props) {
         const json = await response.json();
         if (response.status == 200) {
             setPermissoes([]);
-          setPermissoes(json.permissoes);
+          setPermissoesGerais(json.permissoes);
         }
+
+        return json.permissoes;
       }
 
       const retornaToken = async () => {
@@ -54,6 +81,19 @@ export default function CardParticipante(props) {
   
         return localToken;
       }
+
+    const permitirEdicaoUsuario = (permissoes) => {
+      let editar = false;
+      permissoes.map((p) => {
+        if(p.id == props.item.permissaoViagemId){ 
+          editar = true;
+          console.log('Permissao obtida: ' + p.id)
+          console.log('Permissao do usuario: ' + props.permissaoViagemId)
+        }
+      })
+      console.log("editar: " + editar)
+      setEditar(editar);
+    }
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     if (props.dono == true) {
@@ -73,11 +113,12 @@ export default function CardParticipante(props) {
                 </Text>
                 <View style={styles.containerProprietarioSwitch}>
                 <Text style={styles.label}>Permissao do usuário:</Text>
-                    <Picker style={styles.pickerComponente}
+                {
+                  editar == true
+                  ? (<Picker style={styles.pickerComponente}
                         itemStyle={styles.pickerComponente}
                         prompt="Tipo de usuário"
                         mode="dropdown"
-
                         selectedValue={selectedValue}
                         onValueChange={(itemValue, value) => {
                             setSelectedValue(itemValue)
@@ -85,14 +126,36 @@ export default function CardParticipante(props) {
                             props.alteraParticipante(props.item)
                         }}>
                         {
+                          
                         permissoes.map(p => {
+                          console.log(permissoes)
                             return (
                             <Picker.Item  key={p.id} label={p.descricao} value={p.id} />
                             )
                         })
                         }
-
-                    </Picker>
+                    </Picker>)
+                  : (<Picker style={styles.pickerComponente}
+                        itemStyle={styles.pickerComponente}
+                        prompt="Tipo de usuário"
+                        enabled={editar}
+                        mode="dropdown"
+                        selectedValue={selectedValue}
+                        onValueChange={(itemValue, value) => {
+                            setSelectedValue(itemValue)
+                            props.item.permissaoViagemId = itemValue;
+                            props.alteraParticipante(props.item)
+                        }}>
+                        {
+                        permissoesGerais.map(p => {
+                            return (
+                            <Picker.Item  key={p.id} label={p.descricao} value={p.id} />
+                            )
+                        })
+                        }
+                    </Picker>)
+                }
+                  
                 </View>
             </View>
 
@@ -100,7 +163,8 @@ export default function CardParticipante(props) {
                 if(icon == 'close-thick'){
                     props.removeParticipante(props.item);
                 }
-            }} >
+                
+            }} disabled={!props.editar}>
             <MaterialCommunityIcons name={icon} color={color} size={30} />
             </TouchableOpacity>
         </View>

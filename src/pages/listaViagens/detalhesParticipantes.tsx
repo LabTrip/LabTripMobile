@@ -12,6 +12,7 @@ interface Viagem {
     dataInicio: Date,
     dataFim: Date,
     statusId: number,
+    alterar: Boolean,
     participantes : [
         usuarioId: string,
         permissaoViagemId: string
@@ -230,6 +231,7 @@ export default function DetalhesParticipantes({ route }) {
                     return (
                         <CardParticipante nome={item.nome} dono={dono} permissaoViagemId={item.permissaoViagemId} proprietario={true}
                             style={{ backgroundColor: "#CCEEFF" }} item={item} alteraParticipante={alteraParticipante} removeParticipante={removerParticipante}
+                            editar={viagem.alterar}
                         />
                     )
                 }
