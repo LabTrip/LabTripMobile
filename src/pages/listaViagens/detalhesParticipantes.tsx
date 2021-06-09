@@ -28,8 +28,6 @@ interface Viagem {
 
 export default function DetalhesParticipantes({ route }) {
     const navigation = useNavigation();
-    let Token;
-    const [token, setToken] = useState('');
     const [refreshing, setRefreshing] = useState(false);
     const [participantes, setParticipantes] = useState<Participante[]>([]);
     const [viagem, setViagem] = useState(route.params.viagem);
@@ -55,7 +53,7 @@ export default function DetalhesParticipantes({ route }) {
     }, [refreshing]);
 
     const getViagem = async () => {
-      let localToken = retornaToken();
+      let localToken = await retornaToken() || '';
         return await fetch('https://labtrip-backend.herokuapp.com/viagens/', {
           method: 'GET',
           headers: {
@@ -67,7 +65,7 @@ export default function DetalhesParticipantes({ route }) {
       }
 
     const getParticipantesViagem = async () => {
-      let localToken = retornaToken();
+      let localToken = await retornaToken() || '';
       
       const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/participantes/' + viagem.id, {
         method: 'GET',
@@ -80,19 +78,38 @@ export default function DetalhesParticipantes({ route }) {
 
       const json = await response.json();
       if (response.status == 200) {
+        setParticipantes([]);
         setParticipantes(json.participantes);
       }
     }
 
-    const retornaToken = () => {
-      let localToken;
-      //console.log(token)
-      //console.log(Token)
-      if(Token){
-        localToken = Token;
+    const deleteParticipantesViagem = async (participante) => {
+      let localToken = await retornaToken() || '';
+      
+      const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/participantes/' + viagem.id, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': localToken
+        },
+        body: JSON.stringify({participantes: participante})
+      });
+
+      const json = await response.json();
+      if (response.status == 204) {
+        alert('Participante removido com sucesso!');
+        const response = await getParticipantesViagem();
       }
-      else if(token){
-        localToken = token;
+      else{
+        alert('Erro ao remover participante.');
+      }
+    }
+
+    const retornaToken = async () => {
+      let localToken = await AsyncStorage.getItem('AUTH');
+      if (localToken != null) {
+        localToken = JSON.parse(localToken)
       }
 
       return localToken;
@@ -101,12 +118,7 @@ export default function DetalhesParticipantes({ route }) {
       useEffect(() => {
         const request = async () => {
           try {
-            const value = await AsyncStorage.getItem('AUTH');
-            if (value != null) {
-              Token = JSON.parse(value)
-              const response = await getParticipantesViagem();
-            }
-            console.log(Token)
+            const response = await getParticipantesViagem();
           }
           catch (e) {
             console.log(e)
@@ -117,8 +129,9 @@ export default function DetalhesParticipantes({ route }) {
 
       const onClickSalvaParticipantes = async () => {
         try {
-            let localToken = retornaToken();
-            console.log(localToken)
+          let localToken = await retornaToken() || '';
+            console.log('participantes: ')
+            console.log(participantes)
             setShowLoader(true);
             const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/participantes/' + viagem.id, {
                 method: 'PUT',
@@ -127,7 +140,7 @@ export default function DetalhesParticipantes({ route }) {
                     'Content-Type': 'application/json',
                     'x-access-token': localToken
                 },
-                body: JSON.stringify(participantes)
+                body: JSON.stringify({participantes: participantes})
             });
             let json = await response.json();
             if (response.status >= 200 && response.status <= 299) {
@@ -142,6 +155,41 @@ export default function DetalhesParticipantes({ route }) {
         finally {
             setShowLoader(false);
         }
+    }
+
+    const alteraParticipante = async (item) =>{
+      let participantesAux = participantes;
+      participantes.map((p, index) => {
+        if(p.usuarioId == item.usuarioId){
+          participantesAux[index] = item
+        }
+      });
+
+      setParticipantes([]);
+      setParticipantes(participantesAux);
+    }
+
+    const removerParticipante = async (item) =>{
+      Alert.alert(
+          'Remover participante',
+          'Deseja mesmo remover o participante?',
+          [
+              {
+                  text: 'sim',
+                  onPress: async () => {
+                    let participantesRemovidos = [item];
+                    const response = await deleteParticipantesViagem(participantesRemovidos);
+                  }
+              },
+              {
+                  text: 'não',
+                  onPress: () => {
+
+                  }
+              }
+          ]
+      )
+      
     }
 
     return (
@@ -164,7 +212,7 @@ export default function DetalhesParticipantes({ route }) {
           </View>
         </Modal>
             <BotaoMais onPress={() => {
-               navigation.navigate('ConvidarParticipantes');
+               navigation.navigate('ConvidarParticipantes', {viagem});
             }} />
             <FlatList
                 contentContainerStyle={{ alignItems: 'center' }}
@@ -176,12 +224,12 @@ export default function DetalhesParticipantes({ route }) {
                   />
                 }
                 keyExtractor={(item) => item.usuarioId}
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                     const backgroundColor = item.usuarioId === viagem.usuarioDonoId ? "#CCEEFF" : "#787878";
                     const dono = item.usuarioId === viagem.usuarioDonoId;
                     return (
                         <CardParticipante nome={item.nome} dono={dono} permissaoViagemId={item.permissaoViagemId} proprietario={true}
-                            style={{ backgroundColor: "#CCEEFF" }}
+                            style={{ backgroundColor: "#CCEEFF" }} item={item} alteraParticipante={alteraParticipante} removeParticipante={removerParticipante}
                         />
                     )
                 }

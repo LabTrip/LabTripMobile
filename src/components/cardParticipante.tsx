@@ -1,30 +1,59 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, Image, View, Switch, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface Permissoes{
+    id: string,
+    descricao: string
+}
 
 export default function CardParticipante(props) {
     let icon, color;
     const [isEnabled, setIsEnabled] = useState(props.proprietario);
     const [selectedValue, setSelectedValue] = useState(props.permissaoViagemId);
-    const [permissoes, setPermissoes] = useState([
-        {
-            "id": 1,
-            "descricao": "Proprietário"
-        },
-        {
-            "id": 2,
-            "descricao": "Membro"
-        },
-        {
-            "id": 3,
-            "descricao": "Agente"
-        },
-        {
-            "id": 4,
-            "descricao": "Gerente de agencia"
+    const [permissoes, setPermissoes] = useState<Permissoes[]>([]);
+
+    useEffect(() => {
+        const request = async () => {
+          try {
+            const response = await getPermissoesViagem();
+          }
+          catch (e) {
+            console.log(e)
+          }
         }
-    ]);
+        request()
+    }, []);
+
+    const getPermissoesViagem = async () => {
+        let localToken = await retornaToken() || '';
+        
+        const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/permissoes-viagem', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': localToken
+          }
+        });
+  
+        const json = await response.json();
+        if (response.status == 200) {
+            setPermissoes([]);
+          setPermissoes(json.permissoes);
+        }
+      }
+
+      const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+          localToken = JSON.parse(localToken)
+        }
+  
+        return localToken;
+      }
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     if (props.dono == true) {
@@ -43,19 +72,22 @@ export default function CardParticipante(props) {
             
                 </Text>
                 <View style={styles.containerProprietarioSwitch}>
-                <Text style={styles.label}>Tipo de usuário:</Text>
+                <Text style={styles.label}>Permissao do usuário:</Text>
                     <Picker style={styles.pickerComponente}
+                        itemStyle={styles.pickerComponente}
                         prompt="Tipo de usuário"
                         mode="dropdown"
 
                         selectedValue={selectedValue}
                         onValueChange={(itemValue, value) => {
-                        setSelectedValue(itemValue)
+                            setSelectedValue(itemValue)
+                            props.item.permissaoViagemId = itemValue;
+                            props.alteraParticipante(props.item)
                         }}>
                         {
                         permissoes.map(p => {
                             return (
-                            <Picker.Item key={p.id} label={p.descricao} value={p.id} />
+                            <Picker.Item  key={p.id} label={p.descricao} value={p.id} />
                             )
                         })
                         }
@@ -64,7 +96,11 @@ export default function CardParticipante(props) {
                 </View>
             </View>
 
-            <TouchableOpacity onPress={props.onPress}>
+            <TouchableOpacity onPress={() => {
+                if(icon == 'close-thick'){
+                    props.removeParticipante(props.item);
+                }
+            }} >
             <MaterialCommunityIcons name={icon} color={color} size={30} />
             </TouchableOpacity>
         </View>
