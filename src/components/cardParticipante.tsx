@@ -66,7 +66,7 @@ export default function CardParticipante(props) {
   
         const json = await response.json();
         if (response.status == 200) {
-            setPermissoes([]);
+          setPermissoesGerais([]);
           setPermissoesGerais(json.permissoes);
         }
 
