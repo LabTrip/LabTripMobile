@@ -10,8 +10,9 @@ interface Viagem {
     dataInicio: Date,
     dataFim: Date,
     statusId: number,
-    dono: string
-  }
+    dono: string,
+    usuarioDonoId: number
+}
 
 export default function CardViagem(props) {
 
@@ -53,7 +54,7 @@ export default function CardViagem(props) {
     return (
         <TouchableOpacity style={[styles.cardViagens,
         { backgroundColor: corDoCard, borderLeftColor: corBordaDoCard }]}
-            onPress={() => navigation.navigate(props.navigate, { viagem: props.item })}>
+            onPress={() => navigation.navigate(props.navigate, { viagem: props.viagem })}>
             <Text>{props.nome}</Text>
             <Text>
                 <Text style={styles.label}>Início:</Text> {props.dataInicio}

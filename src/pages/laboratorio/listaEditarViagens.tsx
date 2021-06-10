@@ -19,6 +19,8 @@ export default function ListaEditarViagens() {
   const moment = require('moment');
   const navigation = useNavigation();
   const [viagens, setViagens] = useState<Viagem[]>([]);
+  //array auxiliar para guardar em cache a lista de viagens
+  const [auxViagens, setAuxViagens] = useState<Viagem[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const getViagens = async () => {
@@ -39,11 +41,14 @@ export default function ListaEditarViagens() {
         token = JSON.parse(value)
         const response = await getViagens();
         const json = await response.json();
+        console.log(json)
+        setTimeout(() => { }, 2000)
         if (response.status == 200) {
           //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
           setViagens(json.filter(function (e) {
-            return e.statusId = 2
+            return e.statusId == 1
           }));
+          setAuxViagens(viagens)
         }
       }
     }
@@ -53,29 +58,7 @@ export default function ListaEditarViagens() {
   }
 
   useEffect(() => {
-    const req = async () => {
-      try {
-        const value = await AsyncStorage.getItem('AUTH');
-        if (value != null) {
-          token = JSON.parse(value)
-          const response = await getViagens();
-          const json = await response.json();
-          setTimeout(() => {
-
-          }, 2000)
-          if (response.status == 200) {
-            //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
-            setViagens(json.filter(function (e) {
-              return e.statusId = 2
-            }));
-          }
-        }
-      }
-      catch (e) {
-        alert(e)
-      }
-    }
-    req()
+    request()
   }, []);
 
 
@@ -88,7 +71,7 @@ export default function ListaEditarViagens() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <BarraPesquisa texto={'Pesquisar viagem...'} viagens={viagens} callbackFunction={setViagens} />
+      <BarraPesquisa texto={'Pesquisar viagem...'} auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}
@@ -104,7 +87,7 @@ export default function ListaEditarViagens() {
         renderItem={({ item }) => (
           <CardViagem nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')}
             dataFim={moment(item.dataFim).format('DD/MM/yyyy')} dono={item.dono} local={""} status={item.statusId}
-            navigate={"MenuDetalhesViagemAgencia"} item={item} />
+            navigate={"MenuDetalhesViagemAgencia"} viagem={item} />
         )}
       />
     </View>

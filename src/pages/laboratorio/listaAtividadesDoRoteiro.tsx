@@ -70,14 +70,17 @@ export default function ListaAtividadesDoRoteiro() {
         }
     ];
 
-    useEffect(() => {
-        setAtividades(listaAtividade)
-    }, []);
-
-
     let datas = new Array();
+    //criando lista com as datas de todas atividades
     listaAtividade.forEach((a) => datas.push(a.data))
+    //removendo valores repetidos da lista
     var filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
+
+    useEffect(() => {
+        setSelectedValue(filtroDatas[0]);
+        setAtividades(listaAtividade.filter(a => a.data == filtroDatas[0]));
+    }, [refreshing]);
+
 
 
 
@@ -90,21 +93,18 @@ export default function ListaAtividadesDoRoteiro() {
 
     return (
         <View style={styles.conteudo}>
-            <BotaoMais onPress={() => navigation.navigate('CriarRoteiro')} />
             <View style={styles.containerTop}>
                 <Picker style={styles.pickerComponente}
                     prompt="Tipo de usuário"
                     mode="dropdown"
-
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, value) => {
                         setSelectedValue(itemValue);
-                        console.log(atividades.filter(a => a.data == itemValue))
                         setAtividades(listaAtividade.filter(a => a.data == itemValue));
                     }}>
                     {
                         filtroDatas?.map((a) => {
-                            return <Picker.Item label={a} value={a} />
+                            return <Picker.Item key={a} label={a} value={a} />
                         })
                     }
                 </Picker>

@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CardViagem from './cardViagem';
 
 export default function CardAtividade(props) {
     const navigation = useNavigation();
@@ -26,9 +27,7 @@ export default function CardAtividade(props) {
     let corBotaoCancelar = '#FF2424';
     let disabled = false;
 
-
     getUserId();
-
 
     //muda cor e desativa botões se o usuário não for o dono da viagem.
     if (props.viagem.usuarioDonoId != idUsuario) {
@@ -36,7 +35,6 @@ export default function CardAtividade(props) {
         corBotaoCancelar = '#d3d3d3';
         disabled = true;
     }
-
 
     return (
         <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.item, data: props.data })}>
