@@ -87,11 +87,8 @@ export default function CardParticipante(props) {
       permissoes.map((p) => {
         if(p.id == props.item.permissaoViagemId){ 
           editar = true;
-          console.log('Permissao obtida: ' + p.id)
-          console.log('Permissao do usuario: ' + props.permissaoViagemId)
         }
       })
-      console.log("editar: " + editar)
       setEditar(editar);
     }
 
@@ -128,7 +125,6 @@ export default function CardParticipante(props) {
                         {
                           
                         permissoes.map(p => {
-                          console.log(permissoes)
                             return (
                             <Picker.Item  key={p.id} label={p.descricao} value={p.id} />
                             )
