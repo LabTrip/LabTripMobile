@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, Image, View, Switch, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
+import { black } from 'react-native-paper/lib/typescript/styles/colors';
 
 interface Permissoes{
     id: string,
@@ -113,7 +114,6 @@ export default function CardParticipante(props) {
                 {
                   editar == true
                   ? (<Picker style={styles.pickerComponente}
-                        itemStyle={styles.pickerComponente}
                         prompt="Tipo de usuário"
                         mode="dropdown"
                         selectedValue={selectedValue}
@@ -126,13 +126,12 @@ export default function CardParticipante(props) {
                           
                         permissoes.map(p => {
                             return (
-                            <Picker.Item  key={p.id} label={p.descricao} value={p.id} />
+                            <Picker.Item  key={p.id} label={p.descricao} value={p.id} color={'#000000'}/>
                             )
                         })
                         }
                     </Picker>)
                   : (<Picker style={styles.pickerComponente}
-                        itemStyle={styles.pickerComponente}
                         prompt="Tipo de usuário"
                         enabled={editar}
                         mode="dropdown"
@@ -145,7 +144,7 @@ export default function CardParticipante(props) {
                         {
                         permissoesGerais.map(p => {
                             return (
-                            <Picker.Item  key={p.id} label={p.descricao} value={p.id} />
+                            <Picker.Item  key={p.id} label={p.descricao} value={p.id} color={'#000000'}/>
                             )
                         })
                         }
@@ -216,7 +215,8 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       width: '100%',
       fontSize: 10,
-      backgroundColor: '#F5F5F5',
+      borderStyle: 'solid',
+      borderColor: 'black',
       color: '#333333'
     },
     label: {

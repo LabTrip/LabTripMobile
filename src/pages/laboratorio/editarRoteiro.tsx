@@ -1,19 +1,138 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import normalize from '../../components/fontSizeResponsive';
 import DatePicker from 'react-native-datepicker'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { stringify } from 'uuid';
 
 const moment = require('moment');
+
+interface Roteiro {
+    id: number,
+    viagemId: string,
+    descricaoRoteiro: string,
+    statusId: number,
+    versao: number
+
+}
 
 
 export default function EditarRoteiro({ route }) {
     const navigation = useNavigation();
-    const [apelido, onChangeApelido] = useState(route.params?.roteiro.descricaoRoteiro || "");
-    const [selectedValue, setSelectedValue] = useState(route.params?.roteiro.statusId);
+    const [roteiro, setRoteiro] = useState(route.params.roteiro);
+    const [apelido, onChangeApelido] = useState(route.params.roteiro.descricaoRoteiro);
+    const [selectedValue, setSelectedValue] = useState(route.params.roteiro.statusId);
 
     let comboBox;
+
+
+    useEffect(() => {
+        buscaRoteiro();
+    }, [])
+
+    const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+          localToken = JSON.parse(localToken)
+        }
+        return localToken;
+    }
+
+    const buscaRoteiro = async () => {
+        let localToken = await retornaToken() || '';
+      
+      const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': localToken
+        }
+      });
+
+      const json = await response.json();
+      if (response.status == 200) {
+        setRoteiro(json);
+        onChangeApelido(json.descricaoRoteiro);
+        setSelectedValue(json.statusId)
+      }
+
+    }
+
+    const salvaRoteiro = async () => {
+      let localToken = await retornaToken() || '';
+      
+      const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': localToken
+        },
+        body: JSON.stringify({
+            id: roteiro.id,
+            viagemId: roteiro.viagemId,
+            descricaoRoteiro: apelido,
+            statusId: selectedValue,
+            versao: roteiro.versao
+        })
+      });
+
+      if (response.status == 200) {
+          alert("Roteiro alterado com sucesso!")
+          navigation.goBack();
+      }
+      else{
+        alert("Erro ao alterar roteiro.")
+      }
+    }
+
+    const versionaRoteiro = async () => {
+        let localToken = await retornaToken() || '';
+        
+        const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/versionar/' + roteiro.id + '/' + roteiro.versao, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': localToken
+          }
+        });
+        
+        console.log('https://labtrip-backend.herokuapp.com/roteiros/versionar/' + roteiro.id + '/' + roteiro.versao)
+
+        const json = await response.json()
+        if (response.status == 201) {
+            alert("Roteiro versionado com sucesso!")
+            navigation.goBack();
+        }
+        else{
+          alert("Erro ao versionar roteiro: " + json.mensagem)
+        }
+      }
+
+      const deletaRoteiro = async () => {
+        let localToken = await retornaToken() || '';
+        
+        const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': localToken
+          }
+        });
+  
+        if (response.status >= 200 && response.status <= 299) {
+            alert("Roteiro deletado com sucesso!")
+            navigation.goBack();
+        }
+        else{
+          alert("Erro ao deletar roteiro.")
+        }
+      }
 
     //Adiciona combobox para status do roteiro se o usuário clicar para editar roteiro.
     if (route.name == 'Roteiro') {
@@ -38,12 +157,34 @@ export default function EditarRoteiro({ route }) {
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
             </View>
             <TextInput placeholder={"Apelido do roteiro"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
-            {comboBox}
+            <Picker
+                prompt="Status do roteiro"
+                mode="dropdown"
+                selectedValue={selectedValue}
+                style={{ height: 50, width: '50%' }}
+                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+            >
+                <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
+                <Picker.Item label="Aprovado" value={6} color="#0FD06F" />
+                <Picker.Item label="Reprovado" value={7} color="#D12323" />
+            </Picker>
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
-                alert(apelido)
-                navigation.goBack();
+                
+                salvaRoteiro();
             }}>
                 <Text style={styles.botaoCriarTexto}>Salvar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botaoVersionar} onPress={() => {
+                
+                versionaRoteiro();
+            }}>
+                <Text style={styles.botaoCriarTexto}>Versionar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.botaoDeletar} onPress={() => {
+                
+                deletaRoteiro();
+            }}>
+                <Text style={styles.botaoCriarTexto}>Deletar</Text>
             </TouchableOpacity>
         </View>
 
@@ -90,6 +231,29 @@ const styles = StyleSheet.create({
     },
     botaoCriar: {
         backgroundColor: '#3385FF',
+        width: 150,
+        height: 50,
+        padding: 10,
+        borderRadius: 40,
+        marginTop: '5%',
+        flexDirection: 'column',
+        alignContent: 'center',
+        justifyContent: 'center'
+    },
+    botaoVersionar: {
+        backgroundColor: '#F6E500',
+        width: 150,
+        height: 50,
+        padding: 10,
+        borderRadius: 40,
+        marginTop: '5%',
+        flexDirection: 'column',
+        alignContent: 'center',
+        justifyContent: 'center'
+    }
+    ,
+    botaoDeletar: {
+        backgroundColor: '#FD0000',
         width: 150,
         height: 50,
         padding: 10,
