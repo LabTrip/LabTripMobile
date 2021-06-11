@@ -10,15 +10,17 @@ interface Viagem {
   dataInicio: Date,
   dataFim: Date,
   statusId: number,
-  dono: string
+  dono: string,
+  usuarioDonoId: number
 }
 
 export default function ListaViagens() {
   const moment = require('moment');
   let token;
   const [viagens, setViagens] = useState<Viagem[]>([]);
+  //array auxiliar para guardar em cache a lista de viagens
+  const [auxViagens, setAuxViagens] = useState<Viagem[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  let ListaViagens = [];
 
   const getViagens = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
@@ -43,6 +45,7 @@ export default function ListaViagens() {
           setViagens(json.filter(function (e) {
             return e.statusId != 1
           }));
+          setAuxViagens(viagens);
         }
       }
     }
@@ -55,18 +58,15 @@ export default function ListaViagens() {
     request()
   }, [refreshing]);
 
-
-
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     request();
     setRefreshing(false);
   }, [refreshing]);
 
-
   return (
     <View style={styles.conteudo}>
-      <BarraPesquisa texto="Pesquisar Viagem..." viagens={viagens} callbackFunction={setViagens} />
+      <BarraPesquisa texto="Pesquisar Viagem..." auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}

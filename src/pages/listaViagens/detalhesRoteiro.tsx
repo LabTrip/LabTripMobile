@@ -7,7 +7,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function DetalhesRoteiro({route}) {
     const [selectedValue, setSelectedValue] = useState();
-    const viagem  = route.params;
+    const viagem  = route.params.viagem;
+    console.log(viagem.usuarioDonoId)
 
     let atividades = [
         {
