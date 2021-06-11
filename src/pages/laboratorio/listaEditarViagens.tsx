@@ -58,6 +58,9 @@ export default function ListaEditarViagens() {
   }
 
   useEffect(() => {
+    setTimeout(()=>{
+
+    },2000)
     request()
   }, []);
 

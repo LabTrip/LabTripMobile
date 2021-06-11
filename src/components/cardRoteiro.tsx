@@ -42,12 +42,12 @@ export default function CardRoteiro(props) {
             onPress={() => navigation.navigate(props.navigate, { roteiro: props.item })}>
             <Text>{props.nome}</Text>
             <Text>
-                <Text style={styles.label}>Início:</Text> {props.dataInicio}
-                <Text style={styles.label}> Fim:</Text> {props.dataFim}
+                <Text style={styles.label}>Status: </Text>
+                <Text style={{ color: corDoStatus }}>{props.statusDesc}</Text>
             </Text>
             <Text>
-                <Text style={styles.label}>Status: </Text>
-                <Text style={{ color: corDoStatus }}>{status}</Text>
+                <Text style={styles.label}>Versão: </Text>
+                <Text style={{ color: corDoStatus }}>{props.versao}</Text>
             </Text>
         </TouchableOpacity>
     )

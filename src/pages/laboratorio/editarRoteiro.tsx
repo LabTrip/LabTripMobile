@@ -5,16 +5,31 @@ import { Picker } from '@react-native-picker/picker';
 import normalize from '../../components/fontSizeResponsive';
 import DatePicker from 'react-native-datepicker'
 
-
 const moment = require('moment');
 
 
-export default function CriarRoteiro() {
+export default function EditarRoteiro({ route }) {
     const navigation = useNavigation();
-    const [apelido, onChangeApelido] = useState("");
-    const [selectedValue, setSelectedValue] = useState(1);
+    const [apelido, onChangeApelido] = useState(route.params?.roteiro.descricaoRoteiro || "");
+    const [selectedValue, setSelectedValue] = useState(route.params?.roteiro.statusId);
 
     let comboBox;
+
+    //Adiciona combobox para status do roteiro se o usuário clicar para editar roteiro.
+    if (route.name == 'Roteiro') {
+        comboBox =
+            <Picker
+                prompt="Status do roteiro"
+                mode="dropdown"
+                selectedValue={selectedValue}
+                style={{ height: 50, width: '50%' }}
+                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+            >
+                <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
+                <Picker.Item label="Aprovado" value={6} color="#0FD06F" />
+                <Picker.Item label="Reprovado" value={7} color="#D12323" />
+            </Picker>;
+    }
 
 
     return (
@@ -23,6 +38,7 @@ export default function CriarRoteiro() {
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
             </View>
             <TextInput placeholder={"Apelido do roteiro"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
+            {comboBox}
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
                 alert(apelido)
                 navigation.goBack();

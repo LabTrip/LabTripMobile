@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import BotaoMais from '../../components/botaoMais';
 import CardOrcamento from '../../components/cardOrcamento';
@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function DetalhesOrcamento({ route }) {
     const navigation = useNavigation();
+    const [orcamento, setOrcamento] = useState();
     const rota = route.name;
     let botaoChat;
     if (rota == 'Geral' || rota == 'Orçamento') {

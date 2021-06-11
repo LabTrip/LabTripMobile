@@ -1,87 +1,130 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, RefreshControl, ScrollView, FlatList } from 'react-native';
+import { View, StyleSheet, Text, RefreshControl, ScrollView, FlatList, ActivityIndicator, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BotaoMais from '../../components/botaoMais';
 import CardRoteiro from '../../components/cardRoteiro';
 import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CriarRoteiro from './criarRoteiro';
 
-interface Roteiro {
+interface Viagem {
     id: string,
     descricao: string,
     dataInicio: Date,
     dataFim: Date,
-    statusId: number
+    statusId: number,
+    alterar: Boolean,
+    participantes : [
+        usuarioId: string,
+        permissaoViagemId: string
+    ]
+  }
+
+interface Roteiro {
+    id: string,
+    versao: number,
+    descricaoRoteiro: string,
+    statusId: number,
+    status: string,
 }
 
-export default function ListaPropostaDeRoteiro() {
+
+export default function ListaPropostaDeRoteiro({ route }) {
     const moment = require('moment');
     const navigation = useNavigation();
-    let token;
     const [roteiros, setRoteiros] = useState<Roteiro[]>([])
     const [refreshing, setRefreshing] = React.useState(false);
-
-    let listaRoteiros = [
-        {
-            id: '1',
-            descricao: 'Roteiro 1 ',
-            dataInicio: new Date,
-            dataFim: new Date,
-            statusId: 1
-        },
-        {
-            id: '2',
-            descricao: 'Roteiro 2',
-            dataInicio: new Date(1995, 5, 26),
-            dataFim: new Date(1995, 10, 26),
-            statusId: 6
-        },
-        {
-            id: '3',
-            descricao: 'Roteiro 3',
-            dataInicio: new Date,
-            dataFim: new Date,
-            statusId: 7
-        },
-        {
-            id: '4',
-            descricao: 'Roteiro 4',
-            dataInicio: new Date,
-            dataFim: new Date,
-            statusId: 10
-        }
-    ];
-
+    const [viagem, setViagem] = useState(route.params.viagem);
+    const [showLoader, setShowLoader] = React.useState(false);
 
 
     useEffect(() => {
-        setRoteiros(listaRoteiros);
-    }, [refreshing]);
+        const request = async () => {
+            try {
+              const response = await buscaRoteiros();
+            }
+            catch (e) {
+              console.log(e)
+            }
+          }
+          request()
+    }, []);
 
+    const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+          localToken = JSON.parse(localToken)
+        }
+        return localToken;
+    }
 
+    const buscaRoteiros = async () => {
+        let localToken = await retornaToken() || '';
+      
+      const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + viagem.id, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': localToken
+        }
+      });
 
-    const onRefresh = React.useCallback(() => {
+      const json = await response.json();
+      if (response.status == 200) {
+        setRoteiros([]);
+        setRoteiros(json);
+      }
+    }
+
+    const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
+        const response = await buscaRoteiros();
         setTimeout(() => {
             setRefreshing(false)
-        }, 0);
+        }, 2000);
     }, [refreshing]);
 
     return (
         <View style={styles.conteudo}>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={showLoader}
+                onRequestClose={() => {
+                    setShowLoader(!showLoader)
+                }}
+            >
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
+                    <Text style={styles.textStyle}>
+                        Aguarde...
+                </Text>
+                </View>
+            </View>
+            </Modal>
+            <BotaoMais onPress={() => navigation.navigate('CriarRoteiro')} />
             <View style={styles.containerTop}>
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
             </View>
             <FlatList
-                //style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
-                contentContainerStyle={{ alignItems: 'center' }}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                data={listaRoteiros}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <CardRoteiro key={item.id} nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')} dataFim={moment(item.dataFim).format('DD/MM/yyyy')}
-                        status={item.statusId} item={item} navigate={'EditarRoteiro'} />
-                )}
+                contentContainerStyle={{flexGrow: 1, marginHorizontal: '5%'}}
+                data={roteiros}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+                keyExtractor={(item) => (item.id + '-' + item.versao)}
+                renderItem={({ item, index }) => {
+                    return (
+                        <CardRoteiro key={item.id} nome={item.descricaoRoteiro} 
+                        status={item.statusId} versao={item.versao} item={item} statusDesc={item.status} navigate={'EditarRoteiro'} />
+                    )
+                }
+                }
             />
         </View>
     )
@@ -97,7 +140,6 @@ const styles = StyleSheet.create({
     containerTop: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: '3%',
         width: '92%',
         backgroundColor: '#F2F2F2',
         borderRadius: 7,
@@ -105,5 +147,37 @@ const styles = StyleSheet.create({
     },
     tituloTop: {
         fontSize: normalize(18)
+    },
+    loader: {
+        flexDirection: 'column',
+        alignContent: 'center',
+        justifyContent: 'center',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        opacity: 0.9,
+        borderRadius: 20,
+        padding: '20%',
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    textStyle: {
+        color: "black",
+        fontWeight: "bold",
+        textAlign: "center"
     }
 })
