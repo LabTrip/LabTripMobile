@@ -41,7 +41,6 @@ export default function ListaEditarViagens() {
         token = JSON.parse(value)
         const response = await getViagens();
         const json = await response.json();
-        console.log(json)
         setTimeout(() => { }, 2000)
         if (response.status == 200) {
           //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
