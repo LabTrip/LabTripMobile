@@ -48,7 +48,10 @@ export default function ListaEditarViagens() {
           setViagens(json.filter(function (e) {
             return e.statusId == 1
           }));
-          setAuxViagens(viagens)
+          //lista auxiliar de viagens (está sendo utilizada na pesquisa)
+          setAuxViagens(json.filter(function (e) {
+            return e.statusId == 1
+          }));
         }
       }
     }
@@ -58,9 +61,9 @@ export default function ListaEditarViagens() {
   }
 
   useEffect(() => {
-    setTimeout(()=>{
+    setTimeout(() => {
 
-    },2000)
+    }, 2000)
     request()
   }, []);
 
