@@ -247,14 +247,15 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     borderRadius: 40,
-    marginTop: '5%',
+    marginTop: '1.5%',
+    marginBottom: '1.5%',
     flexDirection: 'column',
     alignContent: 'center',
     justifyContent: 'center'
   },
   botaoCriarTexto: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center'
   },
   loader: {
