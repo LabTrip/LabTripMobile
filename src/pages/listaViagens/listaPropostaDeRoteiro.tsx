@@ -120,7 +120,7 @@ export default function ListaPropostaDeRoteiro({ route }) {
                 keyExtractor={(item) => (item.id + '-' + item.versao)}
                 renderItem={({ item, index }) => {
                     return (
-                        <CardRoteiro key={item.id} nome={item.descricaoRoteiro} 
+                        <CardRoteiro key={item.id} nome={item.descricaoRoteiro} viagem={viagem}
                         status={item.statusId} item={item} statusDesc={item.status} navigate={'EditarRoteiro'} />
                     )
                 }

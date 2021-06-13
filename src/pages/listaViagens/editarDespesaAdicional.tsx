@@ -1,14 +1,71 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DatePicker from 'react-native-datepicker'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const moment = require('moment');
 
 export default function EditarDespesaAdicional({ route }) {
-    const [data, setData] = useState(route.params.data);
-    const [descricao, setDescricao] = useState(route.params.descricao)
-    const [valor, setValor] = useState(route.params.valor.toString())
+    const [despesa, setDespesa] = useState(route.params.despesasExtras)
+    const [data, setData] = useState(new Date(route.params.despesasExtras.data));
+    const [descricao, setDescricao] = useState(route.params.despesasExtras.descricao)
+    const [valor, setValor] = useState(route.params.despesasExtras.custo.toString())
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+
+    const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+          localToken = JSON.parse(localToken)
+        }
+        return localToken;
+    }
+
+    const atualizaDespesaExtra = async () => {
+        let localToken = await retornaToken() || '';
+
+        const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos/despesaExtra/' + despesa.id, {
+            method: 'PUT',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': localToken
+            },
+            body: JSON.stringify(
+                {
+                    descricao: descricao,
+                    custo: valor,
+                    data: data
+                }
+            )
+        });
+        console.log()
+        const json = await response.json();
+        if (response.status == 200) {
+            alert('Despesa extra atualizada com sucesso!')
+            navigation.goBack()
+        }
+        else{
+            alert('Erro ao atualizar despesa extra: ' + json.toString());
+        }
+    }
+
+    
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setData(currentDate);
+        console.log(currentDate)
+    };
+
+
+    const showDatepicker = () => {
+        setShow(true);
+        setMode('date');
+    };
 
     const navigation = useNavigation();
     return (
@@ -17,18 +74,22 @@ export default function EditarDespesaAdicional({ route }) {
                 value={descricao} onChangeText={(texto) => setDescricao(texto)} />
             <TextInput placeholder='Valor da despesa' style={styles.input}
                 keyboardType={'decimal-pad'} value={valor} onChangeText={(valor) => setValor(valor)} />
-            <DatePicker
-                style={styles.input}
-                placeholder={"Data início"}
-                date={moment(data, 'DD/MM/YYYY')}
-                format="DD/MM/yyyy"
-                minDate="01/01/1900"
-                onDateChange={data => setData(data)}
-            />
+            <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                    keyboardType="default" value={moment(data).format('DD/MM/yyyy')} editable={false} />
+                {show && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={data}
+                        display="default"
+                        onChange={onChange}
+                    />
+                )}
+            </TouchableOpacity>
 
             <View style={styles.containerBotoes}>
                 <TouchableOpacity style={styles.botaoSalvar} onPress={() => {
-
+                    atualizaDespesaExtra();
                 }}>
                     <Text style={styles.textoBotao}>Salvar</Text>
                 </TouchableOpacity>
@@ -99,5 +160,32 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center'
 
-    }
+    },
+    containerDataCelular: {
+        flexDirection: 'row',
+    },
+    inputDataCelular: {
+        marginTop: 25,
+        width: 266,
+        height: 50,
+        backgroundColor: '#fff',
+        textAlign: 'center',
+        justifyContent: 'space-around',
+        fontWeight: 'bold',
+        borderRadius: 32,
+        borderColor: 'black',
+        borderWidth: 1,
+        padding: 10,
+        fontSize: 16,
+    },
+    inputDate: {
+        marginTop: '3%',
+        width: '90%',
+        padding: 15,
+        fontSize: 16,
+        borderRadius: 41,
+        backgroundColor: '#EBEBEB',
+        textAlign: 'center',
+        color: '#333333'
+    },
 })

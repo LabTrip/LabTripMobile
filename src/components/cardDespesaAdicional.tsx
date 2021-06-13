@@ -9,12 +9,13 @@ export default function CardDespesaAdicional(props) {
         <View style={styles.cardDespesaAdicional}>
             <View style={styles.containerRow}>
                 <Text style={styles.texto}>{props.data}</Text>
-                <TouchableOpacity onPress={() =>
+                <TouchableOpacity disabled={!props.editar} onPress={() =>
                     navigation.navigate('EditarDespesaAdicional', 
                     { 
                         data: props.data,
                         descricao: props.descricao,
-                        valor: props.valor
+                        valor: props.valor,
+                        despesasExtras: props.item
                     })} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
                 </TouchableOpacity>
@@ -24,7 +25,7 @@ export default function CardDespesaAdicional(props) {
             </View>
             <View style={styles.containerRow}>
                 <Text style={styles.texto}>Valor: R$ {props.valor}</Text>
-                <TouchableOpacity >
+                <TouchableOpacity disabled={!props.editar}>
                     <MaterialCommunityIcons name={'close-thick'} color={'black'} size={25} />
                 </TouchableOpacity>
             </View>
@@ -39,7 +40,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#F2F2F2',
         borderRadius: 7,
         flexDirection: 'column',
-        padding: '2%'
+        padding: '2%',
+        marginVertical: '1%'
     },
     containerRow: {
         flexDirection: 'row',

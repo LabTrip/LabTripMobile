@@ -5,12 +5,11 @@ import DetalhesOrcamento from '../../pages/listaViagens/detalhesOrcamento';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function MenuOrcamento() {
+export default function MenuOrcamento({ route }) {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Geral" component={DetalhesOrcamento} />
-      <Tab.Screen name="Individual" component={DetalhesOrcamento} />
-      
+      <Tab.Screen name="Geral" initialParams={route.params} component={DetalhesOrcamento} />
+      <Tab.Screen name="Individual" initialParams={route.params} component={DetalhesOrcamento} />
     </Tab.Navigator>
   );
 }
