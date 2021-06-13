@@ -41,14 +41,16 @@ export default function ListaEditarViagens() {
         token = JSON.parse(value)
         const response = await getViagens();
         const json = await response.json();
-        console.log(json)
         setTimeout(() => { }, 2000)
         if (response.status == 200) {
           //filtrando lista apenas para viagens que estejam com o status = 2 - em planejamento
           setViagens(json.filter(function (e) {
             return e.statusId == 1
           }));
-          setAuxViagens(viagens)
+          //lista auxiliar de viagens (está sendo utilizada na pesquisa)
+          setAuxViagens(json.filter(function (e) {
+            return e.statusId == 1
+          }));
         }
       }
     }
@@ -58,9 +60,9 @@ export default function ListaEditarViagens() {
   }
 
   useEffect(() => {
-    setTimeout(()=>{
+    setTimeout(() => {
 
-    },2000)
+    }, 2000)
     request()
   }, []);
 

@@ -160,7 +160,6 @@ export default function EditarPerfil() {
                     userId = JSON.parse(user)
                     setIdUsuario(JSON.parse(user))
                 }
-                console.log(userId)
                 const response = await getUsuario();
                 const json = await response.json();
                 const responseFoto = await buscaFoto();
