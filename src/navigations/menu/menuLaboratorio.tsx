@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import React, { useState } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import ListaEditarViagens from '../../pages/laboratorio/listaEditarViagens';
 import MenuLaboratorioCadastro from './menuLaboratorioCadastro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,7 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Tab = createMaterialTopTabNavigator();
 
 export default function MenuLaboratorio() {
-  const [idPermissao, setIdPermissao] = useState(0);
+  const [idPermissao, setIdPermissao] = useState(4);
+  let abaCadastros;
 
   const getUsuario = async (idUsuario, token) => {
     return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + idUsuario, {
@@ -25,24 +26,25 @@ export default function MenuLaboratorio() {
     const idUsuario = await AsyncStorage.getItem('USER_ID') || "";
     const response = await getUsuario(JSON.parse(idUsuario), JSON.parse(token));
     const json = await response.json();
-    setIdPermissao(json.perfilId)
+    setIdPermissao(json.perfilId);
   }
 
   getIdPermissao();
 
-  let abaCadastros;
-
-  //mostra aba de cadastros se usuario não for um usuario com permissao de cliente.
+  //mostra aba de cadastro se o usuario tiver permissão diferente de cliente
   if (idPermissao != 4) {
-    abaCadastros = <Tab.Screen name="Cadastros" component={MenuLaboratorioCadastro} />;
+    return (
+      <Tab.Navigator>
+        <Tab.Screen name="Viagens" component={ListaEditarViagens} />
+        <Tab.Screen name="Cadastros" component={MenuLaboratorioCadastro} />
+      </Tab.Navigator>
+    );
+  } else {
+    return (
+      <Tab.Navigator>
+        <Tab.Screen name="Viagens" component={ListaEditarViagens} />
+      </Tab.Navigator>
+    );
   }
-
-
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Viagens" component={ListaEditarViagens} />
-      {abaCadastros}
-    </Tab.Navigator>
-  );
 
 }
