@@ -161,9 +161,8 @@ export default function DetalhesOrcamento({ route }) {
                     <Text style={styles.label}>Despesas adicionais: </Text>
                     {
                         orcamento?.despesasExtras.map((d, index) => {
-                            console.log(viagem)
                             return (
-                                <CardDespesasAdicionais id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d}/>
+                                <CardDespesasAdicionais key={d.id} id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d}/>
                             )
                         }) 
                     }
