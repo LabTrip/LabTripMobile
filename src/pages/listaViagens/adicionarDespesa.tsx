@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, Platform } from 'r
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { TextInputMask } from 'react-native-masked-text';
 
 const moment = require('moment');
 
@@ -15,11 +16,12 @@ export default function AdicionarDespesa({ route }) {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    
+    let valorUnmasked;
+
     const retornaToken = async () => {
         let localToken = await AsyncStorage.getItem('AUTH');
         if (localToken != null) {
-          localToken = JSON.parse(localToken)
+            localToken = JSON.parse(localToken)
         }
         return localToken;
     }
@@ -27,17 +29,17 @@ export default function AdicionarDespesa({ route }) {
     const salvaDespesaExtra = async () => {
         let localToken = await retornaToken() || '';
 
-        const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos/despesaExtra' , {
+        const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos/despesaExtra', {
             method: 'POST',
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': localToken
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
             },
             body: JSON.stringify(
                 {
                     orcamentoId: orcamento.id,
-                    custo: valor,
+                    custo: valorUnmasked.getRawValue(),
                     descricao: descricao,
                     data: data
                 }
@@ -49,12 +51,12 @@ export default function AdicionarDespesa({ route }) {
             alert('Despesa extra adicionada com sucesso!')
             navigation.goBack()
         }
-        else{
-            alert('Erro ao adicionar despesa extra: ' + json.toString());
+        else {
+            alert('Erro ao adicionar despesa extra: ' + json.mensagem.toString());
         }
     }
 
-    
+
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
@@ -73,8 +75,20 @@ export default function AdicionarDespesa({ route }) {
         <View style={styles.container}>
             <TextInput placeholder='Descrição' style={styles.input}
                 value={descricao} onChangeText={(texto) => setDescricao(texto)} />
-            <TextInput placeholder='Valor da despesa' style={styles.input}
-                keyboardType={'decimal-pad'} value={valor} onChangeText={(valor) => setValor(valor)} />
+            <TextInputMask
+                type={'money'}
+                options={{
+                    maskType: 'INTERNATIONAL',
+
+                }}
+                value={valor}
+                style={styles.input}
+                onChangeText={(valor) => {
+                    setValor(valor);
+                }}
+                placeholder="Valor da despesa"
+                ref={(ref) => valorUnmasked = ref}
+            />
             <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
                 <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
                     keyboardType="default" value={moment(data).format('DD/MM/yyyy')} editable={false} />
@@ -94,7 +108,7 @@ export default function AdicionarDespesa({ route }) {
                 }}>
                     <Text style={styles.textoBotao}>Salvar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.botaoCancelar} onPress={() => navigation.goBack() }>
+                <TouchableOpacity style={styles.botaoCancelar} onPress={() => navigation.goBack()}>
                     <Text style={styles.textoBotao}>Cancelar</Text>
                 </TouchableOpacity>
 
