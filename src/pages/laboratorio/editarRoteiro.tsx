@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     },
     botaoCriar: {
         backgroundColor: '#3385FF',
-        width: 150,
+        width: 130,
         height: 50,
         padding: 10,
         borderRadius: 40,
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     },
     botaoVersionar: {
         backgroundColor: '#F6E500',
-        width: 150,
+        width: 130,
         height: 50,
         padding: 10,
         borderRadius: 40,
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     ,
     botaoDeletar: {
         backgroundColor: '#FD0000',
-        width: 150,
+        width: 130,
         height: 50,
         padding: 10,
         borderRadius: 40,
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     botaoCriarTexto: {
         textAlign: 'center',
         color: '#FFFFFF',
-        fontSize: 24
+        fontSize: 18
     },
     inputDataCelular: {
         marginTop: '1%',

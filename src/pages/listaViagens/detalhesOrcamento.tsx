@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     botaoCriarTexto: {
-        fontSize: 20,
+        fontSize: 16,
         textAlign: 'center',
         color: '#FFFFFF',
     }
