@@ -16,6 +16,7 @@ import AdicionarDespesa from '../../pages/listaViagens/adicionarDespesa';
 import ConvidarParticipantes from '../../pages/listaViagens/convidarParticipante';
 import CriarRoteiro from '../../pages/laboratorio/criarRoteiro';
 import MenuDetalhesRoteiroAgencia from '../menu/menuDetalhesRoteiroAgencia';
+import DetalhesAtividade from '../../pages/listaViagens/detalhesAtividade';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -38,6 +39,7 @@ export default function TelasLaboratorio() {
       <Screen name="AdicionarDespesa" options={{ title: "Adicionar despesa" }} component={AdicionarDespesa} />
       <Screen name="ConvidarParticipantes" options={{ title: "Convidar participante" }} component={ConvidarParticipantes} />
       <Screen name="CriarRoteiro" options={{ title: "Criar roteiro" }} component={CriarRoteiro} />
+      <Screen name="DetalhesAtividade" options={{ title: "Detalhes da atividade" }} component={DetalhesAtividade} />
     </Navigator>
   );
 }
