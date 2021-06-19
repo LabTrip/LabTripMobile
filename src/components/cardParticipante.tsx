@@ -146,7 +146,7 @@ export default function CardParticipante(props) {
 
         </Text>
         <View style={styles.containerProprietarioSwitch}>
-          <Text style={styles.label}>Permissao do usuário:</Text>
+          <Text style={styles.label}>Permissão do usuário:</Text>
           {
             editar == true
               ? (<Picker style={styles.pickerComponente}

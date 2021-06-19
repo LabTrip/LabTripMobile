@@ -1,16 +1,30 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
+import { TextInputMask } from 'react-native-masked-text';
 
 
 export default function EditarOrcamentoPlanejado({ route }) {
     const [orcPlanejado, setOrcPlanejado] = useState(route.params.orcamento.toString());
     const navigation = useNavigation();
+    let valorUnmasked;
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Orçamento planejado*</Text>
-            <TextInput placeholder='Orçamento planejado' style={styles.input}
-                keyboardType={'decimal-pad'} value={orcPlanejado} onChangeText={(valor) => setOrcPlanejado(valor)} />
+            <TextInputMask
+                type={'money'}
+                options={{
+                    maskType: 'INTERNATIONAL',
+
+                }}
+                value={orcPlanejado}
+                style={styles.input}
+                onChangeText={(orcPlanejado) => {
+                    setOrcPlanejado(orcPlanejado);
+                }}
+                placeholder="Valor da despesa"
+                ref={(ref) => valorUnmasked = ref}
+            />
             <Text style={styles.texto}>*O orçamento planejado terá no mínimo o valor da soma de todas atividades já agendadas.</Text>
             <View style={styles.containerBotoes}>
                 <TouchableOpacity style={styles.botaoSalvar} onPress={() => {

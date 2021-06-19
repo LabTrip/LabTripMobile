@@ -32,21 +32,6 @@ export default function EditarViagem({ route }) {
     const [Token, setToken] = useState('');
     const [refreshing, setRefreshing] = React.useState(false);
 
-    let participantesData = [
-        {
-            id: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
-            nome: "Ednaldo Pereira",
-            dono: true,
-            proprietario: true
-        },
-        {
-            id: 'd4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35',
-            nome: "Edneia Silva",
-            dono: false,
-            proprietario: true
-        },
-    ];
-
     useEffect(() => {
         const request = async () => {
             try {

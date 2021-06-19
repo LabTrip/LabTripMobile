@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import DatePicker from 'react-native-datepicker'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { TextInputMask } from 'react-native-masked-text';
 
 const moment = require('moment');
 
@@ -15,11 +16,12 @@ export default function EditarDespesaAdicional({ route }) {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
+    let valorUnmasked;
 
     const retornaToken = async () => {
         let localToken = await AsyncStorage.getItem('AUTH');
         if (localToken != null) {
-          localToken = JSON.parse(localToken)
+            localToken = JSON.parse(localToken)
         }
         return localToken;
     }
@@ -30,14 +32,14 @@ export default function EditarDespesaAdicional({ route }) {
         const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos/despesaExtra/' + despesa.id, {
             method: 'PUT',
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': localToken
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
             },
             body: JSON.stringify(
                 {
                     descricao: descricao,
-                    custo: valor,
+                    custo: valorUnmasked.getRawValue(),
                     data: data
                 }
             )
@@ -48,12 +50,12 @@ export default function EditarDespesaAdicional({ route }) {
             alert('Despesa extra atualizada com sucesso!')
             navigation.goBack()
         }
-        else{
-            alert('Erro ao atualizar despesa extra: ' + json.toString());
+        else {
+            alert('Erro ao atualizar despesa extra: ' + json.mensagem.toString());
         }
     }
 
-    
+
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
@@ -72,8 +74,20 @@ export default function EditarDespesaAdicional({ route }) {
         <View style={styles.container}>
             <TextInput placeholder='Descrição' style={styles.input}
                 value={descricao} onChangeText={(texto) => setDescricao(texto)} />
-            <TextInput placeholder='Valor da despesa' style={styles.input}
-                keyboardType={'decimal-pad'} value={valor} onChangeText={(valor) => setValor(valor)} />
+            <TextInputMask
+                type={'money'}
+                options={{
+                    maskType: 'INTERNATIONAL',
+
+                }}
+                value={valor}
+                style={styles.input}
+                onChangeText={(valor) => {
+                    setValor(valor);
+                }}
+                placeholder="Valor da despesa"
+                ref={(ref) => valorUnmasked = ref}
+            />
             <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
                 <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
                     keyboardType="default" value={moment(data).format('DD/MM/yyyy')} editable={false} />

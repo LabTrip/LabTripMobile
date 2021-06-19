@@ -9,6 +9,7 @@ export default function DetalhesAtividade({ route }) {
     const [gostei, setGostei] = useState(0);
     const [naoGostei, setNaoGostei] = useState(0);
     const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
             <View style={styles.containerDetalhes}>
@@ -25,24 +26,25 @@ export default function DetalhesAtividade({ route }) {
                 <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
             </TouchableOpacity>
             <Text style={styles.tituloDetalhes}>Custo R$ 500,00</Text>
-            <View style={[styles.containerDetalhes, { height: '40%', flexDirection: 'row', justifyContent: 'space-between', padding: '3%' }]}>
-                <Text style={styles.tituloDetalhes}>
-                    Midias
-                </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('AdicionarMidias')}>
-                    <MaterialCommunityIcons name="pencil" color={'black'} size={31} />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.containerVotos}>
-                <TouchableOpacity style={styles.botaoVoto} onPress={() => setGostei(gostei + 1)}>
-                    <MaterialCommunityIcons name="heart" color={'#FF2424'} size={31} />
-                    <Text>{gostei}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.botaoVoto} onPress={() => setNaoGostei(naoGostei + 1)}>
-                    <MaterialCommunityIcons name="close-thick" color={'#000000'} size={31} />
-                    <Text>{naoGostei}</Text>
-                </TouchableOpacity>
-            </View>
+            {route.params.planejamento != true ?
+                (<View style={[styles.containerDetalhes, { height: '40%', flexDirection: 'row', justifyContent: 'space-between', padding: '3%' }]}>
+                    <Text style={styles.tituloDetalhes}>
+                        Midias
+                    </Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('AdicionarMidias')}>
+                        <MaterialCommunityIcons name="pencil" color={'black'} size={31} />
+                    </TouchableOpacity>
+                </View>) :
+                (<View style={styles.containerVotos}>
+                    <TouchableOpacity style={styles.botaoVoto} onPress={() => setGostei(gostei + 1)}>
+                        <MaterialCommunityIcons name="heart" color={'#FF2424'} size={31} />
+                        <Text>{gostei}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.botaoVoto} onPress={() => setNaoGostei(naoGostei + 1)}>
+                        <MaterialCommunityIcons name="close-thick" color={'#000000'} size={31} />
+                        <Text>{naoGostei}</Text>
+                    </TouchableOpacity>
+                </View>)}
         </View>
     );
 }

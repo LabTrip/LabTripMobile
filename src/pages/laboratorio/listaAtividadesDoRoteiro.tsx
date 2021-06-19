@@ -9,7 +9,7 @@ import { Picker } from '@react-native-picker/picker';
 
 interface Atividade {
     id: string,
-    descricao: string,
+    nome: string,
     local: string,
     data: string,
     horario: string,
@@ -38,7 +38,7 @@ export default function ListaAtividadesDoRoteiro() {
     let listaAtividade = [
         {
             id: '1',
-            descricao: 'Parque aquático',
+            nome: 'Parque aquático',
             local: 'Rua eusébio de frança, 320',
             data: '17/02/2021',
             horario: '18:00',
@@ -46,7 +46,7 @@ export default function ListaAtividadesDoRoteiro() {
         },
         {
             id: '2',
-            descricao: 'Trilha no mato ',
+            nome: 'Trilha no mato ',
             local: 'Rua eusébio de frança, 320',
             data: '17/02/2021',
             horario: '18:00',
@@ -54,7 +54,7 @@ export default function ListaAtividadesDoRoteiro() {
         },
         {
             id: '3',
-            descricao: 'Almoço no Mamma Júlia',
+            nome: 'Almoço no Mamma Júlia',
             local: 'Rua eusébio de frança, 320',
             data: '18/02/2021',
             horario: '18:00',
@@ -62,7 +62,7 @@ export default function ListaAtividadesDoRoteiro() {
         },
         {
             id: '4',
-            descricao: 'Apresentação cultural ',
+            nome: 'Apresentação cultural',
             local: 'Rua eusébio de frança, 320',
             data: '19/02/2021',
             horario: '18:00',
@@ -119,7 +119,7 @@ export default function ListaAtividadesDoRoteiro() {
                 }>
                 {
                     atividades?.map((a) => {
-                        return <CardAtividadeAgencia key={a.id} nome={a.descricao} local={a.local} horario={a.horario} />
+                        return <CardAtividadeAgencia key={a.id} nome={a.nome} local={a.local} horario={a.horario} atividade={a} data={selectedValue} />
                     })
                 }
             </ScrollView>
