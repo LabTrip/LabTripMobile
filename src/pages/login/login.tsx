@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { useNavigation, StackActions } from '@react-navigation/native';
 import { i18n } from '../../translate/i18n';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 export default function Login() {
   const navigation = useNavigation();
@@ -15,6 +16,8 @@ export default function Login() {
   const [token, setToken] = React.useState('');
   const [userId, setUserId] = React.useState('');
   const [showLoader, setShowLoader] = React.useState(false);
+  const [tokenNotification, setTokenNotification] = React.useState('');
+
   const auth = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/login', {
       method: 'POST',
