@@ -35,72 +35,72 @@ export default function EditarRoteiro({ route }) {
     const retornaToken = async () => {
         let localToken = await AsyncStorage.getItem('AUTH');
         if (localToken != null) {
-          localToken = JSON.parse(localToken)
+            localToken = JSON.parse(localToken)
         }
         return localToken;
     }
 
     const buscaRoteiro = async () => {
         let localToken = await retornaToken() || '';
-      
-      const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'x-access-token': localToken
-        }
-      });
 
-      const json = await response.json();
-      if (response.status == 200) {
-        setRoteiro(json);
-        onChangeApelido(json.descricaoRoteiro);
-        setSelectedValue(json.statusId)
-      }
+        const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
+            }
+        });
+
+        const json = await response.json();
+        if (response.status == 200) {
+            setRoteiro(json);
+            onChangeApelido(json.descricaoRoteiro);
+            setSelectedValue(json.statusId)
+        }
 
     }
 
     const salvaRoteiro = async () => {
-      let localToken = await retornaToken() || '';
-      
-      const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
-        method: 'PUT',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'x-access-token': localToken
-        },
-        body: JSON.stringify({
-            id: roteiro.id,
-            viagemId: roteiro.viagemId,
-            descricaoRoteiro: apelido,
-            statusId: selectedValue,
-            versao: roteiro.versao
-        })
-      });
+        let localToken = await retornaToken() || '';
 
-      if (response.status == 200) {
-          alert("Roteiro alterado com sucesso!")
-          navigation.goBack();
-      }
-      else{
-        alert("Erro ao alterar roteiro.")
-      }
+        const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
+            },
+            body: JSON.stringify({
+                id: roteiro.id,
+                viagemId: roteiro.viagemId,
+                descricaoRoteiro: apelido,
+                statusId: selectedValue,
+                versao: roteiro.versao
+            })
+        });
+
+        if (response.status == 200) {
+            alert("Roteiro alterado com sucesso!")
+            navigation.goBack();
+        }
+        else {
+            alert("Erro ao alterar roteiro.")
+        }
     }
 
     const versionaRoteiro = async () => {
         let localToken = await retornaToken() || '';
-        
+
         const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/versionar/' + roteiro.id + '/' + roteiro.versao, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': localToken
-          }
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
+            }
         });
-        
+
         console.log('https://labtrip-backend.herokuapp.com/roteiros/versionar/' + roteiro.id + '/' + roteiro.versao)
 
         const json = await response.json()
@@ -108,31 +108,31 @@ export default function EditarRoteiro({ route }) {
             alert("Roteiro versionado com sucesso!")
             navigation.goBack();
         }
-        else{
-          alert("Erro ao versionar roteiro: " + json.mensagem)
+        else {
+            alert("Erro ao versionar roteiro: " + json.mensagem)
         }
-      }
+    }
 
-      const deletaRoteiro = async () => {
+    const deletaRoteiro = async () => {
         let localToken = await retornaToken() || '';
-        
+
         const response = await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + roteiro.id + '/' + roteiro.versao, {
-          method: 'DELETE',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': localToken
-          }
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
+            }
         });
-  
+
         if (response.status >= 200 && response.status <= 299) {
             alert("Roteiro deletado com sucesso!")
             navigation.goBack();
         }
-        else{
-          alert("Erro ao deletar roteiro.")
+        else {
+            alert("Erro ao deletar roteiro.")
         }
-      }
+    }
 
     //Adiciona combobox para status do roteiro se o usuário clicar para editar roteiro.
     if (route.name == 'Roteiro') {
@@ -154,7 +154,7 @@ export default function EditarRoteiro({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.containerTop}>
-                <Text style={styles.tituloTop}>Propostas de roteiro</Text>
+                <Text style={styles.tituloTop}>Detalhes do roteiro</Text>
             </View>
             <TextInput placeholder={"Apelido do roteiro"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
             <Picker
@@ -168,24 +168,31 @@ export default function EditarRoteiro({ route }) {
                 <Picker.Item label="Aprovado" value={6} color="#0FD06F" />
                 <Picker.Item label="Reprovado" value={7} color="#D12323" />
             </Picker>
-            <TouchableOpacity style={styles.botaoCriar} onPress={() => {
-                
-                salvaRoteiro();
-            }}>
-                <Text style={styles.botaoCriarTexto}>Salvar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.botaoVersionar} onPress={() => {
-                
-                versionaRoteiro();
-            }}>
-                <Text style={styles.botaoCriarTexto}>Versionar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.botaoDeletar} onPress={() => {
-                
-                deletaRoteiro();
-            }}>
-                <Text style={styles.botaoCriarTexto}>Deletar</Text>
-            </TouchableOpacity>
+            {route.params.viagem.alterar
+                ? <TouchableOpacity style={styles.botaoCriar} onPress={() => {
+
+                    salvaRoteiro();
+                }}>
+                    <Text style={styles.botaoCriarTexto}>Salvar</Text>
+                </TouchableOpacity>
+                : null}
+            {route.params.viagem.alterar
+                ? <TouchableOpacity style={styles.botaoVersionar} onPress={() => {
+
+                    versionaRoteiro();
+                }}>
+                    <Text style={styles.botaoCriarTexto}>Versionar</Text>
+                </TouchableOpacity>
+                : null}
+            {route.params.viagem.alterar
+                ? <TouchableOpacity style={styles.botaoDeletar} onPress={() => {
+
+                    deletaRoteiro();
+                }}>
+                    <Text style={styles.botaoCriarTexto}>Deletar</Text>
+                </TouchableOpacity>
+                : null}
+
         </View>
 
     );

@@ -3,27 +3,27 @@ import { View, StyleSheet, Text, TouchableOpacity, ScrollView, RefreshControl } 
 import BotaoMais from '../../components/botaoMais';
 import CardOrcamento from '../../components/cardOrcamento';
 import CardDespesasAdicionais from '../../components/cardDespesaAdicional';
-import { useNavigation } from '@react-navigation/native'
+import { useLinkProps, useNavigation } from '@react-navigation/native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
 
 interface Orcamento {
-  despesasExtras: [{
-      id: string,
-      orcamentoId: number,
-      custo: number,
-      descricao: string,
-      usuarioId: string,
-      data: string
-  }],
-  id: number,
-  roteiroId: number,
-  tipoOrcamentoId: number,
-  valorConsumido: number,
-  valorMinimo: number,
-  valorTotal: number,
-  versaoRoteiro: number,
+    despesasExtras: [{
+        id: string,
+        orcamentoId: number,
+        custo: number,
+        descricao: string,
+        usuarioId: string,
+        data: string
+    }],
+    id: number,
+    roteiroId: number,
+    tipoOrcamentoId: number,
+    valorConsumido: number,
+    valorMinimo: number,
+    valorTotal: number,
+    versaoRoteiro: number,
 }
 
 export default function DetalhesOrcamento({ route }) {
@@ -38,23 +38,25 @@ export default function DetalhesOrcamento({ route }) {
 
     const rota = route.name;
     let botaoChat;
+    let alterar = true
+    //adicionando icone de chat quando usuario vier pelas rotas de orçamento geral.
     if (rota == 'Geral' || rota == 'Orçamento') {
         botaoChat = <TouchableOpacity style={{ marginTop: '4%' }} onPress={() => alert('clicou na messagem')}>
             <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
         </TouchableOpacity>;
+        //mostrando botão de criar despesa adicional caso o usuário tenha permissão de membro na viagem
+        alterar = route.params.viagem.alterar;
     }
 
     useEffect(() => {
         buscaOrcamento();
         buscaViagem();
-        console.log('viagem')
-        console.log(route.params)
     }, []);
 
     const retornaToken = async () => {
         let localToken = await AsyncStorage.getItem('AUTH');
         if (localToken != null) {
-          localToken = JSON.parse(localToken)
+            localToken = JSON.parse(localToken)
         }
         return localToken;
     }
@@ -75,32 +77,32 @@ export default function DetalhesOrcamento({ route }) {
         if (response.status == 200) {
             setViagem(json);
         }
-        else{
+        else {
             alert('Não foi possível buscar detalhes da viagem: ' + json.mensagem);
         }
     }
 
     const buscaOrcamento = async () => {
-      let localToken = await retornaToken() || '';
-      const url = roteiro.id + '/' + roteiro.versao + '?tipoOrcamento=' + route.name;
+        let localToken = await retornaToken() || '';
+        const url = roteiro.id + '/' + roteiro.versao + '?tipoOrcamento=' + route.name;
 
-      const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos/' + url, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'x-access-token': localToken
+        const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos/' + url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
+            }
+        });
+
+        const json = await response.json();
+        if (response.status == 200) {
+            setOrcamento(json);
+            setOrcamentoExiste(true);
         }
-      });
-
-      const json = await response.json();
-      if (response.status == 200) {
-        setOrcamento(json);
-        setOrcamentoExiste(true);
-      }
-      else{
-        setOrcamentoExiste(false);
-      }
+        else {
+            setOrcamentoExiste(false);
+        }
     }
 
     const criaOrcamento = async () => {
@@ -110,24 +112,24 @@ export default function DetalhesOrcamento({ route }) {
         const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos', {
             method: 'POST',
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': localToken
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
             },
             body: JSON.stringify(
                 {
-                    roteiroId:roteiro.id,
-                    versaoRoteiro:roteiro.versao,
+                    roteiroId: roteiro.id,
+                    versaoRoteiro: roteiro.versao,
                     tipo: route.name
                 }
             )
         });
-        
+
         const json = await response.json();
         if (json.status == 201) {
             buscaOrcamento();
         }
-        else{
+        else {
             alert('Erro ao criar orçamento: ' + json.mensagem);
         }
     }
@@ -153,8 +155,10 @@ export default function DetalhesOrcamento({ route }) {
             {(orcamentoExiste) && (
                 <View style={styles.container}>
                     <View style={styles.containerTop}>
-                        <BotaoMais onPress={() =>
-                            navigation.navigate('AdicionarDespesa', {orcamento: orcamento})} />
+                        {alterar
+                            ? < BotaoMais onPress={() =>
+                                navigation.navigate('AdicionarDespesa', { orcamento: orcamento })} />
+                            : null}
                         {botaoChat}
                     </View>
                     <CardOrcamento planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} />
@@ -162,12 +166,12 @@ export default function DetalhesOrcamento({ route }) {
                     {
                         orcamento?.despesasExtras.map((d, index) => {
                             return (
-                                <CardDespesasAdicionais key={d.id} id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d}/>
+                                <CardDespesasAdicionais key={d.id} id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} />
                             )
-                        }) 
+                        })
                     }
                 </View>
-            )}            
+            )}
             {(!orcamentoExiste) && (
                 <View style={styles.container}  >
                     <TouchableOpacity style={styles.botaoCriar} onPress={() => {

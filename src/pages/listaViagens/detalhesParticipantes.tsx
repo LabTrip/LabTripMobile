@@ -197,13 +197,13 @@ export default function DetalhesParticipantes({ route }) {
             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
             <Text style={styles.textStyle}>
               Aguarde...
-              </Text>
+            </Text>
           </View>
         </View>
       </Modal>
-      <BotaoMais onPress={() => {
+      {viagem.alterar ? <BotaoMais onPress={() => {
         navigation.navigate('ConvidarParticipantes', { viagem });
-      }} />
+      }} /> : null}
       <FlatList
         contentContainerStyle={{ alignItems: 'center' }}
         data={participantes}
@@ -226,9 +226,9 @@ export default function DetalhesParticipantes({ route }) {
         }
         }
       />
-      <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaParticipantes}>
+      {viagem.alterar? <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaParticipantes}>
         <Text style={styles.botaoCriarTexto}>Salvar participantes</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>: null}
     </View>
   );
 }
