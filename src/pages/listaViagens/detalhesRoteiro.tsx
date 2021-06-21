@@ -5,10 +5,9 @@ import CardAtividade from '../../components/cardAtividade';
 import ScrollViewFlat from '../../components/scrollViewFlat';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function DetalhesRoteiro({route}) {
+export default function DetalhesRoteiro({ route }) {
     const [selectedValue, setSelectedValue] = useState();
-    const viagem  = route.params.viagem;
-    console.log(viagem.usuarioDonoId)
+    const viagem = route.params.viagem;
 
     let atividades = [
         {
@@ -30,7 +29,7 @@ export default function DetalhesRoteiro({route}) {
             horario: "22:00",
         },
     ];
-    
+
     return (
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>

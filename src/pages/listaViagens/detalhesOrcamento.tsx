@@ -30,7 +30,8 @@ export default function DetalhesOrcamento({ route }) {
     const moment = require('moment');
     const navigation = useNavigation();
     const [viagem, setViagem] = useState(route.params.viagem);
-    const [roteiro, setRoteiro] = useState(route.params.roteiro);
+    //capturando roteiro da viagem pelas duas possiveis variaveis que podem chegar
+    const [roteiro, setRoteiro] = useState(route.params.roteiro || route.params.viagem.roteiro);
     const [orcamento, setOrcamento] = useState<Orcamento>();
     const [orcamentoExiste, setOrcamentoExiste] = useState<Boolean>(false);
     const [refreshing, setRefreshing] = React.useState(false);
