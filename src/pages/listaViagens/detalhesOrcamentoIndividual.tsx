@@ -79,7 +79,7 @@ export default function DetalhesOrcamentoIndividual({ route }) {
         });
         
         const json = await response.json();
-        if (json.status == 201) {
+        if (response.status == 201) {
             buscaOrcamento();
         }
         else{
