@@ -7,4 +7,4 @@ const messages = {
 }
 
 
-export{messages}
+export default messages

@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Image, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import i18n from '../../translate/i18n';
 
 export default function RedefinirInserirSenha({route}) {
   const {email, codigoVerificacao} = route.params;
@@ -52,16 +53,16 @@ export default function RedefinirInserirSenha({route}) {
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', }}>
         <View style={styles.scrollContainer}>
       <Image source={require('../../imgs/logo.png')} style={styles.logo} />
-      <Text style={styles.titulo}>Vamos redefinir sua senha.</Text>
-      <Text style={styles.texto}>Insira sua nova senha e a comfirmação.</Text>
-      <TextInput placeholder={"Digite a nova senha"} secureTextEntry={true} style={styles.input} 
+      <Text style={styles.titulo}>{i18n.t('redefinirSenha.titulo')}</Text>
+      <Text style={styles.texto}>{i18n.t('redefinirSenha.InserirNovaSenha')}</Text>
+      <TextInput placeholder={i18n.t('redefinirSenha.digiteSenha')} secureTextEntry={true} style={styles.input} 
       onChangeText={text => {onChangeSenha(text); validaForcaSenha()}} value={senha}/>
       {
                 senhaForte 
                 ? <View style={styles.passwordContainerValid} ></View> 
                 : <View style={styles.passwordContainer}></View>
       }
-      <TextInput placeholder={"Confirme a nova senha"} secureTextEntry={true} style={styles.input} 
+      <TextInput placeholder={i18n.t('redefinirSenha.confirmeSenha')} secureTextEntry={true} style={styles.input} 
       onChangeText={text => onChangeConfirmSenha(text)} value={confirmSenha}/>
       <TouchableOpacity style={styles.botaoRedefinir} onPress={async () => {
         if(verificaSenhas()){
@@ -81,7 +82,7 @@ export default function RedefinirInserirSenha({route}) {
           
         }
         }}>
-        <Text style={styles.botaoRedefinirTexto}>Redefinir</Text>
+        <Text style={styles.botaoRedefinirTexto}>{i18n.t('botoes.redefinir')}</Text>
       </TouchableOpacity>
       </View>
       </ScrollView>

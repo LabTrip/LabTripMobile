@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, Image, TextInput, TouchableOpacity, StatusBar, ScrollView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import i18n from '../../translate/i18n';
 
 export default function RedefinirInserirCodigo({ route }) {
   const { email } = route.params;
@@ -25,9 +26,9 @@ export default function RedefinirInserirCodigo({ route }) {
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', }}>
         <View style={styles.scrollContainer}>
           <Image source={require('../../imgs/logo.png')} style={styles.logo} />
-          <Text style={styles.titulo}>Vamos redefinir sua senha.</Text>
-          <Text style={styles.texto}>Insira o código recebido por e-mail.</Text>
-          <TextInput placeholder={"Código"} style={styles.input}
+          <Text style={styles.titulo}>{i18n.t('redefinirSenha.titulo')}</Text>
+          <Text style={styles.texto}>{i18n.t('redefinirSenha.inserirCodigo')}</Text>
+          <TextInput placeholder={i18n.t('redefinirSenha.codigo')} style={styles.input}
             onChangeText={text => onChangeTextCodigo(text)} value={codigo} />
           <TouchableOpacity style={styles.botaoEnviar} onPress={async () => {
             let response = await verificaCodigo();
@@ -36,10 +37,10 @@ export default function RedefinirInserirCodigo({ route }) {
               navigation.navigate('RedefinirInserirSenha', { email: email, codigoVerificacao: codigo });
             }
             else {
-              alert(json.mensagem);
+              alert(i18n.t('modais.codigoInvalido'));
             }
           }}>
-            <Text style={styles.botaoLoginTexto}>Enviar</Text>
+            <Text style={styles.botaoLoginTexto}>{i18n.t('botoes.confirmar')}</Text>
           </TouchableOpacity>
           <StatusBar />
         </View>

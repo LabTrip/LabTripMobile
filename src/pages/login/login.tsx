@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Modal, ActivityIndicator, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { useNavigation, StackActions } from '@react-navigation/native';
-import { i18n } from '../../translate/i18n';
+import i18n from '../../translate/i18n';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -110,7 +110,7 @@ export default function Login() {
           <View style={styles.modalView}>
             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
             <Text style={styles.textStyle}>
-              Aguarde...
+            {i18n.t('modais.aguarde')}
             </Text>
           </View>
         </View>
@@ -121,12 +121,12 @@ export default function Login() {
         <View style={styles.scrollContainer}>
           <Image source={require('../../imgs/logo.png')} style={styles.logo} />
 
-          <Text style={styles.title}>Olá!</Text>
-          <Text style={styles.title}>Seja bem-vindo ao Labtrip.</Text>
+          <Text style={styles.title}>{i18n.t('login.titulo')}</Text>
+          <Text style={styles.title}>{i18n.t('login.saudacao')}</Text>
           <TextInput placeholder='email@email.com' style={styles.input}
             onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'}
             autoCompleteType={'email'} />
-          <TextInput placeholder='senha' style={styles.input} secureTextEntry={true}
+          <TextInput placeholder={i18n.t('login.senha')} style={styles.input} secureTextEntry={true}
             onChangeText={text => onChangeTextSenha(text)} value={senha} autoCompleteType={'password'}
           />
           <TouchableOpacity style={styles.botaoLogin} onPress={async () => {
@@ -143,17 +143,17 @@ export default function Login() {
             }
             else {
               setShowLoader(false)
-              alert(json.mensagem);
+              alert(i18n.t('modais.loginInvalido'));
             }
           }}>
-            <Text style={styles.botaoLoginTexto}>Entrar</Text>
+            <Text style={styles.botaoLoginTexto}>{i18n.t('botoes.entrar')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('RedefinirInserirEmail')}>
             <Text style={styles.link} >
-              Esqueceu sua senha?
+              {i18n.t('login.redefinir')}
             </Text>
             <Text style={styles.link} >
-              Primeiro acesso?
+              {i18n.t('login.primeiroAcesso')}
             </Text>
           </TouchableOpacity>
         </View>

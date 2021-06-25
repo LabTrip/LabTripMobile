@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import i18n from '../../translate/i18n';
 
 
 
@@ -12,9 +13,9 @@ export default function RedefinirSucesso() {
   return (
     <SafeAreaView style={styles.container}>
       <Image source={require('../../imgs/logo.png')} style={styles.logo} />
-      <Text style={styles.texto}>Sucesso a senha foi redefinida!</Text>
+      <Text style={styles.texto}>{i18n.t('redefinirSenha.sucesso')}</Text>
       <TouchableOpacity style={styles.botaoRedefinir} onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.botaoRedefinirTexto}>Fazer login</Text>
+        <Text style={styles.botaoRedefinirTexto}>{i18n.t('botoes.entrar')}</Text>
       </TouchableOpacity>
       <StatusBar/>
     </SafeAreaView>
@@ -39,7 +40,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontFamily: 'Roboto',
-    textAlign: 'center'
+    textAlign: 'center',
+    maxWidth: '90%'
   },
   logo: {
     width: 192,
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginTop: 30,
     height: 50,
+    width: 144,
     flexDirection: 'column',
     alignContent: 'center',
     justifyContent: 'center',

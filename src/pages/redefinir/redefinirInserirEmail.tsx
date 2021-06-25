@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import i18n from '../../translate/i18n';
 
 export default function RedefinirInserirEmail() {
   const navigation = useNavigation();
@@ -24,9 +25,9 @@ export default function RedefinirInserirEmail() {
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', }}>
         <View style={styles.scrollContainer}>
           <Image source={require('../../imgs/logo.png')} style={styles.logo} />
-          <Text style={styles.titulo}>Vamos redefinir sua senha.</Text>
-          <Text style={styles.texto}>Insira o e-mail cadastrado.</Text>
-          <TextInput placeholder={"seuemail@email.com"} style={styles.input}
+          <Text style={styles.titulo}>{i18n.t('redefinirSenha.titulo')}</Text>
+          <Text style={styles.texto}>{i18n.t('redefinirSenha.inserirEmail')}</Text>
+          <TextInput placeholder={i18n.t('redefinirSenha.email')} style={styles.input}
             onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'} autoCompleteType={'email'}/>
           <TouchableOpacity style={styles.botaoConfirmar} onPress={async () => {
             let response = await geraCodigo();
@@ -35,10 +36,10 @@ export default function RedefinirInserirEmail() {
               navigation.navigate('RedefinirInserirCodigo', { email: email });
             }
             else {
-              alert(json.mensagem);
+              alert(i18n.t('modais.emailInvalido'));
             }
           }}>
-            <Text style={styles.botaoLoginTexto}>Confirmar</Text>
+            <Text style={styles.botaoLoginTexto}>{i18n.t('botoes.confirmar')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
