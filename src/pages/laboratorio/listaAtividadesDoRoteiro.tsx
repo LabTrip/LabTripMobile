@@ -1,38 +1,79 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, RefreshControl, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import BotaoMais from '../../components/botaoMais';
 import CardAtividadeAgencia from '../../components/cardAtividadeAgencia';
 import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 
 interface Atividade {
-    id: string,
-    nome: string,
+    id: number,
+    atividadeId: string,
     local: string,
-    data: string,
-    horario: string,
-    statusId: number
+    endereco: string,
+    cidade: string,
+    pais: string,
+    latitude: string,
+    longitude: string,
+    roteiroId: number,
+    versaoRoteiro: number,
+    dataInicio: Date,
+    dataFim: Date,
+    custo: number,
+    statusId: number,
+    votoPositivo: string,
+    votoNegativo: string,
+    observacaoCliente: string,
+    observacaoAgente: string
 }
 
-export default function ListaAtividadesDoRoteiro() {
+export default function ListaAtividadesDoRoteiro({ route }) {
     const moment = require('moment');
     const navigation = useNavigation();
-    let token;
-    const [atividades, setAtividades] = useState<Atividade[]>([])
+    const roteiro = route.params.roteiro;
+    const [atividades, setAtividades] = useState<Atividade[]>([]);
+    //variavel auxiliar de atividades
+    const [atividadesAux, setAtividadesAux] = useState<Atividade[]>([])
     const [refreshing, setRefreshing] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState('');
 
-    const getViagens = async () => {
-        return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
+    //captura o token local do usuário.
+    const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+            localToken = JSON.parse(localToken)
+        }
+        return localToken;
+    }
+
+    //faz a request para listar as atividade do roteiro
+    const buscaAtividades = async () => {
+        let localToken = await retornaToken() || '';
+
+        const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + roteiro.id + '/' + roteiro.versao, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'x-access-token': token
+                'x-access-token': localToken
             }
         });
+        const json = await response.json();
+        //seta lista de atividades se o status da resposta for 200
+        if (response.status == 200) {
+            setAtividadesAux(json);
+            setAtividades(json);
+        }
+    }
+
+    const request = async () => {
+        try {
+            await buscaAtividades();
+
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     let listaAtividade = [
@@ -72,17 +113,16 @@ export default function ListaAtividadesDoRoteiro() {
 
     let datas = new Array();
     //criando lista com as datas de todas atividades
-    listaAtividade.forEach((a) => datas.push(a.data))
-    //removendo valores repetidos da lista
+    atividadesAux.forEach((a) => datas.push(moment(a.dataInicio).format('DD/MM/yyyy')));
+    //removendo valores de datas repetidas da lista
     var filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
 
     useEffect(() => {
+        request();
         setSelectedValue(filtroDatas[0]);
-        setAtividades(listaAtividade.filter(a => a.data == filtroDatas[0]));
+        //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
+        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == filtroDatas[0]));
     }, [refreshing]);
-
-
-
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -100,7 +140,7 @@ export default function ListaAtividadesDoRoteiro() {
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, value) => {
                         setSelectedValue(itemValue);
-                        setAtividades(listaAtividade.filter(a => a.data == itemValue));
+                        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == itemValue));
                     }}>
                     {
                         filtroDatas?.map((a) => {
@@ -119,7 +159,7 @@ export default function ListaAtividadesDoRoteiro() {
                 }>
                 {
                     atividades?.map((a) => {
-                        return <CardAtividadeAgencia key={a.id} nome={a.nome} local={a.local} horario={a.horario} atividade={a} data={selectedValue} />
+                        return <CardAtividadeAgencia key={a.id} atividade={a} />
                     })
                 }
             </ScrollView>

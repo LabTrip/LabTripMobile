@@ -5,27 +5,28 @@ import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function DetalhesAtividade({ route }) {
-
-    const [gostei, setGostei] = useState(0);
-    const [naoGostei, setNaoGostei] = useState(0);
+    const moment = require('moment');
+    const [gostei, setGostei] = useState(parseInt(route.params.atividade.votoPositivo) || 0);
+    const [naoGostei, setNaoGostei] = useState(parseInt(route.params.atividade.votoNegativo) || 0);
+    let valorFormatado = route.params.atividade.custo.toFixed(2)
     const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
             <View style={styles.containerDetalhes}>
-                <Text style={styles.tituloDetalhes}>{route.params.atividade.nome}</Text>
+                <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
                 <View style={styles.containerDataStatus}>
-                    <Text style={styles.textoDetalhes}>{route.params.data}</Text>
+                    <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('DD/MM/yyyy')}</Text>
                     <Text style={styles.textoStatus}>Agendada</Text>
                 </View>
-                <Text style={styles.textoDetalhes}>{route.params.atividade.horario}</Text>
-                <Text style={styles.textoDetalhes}>{route.params.atividade.local}</Text>
+                <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('HH:mm')}</Text>
+                <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
                 <Text style={styles.textoDetalhes}>Ensolarado, 25°</Text>
             </View>
             <TouchableOpacity onPress={() => alert('clicou na messagem')}>
                 <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
             </TouchableOpacity>
-            <Text style={styles.tituloDetalhes}>Custo R$ 500,00</Text>
+            <Text style={styles.tituloDetalhes}>Custo: R$ {valorFormatado}</Text>
             {route.params.planejamento != true ?
                 (<View style={[styles.containerDetalhes, { height: '40%', flexDirection: 'row', justifyContent: 'space-between', padding: '3%' }]}>
                     <Text style={styles.tituloDetalhes}>

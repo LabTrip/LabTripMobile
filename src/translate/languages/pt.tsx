@@ -13,7 +13,7 @@ const messages  = {
                 inserirCodigo:'Insira o código recebido por e-mail.',
                 inserirEmail: 'Insira o e-mail cadastrado.',
                 InserirNovaSenha: 'Insira sua nova senha e a confirmação.',
-                sucesso: 'A senha foi redefinida com sucesso.',
+                sucesso: 'A senha foi redefinida com sucesso .',
                 senha: 'senha',
                 email: 'seuemail@email.com',
                 redefinir: 'Esqueceu sua senha?',

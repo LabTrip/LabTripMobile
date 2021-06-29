@@ -13,7 +13,7 @@ export default function MenuDetalhesRoteiroAgencia({ route }) {
     return (
         <Tab.Navigator>
             <Tab.Screen name="Roteiro" initialParams={route.params} component={EditarRoteiro} />
-            <Tab.Screen name="Atividades" component={ListaAtividadesDoRoteiro} />
+            <Tab.Screen name="Atividades" initialParams={route.params} component={ListaAtividadesDoRoteiro} />
             <Tab.Screen name="Orçamento" initialParams={route.params} component={MenuOrcamento} />
         </Tab.Navigator>
     );
