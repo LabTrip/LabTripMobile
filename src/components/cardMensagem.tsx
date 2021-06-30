@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Balloon from "react-native-balloon";
 
-let corDoCard, corBordaDoCard, status, corDoStatus;
+let orientacaoBalao, corBordaDoCard, status, corDoStatus;
 
 interface Mensagem {
     id: string,
@@ -28,24 +29,46 @@ export default function CardViagem(props) {
 
     const exibirNome = () => {
         if(props.usuarioId === props.item.metadata.usuarioId){
+            orientacaoBalao = 'right'
             return 'Você'
         }
         else{
+            orientacaoBalao = 'left'
             return props.enviadoPor;
         }
     }
 
+    const orientacao = () => {
+        if(props.usuarioId === props.item.metadata.usuarioId){
+            return 'right'
+        }
+        else{
+            return 'left'
+        }
+    }
+
     return (
-        <TouchableOpacity style={styleAlign()}>
-            <View style={styles.cardMensagem}>
+        <View style={styleAlign()}>
+            <Balloon
+            borderColor="#F2F2F2"
+            backgroundColor="#FFFFFF"
+            borderWidth={1}
+            borderRadius={20}
+            triangleSize={10}
+            triangleDirection={orientacao()}
+            triangleOffset={'30%'}
+            containerStyle={styles.cardMensagem}
+            onPress={() => console.log("press")}
+            >
                 <View style={styles.containerEviadoPor} >
                     <Text style={styles.label}>{exibirNome()}</Text>
                 </View>
                 <View style={styles.containerMensagem}>
                     <Text>{props.mensagem}</Text>
                 </View>
-            </View>
-        </TouchableOpacity>
+            </Balloon>
+            
+        </View>
     )
 }
 
@@ -61,15 +84,10 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
     },
     cardMensagem: {
-        margin: 0,
-        padding: 10,
-        borderRadius: 13,
-        flex: 1,
         maxWidth:'80%',
         flexDirection: 'column',
         justifyContent: 'space-around',
-        alignItems: 'flex-start',
-        backgroundColor: 'white'
+        alignItems: 'flex-start'
     },
     containerEviadoPor:{
         marginTop: 5,
@@ -80,5 +98,26 @@ const styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold'
+    },
+    leftArrow: {
+        position: "absolute",
+        backgroundColor: "#dedede",
+        //backgroundColor:"red",
+        width: 20,
+        height: 25,
+        bottom: 0,
+        borderBottomRightRadius: 25,
+        left: -10
+    },
+    leftArrowOverlap: {
+        position: "absolute",
+        backgroundColor: "#eeeeee",
+        //backgroundColor:"green",
+        width: 20,
+        height: 35,
+        bottom: -6,
+        borderBottomRightRadius: 18,
+        left: -20
+    
     }
 });

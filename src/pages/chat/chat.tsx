@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, FlatList, TextInput, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import CardMensagem from '../../components/cardMensagem'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {io} from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 
 interface Mensagem {
@@ -17,30 +18,14 @@ interface Mensagem {
 
 export default function Chat({ route }) {
   const [viagem, setViagem] = useState(route.params.viagem);
+  const isFocused = useIsFocused();
   const [topico, setTopico] = useState(route.params.topico);
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [mensagem, setMensagem] = React.useState('');
   const [usuarioId, setUsuarioId] = useState('');
-  let [socket, setSocket] = React.useState(io('http://192.168.0.13:5001/', { transports: ["websocket"] }));
-
-  const messages = [
-    {
-      metadata: {
-        id: '0',
-        usuarioId: 'abc',
-        enviadoPor: 'Gabriel'
-      },
-      mensagem: 'Olá'
-    },
-    {
-      metadata: {
-        id: '2',
-        usuarioId: 'bca',
-        enviadoPor: 'Maria'
-      },
-      mensagem: 'Olá'
-    }
-  ]
+  const [showLoader, setShowLoader] = React.useState(false);
+  const [socket, setSocket] = React.useState(io('https://labtrip-backend.herokuapp.com/', { transports: ["websocket"] }));
+  const [flatList, setFlatList] = useState<any>();
 
   const retornaUserId = async () => {
     let userId = await AsyncStorage.getItem('USER_ID');
@@ -59,25 +44,72 @@ export default function Chat({ route }) {
     return localToken;
   }
 
+  const verificaChatExiste = async (token) => {
+    const urn = viagem.id + '/' + topico.descricao + '?verificar=true'
+    const response = await fetch('https://labtrip-backend.herokuapp.com/chats/' + urn, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
+        });
+    return response.status;
+  }
+
+  const criaChat = async (token) => {
+    const response = await fetch('https://labtrip-backend.herokuapp.com/chats/', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            },
+            body: JSON.stringify({
+              viagemId: viagem.id,
+              topico: topico.descricao
+            })
+        });
+    return response.status;
+  }
 
   const conectaSocket = async () => {
-    let localToken = await retornaToken() || '';
-    socket.connect();
-    socket.on("connect", () => {
-      console.log("Frontend, connected!");
-    });
-    socket.emit('joinRoom', {token: localToken, room: viagem.id+'/'+topico.descricao})
-    console.log('join')
+    try{
+      setShowLoader(true);
+      let localToken = await retornaToken() || '';
+      const chatExiste = await verificaChatExiste(localToken);
+      console.log(chatExiste)
+      if(chatExiste == 404){
+        const criouChat = await criaChat(localToken);
+        console.log(criouChat)        
+      }
+      socket.connect();
+      socket.on("connect", () => {
+        //console.log("Frontend, connected!");
+      });
+      socket.emit('joinRoom', {token: localToken, room: viagem.id+'/'+topico.descricao})
+      //console.log('join')
 
+      adicionaListeners();
+    }
+    catch(e){
+      console.log(e)
+    }
+    finally{
+      //setShowLoader(false);
+      return
+    }
+  }
+
+  const adicionaListeners = () => {
     socket.on('message', (message) => {
-      setMensagens([...mensagens, message]);
+      setMensagens(mensagens => [...mensagens, message]);
     })
 
     socket.on('messages', (messages) => {
       setMensagens(messages);
+      setShowLoader(false);
     })
-
-    return
   }
 
   const onSendMessage = () => {
@@ -88,23 +120,48 @@ export default function Chat({ route }) {
   useEffect(() => {
     try{
       retornaUserId();
-      conectaSocket();
+      if(isFocused){
+        conectaSocket();
+      }
+      else{
+        //console.log('desconectou')
+        socket.disconnect()
+      }
       return
     }
     catch(e){
       console.log('Error')
       console.log(e)
     }
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
+      <Modal animationType="fade" transparent={true} visible={showLoader}
+          onRequestClose={() => {
+              setShowLoader(!showLoader)
+          }}>
+          <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                  <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
+                  <Text style={styles.textStyle}>
+                      Aguarde...
+                  </Text>
+              </View>
+          </View>
+          
+      </Modal>
       <View>
         <Text>{topico.descricao}</Text>
       </View>
       <FlatList
+        ref={(view) => {
+          setFlatList(view); 
+        }}
+        onContentSizeChange={() => {
+          flatList.scrollToEnd();
+        }}
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' , width: '100%'}}
-        contentContainerStyle={{}}
         data={mensagens}
         keyExtractor={(item) => item.metadata.id.toString()}
         renderItem={({ item }) => (
@@ -181,5 +238,37 @@ const styles = StyleSheet.create({
     color: 'black',
     flex: 1,
     fontSize: 20
+  },
+  loader: {
+      flexDirection: 'column',
+      alignContent: 'center',
+      justifyContent: 'center',
+  },
+  centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+  },
+  modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      opacity: 0.9,
+      borderRadius: 20,
+      padding: '20%',
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+          width: 0,
+          height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+  },
+  textStyle: {
+      color: "black",
+      fontWeight: "bold",
+      textAlign: "center"
   }
 })

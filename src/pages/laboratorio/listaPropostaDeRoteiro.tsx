@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, RefreshControl, ScrollView, FlatList, ActivityIndicator, Modal } from 'react-native';
+import { View, StyleSheet, Text, RefreshControl, ScrollView, FlatList, ActivityIndicator, Modal, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BotaoMais from '../../components/botaoMais';
 import CardRoteiro from '../../components/cardRoteiro';
 import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CriarRoteiro from './criarRoteiro';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface Viagem {
     id: string,
@@ -36,6 +37,9 @@ export default function ListaPropostaDeRoteiro({ route }) {
     const [refreshing, setRefreshing] = React.useState(false);
     const [viagem, setViagem] = useState(route.params.viagem);
     const [showLoader, setShowLoader] = React.useState(false);
+    let botaoChat = (<TouchableOpacity style={{ marginTop: '4%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Roteiro'}})}>
+                        <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
+                    </TouchableOpacity>);
 
 
     useEffect(() => {
@@ -108,6 +112,7 @@ export default function ListaPropostaDeRoteiro({ route }) {
             <View style={styles.containerTop}>
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
             </View>
+            {botaoChat}
             <FlatList
                 contentContainerStyle={{ flexGrow: 1, marginHorizontal: '5%' }}
                 data={roteiros}

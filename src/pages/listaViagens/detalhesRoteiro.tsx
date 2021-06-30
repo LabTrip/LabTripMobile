@@ -4,8 +4,10 @@ import { Picker } from '@react-native-picker/picker';
 import CardAtividade from '../../components/cardAtividade';
 import ScrollViewFlat from '../../components/scrollViewFlat';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function DetalhesRoteiro({ route }) {
+    const navigation = useNavigation();
     const [selectedValue, setSelectedValue] = useState();
     const viagem = route.params.viagem;
 
@@ -49,7 +51,7 @@ export default function DetalhesRoteiro({ route }) {
                 <TouchableOpacity style={styles.botaoIconeTop} onPress={() => Linking.openURL('https://dl.dropbox.com/s/0skuwdlhg6q4fol/History%20of%20GIF.gif?dl=1')}>
                     <MaterialCommunityIcons name={'file-download'} color={'#575757'} size={30} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.botaoIconeTop} onPress={() => alert('clicou no chat')}>
+                <TouchableOpacity style={styles.botaoIconeTop} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Roteiro'}})}>
                     <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
                 </TouchableOpacity>
             </View>
