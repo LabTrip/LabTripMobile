@@ -42,9 +42,9 @@ export default function DetalhesOrcamento({ route }) {
     let alterar = true
     //adicionando icone de chat quando usuario vier pelas rotas de orçamento geral.
     if (rota == 'Geral' || rota == 'Orçamento') {
-        botaoChat = <TouchableOpacity style={{ marginTop: '4%' }} onPress={() => alert('clicou na messagem')}>
-            <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
-        </TouchableOpacity>;
+        botaoChat = <TouchableOpacity style={{ marginTop: '4%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Orçamento'}})}>
+                        <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
+                    </TouchableOpacity>;
         //mostrando botão de criar despesa adicional caso o usuário tenha permissão de membro na viagem
         alterar = route.params.viagem.alterar;
     }

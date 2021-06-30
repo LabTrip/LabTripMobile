@@ -1,10 +1,10 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, FlatList } from 'react-native';
 
-export default function Mensagens() {
+export default function mensagens() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
-      <Text>Mensagens!</Text>
+        <Text>Mensagens</Text>
     </View>
   );
 }
