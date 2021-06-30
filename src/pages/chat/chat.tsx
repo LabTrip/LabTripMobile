@@ -20,6 +20,7 @@ export default function Chat({ route }) {
   const [topico, setTopico] = useState(route.params.topico);
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [mensagem, setMensagem] = React.useState('');
+  const [usuarioId, setUsuarioId] = useState('');
   let [socket, setSocket] = React.useState(io('http://192.168.0.13:5001/', { transports: ["websocket"] }));
 
   const messages = [
@@ -41,6 +42,15 @@ export default function Chat({ route }) {
     }
   ]
 
+  const retornaUserId = async () => {
+    let userId = await AsyncStorage.getItem('USER_ID');
+    if (userId != null) {
+      userId = JSON.parse(userId)
+    }
+    setUsuarioId(userId || '');
+  }
+  
+
   const retornaToken = async () => {
     let localToken = await AsyncStorage.getItem('AUTH');
     if (localToken != null) {
@@ -60,9 +70,7 @@ export default function Chat({ route }) {
     console.log('join')
 
     socket.on('message', (message) => {
-      let mensagensAux = mensagens;
-      mensagensAux.push(message);
-      setMensagens(mensagensAux);
+      setMensagens([...mensagens, message]);
     })
 
     socket.on('messages', (messages) => {
@@ -73,12 +81,13 @@ export default function Chat({ route }) {
   }
 
   const onSendMessage = () => {
-    //socket.emit('chatMessage', mensagem);
+    socket.emit('chatMessage', mensagem);
     setMensagem('');
   }
 
   useEffect(() => {
     try{
+      retornaUserId();
       conectaSocket();
       return
     }
@@ -97,14 +106,14 @@ export default function Chat({ route }) {
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' , width: '100%'}}
         contentContainerStyle={{}}
         data={mensagens}
-        keyExtractor={(item) => item.metadata.id}
+        keyExtractor={(item) => item.metadata.id.toString()}
         renderItem={({ item }) => (
-          <CardMensagem enviadoPor={item.metadata.enviadoPor} mensagem={item.mensagem} item={item} />
+          <CardMensagem enviadoPor={item.metadata.enviadoPor} mensagem={item.mensagem} item={item} usuarioId={usuarioId}/>
         )}
       />
       <View style={styles.containerInline}>
         <TextInput placeholder='Digite sua mensagem aqui' style={styles.input}
-            onChangeText={text => setMensagem(text.trim())} value={mensagem} />
+            onChangeText={text => setMensagem(text)} value={mensagem} />
         <TouchableOpacity style={styles.iconContainer} onPress={onSendMessage}>
           <MaterialCommunityIcons name="send" style={styles.icon} />
         </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -17,25 +17,55 @@ export default function CardViagem(props) {
 
     const navigation = useNavigation();
 
+    const styleAlign = () => {
+        if(props.usuarioId === props.item.metadata.usuarioId){
+            return styles.cardAlignEnd
+        }
+        else{
+            return styles.cardAlignStart
+        }
+    }
+
+    const exibirNome = () => {
+        if(props.usuarioId === props.item.metadata.usuarioId){
+            return 'Você'
+        }
+        else{
+            return props.enviadoPor;
+        }
+    }
+
     return (
-        <TouchableOpacity style={styles.cardMensagem}>
-            <View style={styles.containerEviadoPor}>
-                <Text style={styles.label}>{props.enviadoPor}</Text>
-            </View>
-            <View style={styles.containerMensagem}>
-                <Text>{props.mensagem}</Text>
+        <TouchableOpacity style={styleAlign()}>
+            <View style={styles.cardMensagem}>
+                <View style={styles.containerEviadoPor} >
+                    <Text style={styles.label}>{exibirNome()}</Text>
+                </View>
+                <View style={styles.containerMensagem}>
+                    <Text>{props.mensagem}</Text>
+                </View>
             </View>
         </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
-    cardMensagem: {
-        marginTop: 25,
+    cardAlignStart:{
+        marginTop: 20,
         marginHorizontal: '5%',
+        alignItems: 'flex-start',
+    },
+    cardAlignEnd:{
+        marginTop: 20,
+        marginHorizontal: '5%',
+        alignItems: 'flex-end',
+    },
+    cardMensagem: {
+        margin: 0,
         padding: 10,
         borderRadius: 13,
         flex: 1,
+        maxWidth:'80%',
         flexDirection: 'column',
         justifyContent: 'space-around',
         alignItems: 'flex-start',
@@ -52,4 +82,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 });
-
