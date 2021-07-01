@@ -88,7 +88,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         setSelectedValue(filtroDatas[0]);
         //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
         setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == filtroDatas[0]));
-        //setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == selectedValue));
+        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == selectedValue));
 
 
     }, [refreshing]);

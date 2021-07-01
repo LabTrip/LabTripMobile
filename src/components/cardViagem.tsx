@@ -1,8 +1,10 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let corDoCard, corBordaDoCard, status, corDoStatus;
+let token
 
 interface Viagem {
     id: string,
@@ -11,12 +13,58 @@ interface Viagem {
     dataFim: Date,
     statusId: number,
     dono: string,
-    usuarioDonoId: number
+    usuarioDonoId: number,
 }
+
+
 
 export default function CardViagem(props) {
 
     const navigation = useNavigation();
+
+    //busca informações da viagem.
+    const getViagem = async () => {
+        return await fetch('https://labtrip-backend.herokuapp.com/viagens/' + props.viagem.id, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
+        });
+    }
+
+    //lista roteiros da viagem.
+    const getRoteiros = async () => {
+        return await fetch('https://labtrip-backend.herokuapp.com/roteiros/' + props.viagem.id, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
+        });
+    }
+
+    const request = async () => {
+        const value = await AsyncStorage.getItem('AUTH')
+
+        if (value != null) {
+            token = JSON.parse(value)
+            const response = await getViagem();
+            const json = await response.json();
+            const responseRoteiros = await getRoteiros();
+            const jsonRoteiros = await responseRoteiros.json();
+            if (response.status == 200 && responseRoteiros.status == 200) {
+                props.viagem.alterar = json.alterar;
+                props.viagem.roteiro = jsonRoteiros[0];
+            } else {
+                alert("Erro ao buscar informações da viagem: " + json.mensagem + "\nVerifique a sua conexão com a internet, reinicie o aplicativo e tente novamente!");
+            }
+        }
+    }
+
+    request();
 
     switch (props.status) {
         case 1:

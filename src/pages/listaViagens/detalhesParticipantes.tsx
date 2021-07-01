@@ -69,7 +69,6 @@ export default function DetalhesParticipantes({ route }) {
 
     const json = await response.json();
     if (response.status == 200) {
-      console.log(json);
       setParticipantes([]);
       setParticipantes(json.participantes);
     }
@@ -122,8 +121,6 @@ export default function DetalhesParticipantes({ route }) {
   const onClickSalvaParticipantes = async () => {
     try {
       let localToken = await retornaToken() || '';
-      console.log('participantes: ')
-      console.log(participantes)
       setShowLoader(true);
       const response = await fetch('https://labtrip-backend.herokuapp.com/viagens/participantes/' + viagem.id, {
         method: 'PUT',
