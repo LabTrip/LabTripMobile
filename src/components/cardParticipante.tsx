@@ -113,7 +113,6 @@ export default function CardParticipante(props) {
     const blob = await responseFoto.blob();
 
     if (responseFoto.status == 200) {
-      console.log("tipo: " + blob.type + ", tamanho: " + blob.size);
       var reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = function () {

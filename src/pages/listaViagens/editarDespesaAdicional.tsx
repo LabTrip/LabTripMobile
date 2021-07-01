@@ -12,7 +12,7 @@ export default function EditarDespesaAdicional({ route }) {
     const [despesa, setDespesa] = useState(route.params.despesasExtras)
     const [data, setData] = useState(new Date(route.params.despesasExtras.data));
     const [descricao, setDescricao] = useState(route.params.despesasExtras.descricao)
-    const [valor, setValor] = useState(route.params.despesasExtras.custo.toString())
+    const [valor, setValor] = useState(route.params.despesasExtras.custo.toFixed(2).toString())
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);

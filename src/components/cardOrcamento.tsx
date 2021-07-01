@@ -10,15 +10,15 @@ export default function CardOrcamento(props) {
     return (
         <View style={styles.cardOrcamento}>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>Orçamento planejado: R$ {props.planejado}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('EditarOrcamentoPlanejado', {orcamento:props.planejado})} >
+                <Text style={styles.texto}>Orçamento planejado: R$ {props.planejado.toFixed(2)}</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('EditarOrcamentoPlanejado', {orcamento:props.planejado.toFixed(2)})} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
                 </TouchableOpacity>
             </View>
             <View>
             </View>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>Saldo atual: R$ {props.saldoAtual}</Text>
+                <Text style={styles.texto}>Saldo atual: R$ {props.saldoAtual.toFixed(2)}</Text>
             </View>
         </View>
 

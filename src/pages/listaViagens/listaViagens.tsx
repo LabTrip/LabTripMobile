@@ -21,9 +21,11 @@ export default function ListaViagens() {
   //array auxiliar para guardar em cache a lista de viagens
   const [auxViagens, setAuxViagens] = useState<Viagem[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const abortController = new AbortController();
 
   const getViagens = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
+      signal: abortController.signal,
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -58,7 +60,10 @@ export default function ListaViagens() {
   }
 
   useEffect(() => {
-    request()
+    request();
+    return () => {
+      abortController.abort();
+    }
   }, [refreshing]);
 
   const onRefresh = React.useCallback(async () => {

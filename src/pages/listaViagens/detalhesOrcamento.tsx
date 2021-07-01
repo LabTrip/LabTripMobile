@@ -170,6 +170,7 @@ export default function DetalhesOrcamento({ route }) {
                                 <CardDespesasAdicionais key={d.id} id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} />
                             )
                         })
+                        
                     }
                 </View>
             )}

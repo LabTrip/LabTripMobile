@@ -1,36 +1,115 @@
-import React, { useState } from 'react';
-import { FlatList, Linking, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Linking, StyleSheet, Text, View, TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import CardAtividade from '../../components/cardAtividade';
-import ScrollViewFlat from '../../components/scrollViewFlat';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface Atividade {
+    id: number,
+    atividadeId: string,
+    local: string,
+    endereco: string,
+    cidade: string,
+    pais: string,
+    latitude: string,
+    longitude: string,
+    roteiroId: number,
+    versaoRoteiro: number,
+    dataInicio: Date,
+    dataFim: Date,
+    custo: number,
+    statusId: number,
+    votoPositivo: string,
+    votoNegativo: string,
+    observacaoCliente: string,
+    observacaoAgente: string
+}
 
 export default function DetalhesRoteiro({ route }) {
+    const moment = require('moment');
     const navigation = useNavigation();
     const [selectedValue, setSelectedValue] = useState();
     const viagem = route.params.viagem;
+    const [atividades, setAtividades] = useState<Atividade[]>([]);
+    //variavel auxiliar de atividades
+    const [atividadesAux, setAtividadesAux] = useState<Atividade[]>([]);
+    //variavel do refresh
+    const [refreshing, setRefreshing] = React.useState(false);
+    const abortController = new AbortController();
 
-    let atividades = [
-        {
-            id: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
-            nome: "Visita ao IFSP",
-            local: "R. Pedro Vicente, 625 - Canindé, São Paulo - SP, 01109-010",
-            horario: "18:50",
-        },
-        {
-            id: 'd4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35',
-            nome: "Café da Torre Eiffel",
-            local: "Paris, França",
-            horario: "20:00",
-        },
-        {
-            id: '4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
-            nome: "Visita ao Louvre",
-            local: "Paris, França",
-            horario: "22:00",
-        },
-    ];
+    //captura o token local do usuário.
+    const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+            localToken = JSON.parse(localToken)
+        }
+        return localToken;
+    }
+
+
+    //faz a request para listar as atividade do roteiro
+    const buscaAtividades = async () => {
+        let localToken = await retornaToken() || '';
+
+
+        const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + viagem.roteiro.id + '/' + viagem.roteiro.versao, {
+            signal: abortController.signal,
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
+            }
+        });
+        const json = await response.json();
+        //seta lista de atividades se o status da resposta for 200
+        if (response.status == 200) {
+            console.log(json)
+            setAtividadesAux(json);
+            setAtividades(json);
+        }
+    }
+
+    const request = async () => {
+        try {
+            await buscaAtividades();
+
+        }
+        catch (e) {
+            console.log(e)
+        }
+
+        return () => {
+            abortController.abort();
+        }
+    }
+
+    let datas = new Array();
+    let filtroDatas = new Array();
+    //criando lista com as datas de todas atividades
+    atividadesAux.forEach((a) => datas.push(moment(a.dataInicio).format('DD/MM/yyyy')));
+    //removendo valores de datas repetidas da lista
+    filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
+
+    useEffect(() => {
+        request();
+        setSelectedValue(filtroDatas[0]);
+        //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
+        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == filtroDatas[0]));
+        //setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == selectedValue));
+
+        console.log()
+    }, [refreshing]);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 0);
+    }, [refreshing]);
+
 
     return (
         <View style={styles.conteudo}>
@@ -51,19 +130,25 @@ export default function DetalhesRoteiro({ route }) {
                 <TouchableOpacity style={styles.botaoIconeTop} onPress={() => Linking.openURL('https://dl.dropbox.com/s/0skuwdlhg6q4fol/History%20of%20GIF.gif?dl=1')}>
                     <MaterialCommunityIcons name={'file-download'} color={'#575757'} size={30} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.botaoIconeTop} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Roteiro'}})}>
+                <TouchableOpacity style={styles.botaoIconeTop} onPress={() => navigation.navigate('Chat', { viagem: viagem, topico: { id: 0, descricao: 'Roteiro' } })}>
                     <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
                 </TouchableOpacity>
             </View>
-            <ScrollViewFlat>
-                <FlatList
-                    data={atividades}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <CardAtividade nome={item.nome} local={item.local} horario={item.horario} item={item} viagem={viagem} data={selectedValue} />
-                    )}
-                />
-            </ScrollViewFlat>
+            <ScrollView
+                contentContainerStyle={{ flexGrow: 1 }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
+                {
+                    atividades?.map((a) => {
+                        return <CardAtividade nome={a.local} local={a.endereco} horario={'18h'} item={a} viagem={viagem} data={selectedValue} />
+                    })
+                }
+            </ScrollView>
         </View>
     );
 }

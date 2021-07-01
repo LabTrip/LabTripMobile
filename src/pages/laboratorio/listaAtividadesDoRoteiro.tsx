@@ -62,7 +62,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         //seta lista de atividades se o status da resposta for 200
         if (response.status == 200) {
             setAtividadesAux(json);
-            setAtividades(json);
+            //setAtividades(json);
         }
     }
 
@@ -76,52 +76,21 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         }
     }
 
-    let listaAtividade = [
-        {
-            id: '1',
-            nome: 'Parque aquático',
-            local: 'Rua eusébio de frança, 320',
-            data: '17/02/2021',
-            horario: '18:00',
-            statusId: 1
-        },
-        {
-            id: '2',
-            nome: 'Trilha no mato ',
-            local: 'Rua eusébio de frança, 320',
-            data: '17/02/2021',
-            horario: '18:00',
-            statusId: 1
-        },
-        {
-            id: '3',
-            nome: 'Almoço no Mamma Júlia',
-            local: 'Rua eusébio de frança, 320',
-            data: '18/02/2021',
-            horario: '18:00',
-            statusId: 1
-        },
-        {
-            id: '4',
-            nome: 'Apresentação cultural',
-            local: 'Rua eusébio de frança, 320',
-            data: '19/02/2021',
-            horario: '18:00',
-            statusId: 1
-        }
-    ];
-
     let datas = new Array();
+    let filtroDatas = new Array();
     //criando lista com as datas de todas atividades
     atividadesAux.forEach((a) => datas.push(moment(a.dataInicio).format('DD/MM/yyyy')));
     //removendo valores de datas repetidas da lista
-    var filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
+    filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
 
     useEffect(() => {
         request();
         setSelectedValue(filtroDatas[0]);
         //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
         setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == filtroDatas[0]));
+        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == selectedValue));
+
+
     }, [refreshing]);
 
     const onRefresh = React.useCallback(() => {
