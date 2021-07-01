@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Modal, ActivityIndicator, AsyncStorage } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CardDespesaAdicional(props) {
     const [showLoaderDelete, setShowLoaderDelete] = React.useState(false);
@@ -97,7 +98,7 @@ export default function CardDespesaAdicional(props) {
                     { 
                         data: props.data,
                         descricao: props.descricao,
-                        valor: props.valor,
+                        valor: props.valor.toFixed(2),
                         despesasExtras: props.item
                     })} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
@@ -107,7 +108,7 @@ export default function CardDespesaAdicional(props) {
                 <Text style={styles.texto}>{props.descricao}</Text>
             </View>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>Valor: R$ {props.valor}</Text>
+                <Text style={styles.texto}>Valor: R$ {props.valor.toFixed(2)}</Text>
                 <TouchableOpacity disabled={!props.editar} onPress={() =>{
                     setShowLoaderDelete(true);
                 }}>
