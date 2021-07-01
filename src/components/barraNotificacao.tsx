@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function BarraNotificacao(props) {
     return (
@@ -9,7 +10,7 @@ export default function BarraNotificacao(props) {
             <View style={{backgroundColor: props.corDaBarra}}>
                 <View style={styles.barraNotificacao} >
                     <View style={styles.icone}>
-                        <MaterialCommunityIcons name={props.icone} color={'#000000'} size={24} />
+                        <MaterialIcons name={props.icone} color={'#000000'} size={24} />
                     </View>
                     <Text style={styles.textoNotificacao}>{props.texto}</Text>
                 </View>

@@ -42,7 +42,7 @@ export default function Notificacoes() {
       });
 
       const json = await response.json();
-      console.log(json)
+      //console.log(json)
       if (response.status == 200) {
         setNotificacoes(json);
       }
@@ -54,7 +54,7 @@ export default function Notificacoes() {
   useEffect(() => {
     try {
       buscaNotificacoes();
-      console.log('alou')
+      //console.log('alou')
     }
     catch (e) {
         console.log(e)
