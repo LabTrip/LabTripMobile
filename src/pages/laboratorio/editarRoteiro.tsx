@@ -184,14 +184,6 @@ export default function EditarRoteiro({ route }) {
                     <Text style={styles.botaoCriarTexto}>Versionar</Text>
                 </TouchableOpacity>
                 : null}
-            {route.params.viagem.alterar
-                ? <TouchableOpacity style={styles.botaoDeletar} onPress={() => {
-
-                    deletaRoteiro();
-                }}>
-                    <Text style={styles.botaoCriarTexto}>Excluir</Text>
-                </TouchableOpacity>
-                : null}
 
         </View>
 

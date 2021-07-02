@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, RefreshControl, ScrollView, FlatList, ActivityIndicator, Modal, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Checkbox } from 'react-native-paper';
 import BotaoMais from '../../components/botaoMais';
 import CardRoteiro from '../../components/cardRoteiro';
 import normalize from '../../components/fontSizeResponsive'
@@ -34,13 +35,14 @@ export default function ListaPropostaDeRoteiro({ route }) {
     const moment = require('moment');
     const navigation = useNavigation();
     const [roteiros, setRoteiros] = useState<Roteiro[]>([])
+    const [roteirosFull, setRoteirosFull] = useState<Roteiro[]>([])
     const [refreshing, setRefreshing] = React.useState(false);
     const [viagem, setViagem] = useState(route.params.viagem);
     const [showLoader, setShowLoader] = React.useState(false);
+    const [ocultarReprovados, setOcultarReprovados] = useState(true);
     let botaoChat = (<TouchableOpacity style={{ marginTop: '4%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Roteiro'}})}>
                         <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
                     </TouchableOpacity>);
-
 
     useEffect(() => {
         const request = async () => {
@@ -76,8 +78,8 @@ export default function ListaPropostaDeRoteiro({ route }) {
 
         const json = await response.json();
         if (response.status == 200) {
-            setRoteiros([]);
-            setRoteiros(json);
+            await setRoteirosFull(json);
+            await setRoteiros(json.filter((roteiro) => roteiro.status != 'Reprovado'));
         }
     }
 
@@ -88,6 +90,18 @@ export default function ListaPropostaDeRoteiro({ route }) {
             setRefreshing(false)
         }, 2000);
     }, [refreshing]);
+
+    const ocultarRoteirosOnPress = () => {
+        if(!ocultarReprovados){
+            const r = roteirosFull.filter((roteiro) => roteiro.status != 'Reprovado')
+            setRoteiros(r);
+            setOcultarReprovados(true);
+        }
+        else{
+            setRoteiros(roteirosFull);
+            setOcultarReprovados(false);
+        }
+    }
 
     return (
         <View style={styles.conteudo}>
@@ -111,6 +125,13 @@ export default function ListaPropostaDeRoteiro({ route }) {
             {/*<BotaoMais onPress={() => navigation.navigate('CriarRoteiro')} />*/}
             <View style={styles.containerTop}>
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <Checkbox
+                        status={ocultarReprovados ? 'checked' : 'unchecked'}
+                        onPress={ocultarRoteirosOnPress}
+                    />
+                    <Text>Esconder roteiros reprovados</Text>
+                </View>
             </View>
             {botaoChat}
             <FlatList
@@ -143,15 +164,18 @@ const styles = StyleSheet.create({
 
     },
     containerTop: {
+        width: '90%',
+        flexGrow: 1,
+        margin: 20,
+        padding: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '92%',
         backgroundColor: '#F2F2F2',
         borderRadius: 7,
-        height: '10%'
     },
     tituloTop: {
-        fontSize: normalize(18)
+        fontSize: normalize(18),
+        margin: 3
     },
     loader: {
         flexDirection: 'column',
