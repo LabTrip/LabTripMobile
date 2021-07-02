@@ -15,7 +15,8 @@ interface Orcamento {
         custo: number,
         descricao: string,
         usuarioId: string,
-        data: string
+        data: string,
+        nomeUsuario: string
     }],
     id: number,
     roteiroId: number,
@@ -166,8 +167,12 @@ export default function DetalhesOrcamento({ route }) {
                     <Text style={styles.label}>Despesas adicionais: </Text>
                     {
                         orcamento?.despesasExtras.map((d, index) => {
+                            let modificadoPor = "";
+                            if(route.name == 'Geral'){
+                                modificadoPor = d.nomeUsuario
+                             }
                             return (
-                                <CardDespesasAdicionais key={d.id} id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} />
+                                <CardDespesasAdicionais key={d.id} id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} modificadoPor={modificadoPor}/>
                             )
                         })
                         
