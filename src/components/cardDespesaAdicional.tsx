@@ -115,6 +115,10 @@ export default function CardDespesaAdicional(props) {
                     <MaterialCommunityIcons name={'close-thick'} color={'black'} size={25} />
                 </TouchableOpacity>
             </View>
+            {props.modificadoPor != "" && (<View style={styles.containerRow}>
+                                        <Text style={styles.texto}>Última modificação: {props.modificadoPor}</Text>
+                                    </View>)
+            }
         </View>
 
     )
