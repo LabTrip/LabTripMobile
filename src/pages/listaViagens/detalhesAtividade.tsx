@@ -23,9 +23,6 @@ export default function DetalhesAtividade({ route }) {
                 <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
                 <Text style={styles.textoDetalhes}>Ensolarado, 25°</Text>
             </View>
-            <TouchableOpacity onPress={() => alert('clicou na messagem')}>
-                <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
-            </TouchableOpacity>
             <Text style={styles.tituloDetalhes}>Custo: R$ {valorFormatado}</Text>
             {route.params.planejamento != true ?
                 (<View style={[styles.containerDetalhes, { height: '40%', flexDirection: 'row', justifyContent: 'space-between', padding: '3%' }]}>

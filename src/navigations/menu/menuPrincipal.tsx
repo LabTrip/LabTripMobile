@@ -48,7 +48,7 @@ export default function MenuPrincipal() {
     if (response.status == 200) {
       console.log('Push token cadastrado.')
     }
-    else{
+    else {
       console.log('erro ao cadastras Push token.')
     }
   }
@@ -71,7 +71,7 @@ export default function MenuPrincipal() {
     } else {
       alert('Must use physical device for Push Notifications');
     }
-  
+
     if (Platform.OS === 'android') {
       Notifications.setNotificationChannelAsync('default', {
         name: 'default',
@@ -89,35 +89,35 @@ export default function MenuPrincipal() {
         <Tab.Screen name="Notificacoes" component={Notificacoes} options={{
           tabBarLabel: '',
           tabBarColor: '#fff',
-          tabBarIcon: ({focused}) => (
-            <MaterialCommunityIcons name="bell"  color={focused ? '#0FD06F' : '#BABABA'} size={29} />
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons name="bell" color={focused ? '#0FD06F' : '#BABABA'} size={29} />
           )
         }} />
         <Tab.Screen name="TelasLaboratorio" component={TelasLaboratorio} options={{
           tabBarLabel: '',
           tabBarColor: '#fff',
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons name="pen" color={focused ? '#0FD06F' : '#BABABA'} size={29} />
           )
         }} />
         <Tab.Screen name="TelasListaViagens" component={TelasListaViagens} options={{
           tabBarLabel: '',
           tabBarColor: '#fff',
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons name="airplane" color={focused ? '#0FD06F' : '#BABABA'} size={29} />
           )
         }} />
-        <Tab.Screen name="Mensagens" component={Mensagens} options={{
+        {/*<Tab.Screen name="Sobre o app" component={Mensagens} options={{
           tabBarLabel: '',
           tabBarColor: '#fff',
-          tabBarIcon: ({focused}) => (
-            <MaterialCommunityIcons name="message" color={focused ? '#0FD06F' : '#BABABA'} size={29} />
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons name="help" color={focused ? '#0FD06F' : '#BABABA'} size={29} />
           )
-        }} />
-        <Tab.Screen name="TelasProfile"  component={TelasProfile} options={{
+        }} />*/}
+        <Tab.Screen name="TelasProfile" component={TelasProfile} options={{
           tabBarLabel: '',
           tabBarColor: '#fff',
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons name="account" color={focused ? '#0FD06F' : '#BABABA'} size={29} />
           )
         }} />

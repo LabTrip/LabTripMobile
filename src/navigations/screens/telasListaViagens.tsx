@@ -8,6 +8,7 @@ import EditarOrcamentoPlanejado from '../../pages/listaViagens/editarOrcamentoPl
 import EditarDespesaAdicional from '../../pages/listaViagens/editarDespesaAdicional'
 import AdicionarDespesa from '../../pages/listaViagens/adicionarDespesa';
 import AdicionarMidias from '../../pages/listaViagens/adicionarMidias';
+import Chat from '../../pages/chat/chat';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -22,6 +23,7 @@ export default function TelasListaViagens() {
             <Screen name="EditarDespesaAdicional" options={{ title: "Editar despesa adicional" }} component={EditarDespesaAdicional} />
             <Screen name="AdicionarDespesa" options={{ title: "Adicionar despesa" }} component={AdicionarDespesa} />
             <Screen name="AdicionarMidias" options={{ title: "Adicionar midias" }} component={AdicionarMidias} />
+            <Screen name="Chat" options={{ title: "Chat" }} component={Chat} />
         </Navigator>
     );
 }

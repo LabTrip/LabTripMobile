@@ -109,9 +109,6 @@ export default function CardViagem(props) {
                 <Text style={styles.label}> Fim:</Text> {props.dataFim}
             </Text>
             <Text>
-                <Text style={styles.label}>Local:</Text> {props.local}
-            </Text>
-            <Text>
                 <Text style={styles.label}>Status: </Text>
                 <Text style={{ color: corDoStatus }}>{status}</Text>
             </Text>

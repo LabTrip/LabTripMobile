@@ -189,7 +189,7 @@ export default function EditarRoteiro({ route }) {
 
                     deletaRoteiro();
                 }}>
-                    <Text style={styles.botaoCriarTexto}>Deletar</Text>
+                    <Text style={styles.botaoCriarTexto}>Excluir</Text>
                 </TouchableOpacity>
                 : null}
 
