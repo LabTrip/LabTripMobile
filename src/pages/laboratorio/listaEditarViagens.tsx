@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import BarraPesquisa from '../../components/barraPesquisa';
 import CardViagem from '../../components/cardViagem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BotaoMais from '../../components/botaoMais';
 
 interface Viagem {
   id: string,
@@ -14,7 +15,7 @@ interface Viagem {
   dono: string
 }
 
-export default function ListaEditarViagens() {
+export default function ListaEditarViagens({ route }) {
   let token;
   const moment = require('moment');
   const navigation = useNavigation();
@@ -22,9 +23,12 @@ export default function ListaEditarViagens() {
   //array auxiliar para guardar em cache a lista de viagens
   const [auxViagens, setAuxViagens] = useState<Viagem[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const abortController = new AbortController();
+  const [idPermissao, setIdPermissao] = useState(4);
 
   const getViagens = async () => {
     return await fetch('https://labtrip-backend.herokuapp.com/viagens', {
+      signal: abortController.signal,
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -32,6 +36,24 @@ export default function ListaEditarViagens() {
         'x-access-token': token
       }
     });
+  }
+  const getUsuario = async (idUsuario, token) => {
+    return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + idUsuario, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token
+      }
+    });
+  }
+
+  const getIdPermissao = async () => {
+    const token = await AsyncStorage.getItem('AUTH') || "";
+    const idUsuario = await AsyncStorage.getItem('USER_ID') || "";
+    const response = await getUsuario(JSON.parse(idUsuario), JSON.parse(token));
+    const json = await response.json();
+    setIdPermissao(json.perfilId);
   }
 
   const request = async () => {
@@ -61,9 +83,12 @@ export default function ListaEditarViagens() {
 
   useEffect(() => {
     setTimeout(() => {
-
     }, 2000)
-    request()
+    request();
+    getIdPermissao();
+    return () => {
+      abortController.abort();
+    }
   }, []);
 
 
@@ -77,6 +102,11 @@ export default function ListaEditarViagens() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <BarraPesquisa texto={'Pesquisar viagem...'} auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
+      {idPermissao != 4 ?
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <BotaoMais onPress={ () => navigation.navigate('CriarViagem')} />
+        </View>
+        : null}
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}

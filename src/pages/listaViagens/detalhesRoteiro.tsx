@@ -66,6 +66,9 @@ export default function DetalhesRoteiro({ route }) {
         const json = await response.json();
         //seta lista de atividades se o status da resposta for 200
         if (response.status == 200) {
+            console.log(viagem.roteiro.id);
+            console.log(viagem.roteiro.versao)
+
             console.log(json)
             setAtividadesAux(json);
             setAtividades(json);
@@ -81,9 +84,9 @@ export default function DetalhesRoteiro({ route }) {
             console.log(e)
         }
 
-        return () => {
+        /*return () => {
             abortController.abort();
-        }
+        }*/
     }
 
     let datas = new Array();
@@ -145,7 +148,7 @@ export default function DetalhesRoteiro({ route }) {
             >
                 {
                     atividades?.map((a) => {
-                        return <CardAtividade nome={a.local} local={a.endereco} horario={'18h'} item={a} viagem={viagem} data={selectedValue} />
+                        return <CardAtividade key={a.id} nome={a.local} local={a.endereco} horario={'18h'} item={a} viagem={viagem} data={selectedValue} />
                     })
                 }
             </ScrollView>
