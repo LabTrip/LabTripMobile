@@ -12,7 +12,7 @@ export default function CardAtividadeAgencia(props) {
         <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.atividade, planejamento: true})}>
             <Text style={styles.textoTitulo}>{props.atividade.local} </Text>
             <View style={styles.detalhes}>
-                <Text style={styles.textoDetalhes}>Local: {props.atividade.endereco}{"\n"}Horário: {moment(props.atividade.dataInicio).format('HH:mm')}</Text>
+                <Text style={styles.textoDetalhes}>Local: {props.atividade.endereco}{"\n"}Horário: {moment(props.atividade.dataInicio).local().format('HH:mm')}</Text>
                 {/*<TouchableOpacity>
                     <MaterialCommunityIcons name="heart" color={'#FF2424'} size={29} />
                     <Text>1</Text>

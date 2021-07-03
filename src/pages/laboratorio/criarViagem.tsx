@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Platform
 import { useNavigation } from '@react-navigation/native';
 import CardProprietario from '../../components/cardProprietario';
 import BotaoLupa from '../../components/botaoLupa';
-import DatePicker from 'react-native-datepicker'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -21,11 +20,14 @@ export default function CriarViagem() {
     let token, userId;
     const navigation = useNavigation();
     const [apelido, setApelido] = useState('');
-    const [dataInicio, onChangeTextDataInicio] = useState(moment());
-    const [dataFim, onChangeTextDataFim] = useState(moment());
+    const [dataInicio, onChangeTextDataInicio] = useState(new Date());
+    const [dataFim, onChangeTextDataFim] = useState(new Date());
     const [email, onChangeTextEmail] = useState('');
     const [participantes, setParticipantes] = useState<Participante[]>([]);
     const [agente, setAgente] = useState<Participante[]>([]);
+    const [showDataInicio, setShowDataInicio] = useState(false);
+    const [showDataFim, setShowDataFim] = useState(false);
+    const [mode, setMode] = useState('date');
 
     const buscaUsuario = async (email) => {
         return await fetch('https://labtrip-backend.herokuapp.com/usuarios/email/' + email, {
@@ -121,6 +123,29 @@ export default function CriarViagem() {
         }
     }
 
+    const mostrarDataInicio = () => {
+        setShowDataInicio(true);
+        setMode('date');
+    };
+
+    const onChangeDataInicio = (event, selectedDate) => {
+        const currentDate = selectedDate || new Date();
+        setShowDataInicio(Platform.OS === 'ios');
+        onChangeTextDataInicio(currentDate);
+        console.log(currentDate)
+    };
+
+    const mostrarDataFim = () => {
+        setShowDataFim(true);
+        setMode('date');
+    };
+
+    const onChangeDataFim = (event, selectedDate) => {
+        const currentDate = selectedDate || new Date();
+        setShowDataFim(Platform.OS === 'ios');
+        onChangeTextDataFim(currentDate);
+        console.log(currentDate)
+    };
 
     return (
         <View style={styles.container}>
@@ -130,22 +155,32 @@ export default function CriarViagem() {
                 <Text style={styles.labelData}>Data de Fim</Text>
             </View>
             <View style={styles.containerData}>
-                <DatePicker
-                    style={styles.inputDataCelular}
-                    placeholder={"Data início"}
-                    date={moment(dataInicio, 'DD/MM/YYYY')}
-                    format="DD/MM/yyyy"
-                    minDate="01/01/1900"
-                    onDateChange={data => onChangeTextDataInicio(data)}
-                />
-                <DatePicker
-                    style={styles.inputDataCelular}
-                    placeholder={"Data fim"}
-                    date={moment(dataFim, 'DD/MM/YYYY')}
-                    format="DD/MM/yyyy"
-                    minDate="01/01/1900"
-                    onDateChange={data => onChangeTextDataFim(data)}
-                />
+            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
+                <Text>Data início</Text>
+                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                    keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                {showDataInicio && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={dataInicio}
+                        display="default"
+                        onChange={onChangeDataInicio}
+                    />
+                )}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
+                <Text>Data fim</Text>
+                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                    keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                {showDataFim && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={dataFim}
+                        display="default"
+                        onChange={onChangeDataFim}
+                    />
+                )}
+            </TouchableOpacity>
             </View>
             <View style={styles.containerAddFuncionarios}>
                 <TextInput placeholder={"Email do proprietário"} value={email} onChangeText={texto => onChangeTextEmail(texto)}
@@ -245,18 +280,32 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
     },
+    containerDataCelular: {
+        flexDirection: 'row',
+    },
     inputDataCelular: {
-        marginTop: '1%',
-        marginBottom: '3%',
-        width: '45%',
-        marginHorizontal: '2%',
+        marginTop: 25,
+        width: 266,
         height: 50,
-        backgroundColor: '#EBEBEB',
+        backgroundColor: '#fff',
         textAlign: 'center',
         justifyContent: 'space-around',
+        fontWeight: 'bold',
         borderRadius: 32,
+        borderColor: 'black',
+        borderWidth: 1,
+        padding: 10,
+        fontSize: 16,
+    },
+    inputDate: {
+        marginTop: '3%',
+        width: '90%',
         padding: 15,
         fontSize: 16,
-    }
+        borderRadius: 41,
+        backgroundColor: '#EBEBEB',
+        textAlign: 'center',
+        color: '#333333'
+    },
 
 });

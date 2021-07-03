@@ -13,6 +13,7 @@
     "pushApiKey": "expo push:android:upload --api-key AAAAwBb6Lug:APA91bF8uIXEnMVD46NQF0DDiarRSQxGXU-ZHSiXOow2_O1tDjJ9dzQ1J40h2MINNC2wZWjItEnogPyQoOssELEokTVlTqAYrskz-F04Kv_Ld-PZaLGYmwBB2bNlfDrG-q7Bc4Eb6KfM"
   },
   "dependencies": {
+    "@expo/vector-icons": "^12.0.0",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/datetimepicker": "^3.4.7",
     "@react-native-community/masked-view": "^0.1.10",
@@ -33,7 +34,7 @@
     "i18next": "^19.8.5",
     "i18next-browser-languagedetector": "^6.0.1",
     "moment": "^2.29.1",
-    "react": "16.13.1",
+    "react": "^16.13.1",
     "react-data-table-component": "^6.11.7",
     "react-dom": "16.13.1",
     "react-input-mask": "^2.0.4",
@@ -59,8 +60,7 @@
     "react-navigation-material-bottom-tabs": "^2.3.3",
     "rn-fetch-blob": "^0.12.0",
     "socket.io-client": "^4.1.2",
-    "styled-components": "^5.2.1",
-    "@expo/vector-icons": "^12.0.0"
+    "styled-components": "^5.2.1"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

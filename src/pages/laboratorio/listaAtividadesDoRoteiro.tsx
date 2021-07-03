@@ -5,6 +5,7 @@ import CardAtividadeAgencia from '../../components/cardAtividadeAgencia';
 import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
+import BotaoMais from '../../components/botaoMais'
 
 interface Atividade {
     id: number,
@@ -79,7 +80,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
     let datas = new Array();
     let filtroDatas = new Array();
     //criando lista com as datas de todas atividades
-    atividadesAux.forEach((a) => datas.push(moment(a.dataInicio).format('DD/MM/yyyy')));
+    atividadesAux.forEach((a) => datas.push(moment(a.dataInicio).local().format('DD/MM/yyyy')));
     //removendo valores de datas repetidas da lista
     filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
 
@@ -87,8 +88,8 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         request();
         setSelectedValue(filtroDatas[0]);
         //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
-        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == filtroDatas[0]));
-        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == selectedValue));
+        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == filtroDatas[0]));
+        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == selectedValue));
 
 
     }, [refreshing]);
@@ -103,13 +104,14 @@ export default function ListaAtividadesDoRoteiro({ route }) {
     return (
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>
+                <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', {roteiro: route.params.roteiro})}></BotaoMais>
                 <Picker style={styles.pickerComponente}
                     prompt="Tipo de usuário"
                     mode="dropdown"
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, value) => {
                         setSelectedValue(itemValue);
-                        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == itemValue));
+                        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == itemValue));
                     }}>
                     {
                         filtroDatas?.map((a) => {

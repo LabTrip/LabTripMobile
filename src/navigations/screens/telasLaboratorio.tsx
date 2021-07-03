@@ -18,6 +18,7 @@ import CriarRoteiro from '../../pages/laboratorio/criarRoteiro';
 import MenuDetalhesRoteiroAgencia from '../menu/menuDetalhesRoteiroAgencia';
 import DetalhesAtividade from '../../pages/listaViagens/detalhesAtividade';
 import Chat from '../../pages/chat/chat'
+import AdicionarAtividadeRoteiro from '../../pages/laboratorio/adicionarAtividadeRoteiro'
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -42,6 +43,7 @@ export default function TelasLaboratorio() {
       <Screen name="CriarRoteiro" options={{ title: "Criar roteiro" }} component={CriarRoteiro} />
       <Screen name="DetalhesAtividade" options={{ title: "Detalhes da atividade" }} component={DetalhesAtividade} />
       <Screen name="Chat" options={{ title: "Chat" }} component={Chat} />
+      <Screen name="AdicionarAtividadeRoteiro" options={{ title: "Adicionar atividades ao roteiro" }} component={AdicionarAtividadeRoteiro} />
     </Navigator>
   );
 }
