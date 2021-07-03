@@ -86,7 +86,7 @@ export default function ListaEditarViagens({ route }) {
     }, 2000)
     request();
     getIdPermissao();
-    return () => {
+    return function cleanup() {
       abortController.abort();
     }
   }, []);
@@ -104,7 +104,7 @@ export default function ListaEditarViagens({ route }) {
       <BarraPesquisa texto={'Pesquisar viagem...'} auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
       {idPermissao != 4 ?
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <BotaoMais onPress={ () => navigation.navigate('CriarViagem')} />
+          <BotaoMais onPress={() => navigation.navigate('CriarViagem')} />
         </View>
         : null}
       <FlatList

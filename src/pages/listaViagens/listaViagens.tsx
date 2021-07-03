@@ -61,7 +61,7 @@ export default function ListaViagens() {
 
   useEffect(() => {
     request();
-    return () => {
+    return function cleanup () {
       abortController.abort();
     }
   }, [refreshing]);
