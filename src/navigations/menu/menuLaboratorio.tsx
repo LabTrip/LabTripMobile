@@ -31,20 +31,11 @@ export default function MenuLaboratorio() {
 
   getIdPermissao();
 
-  //mostra aba de cadastro se o usuario tiver permissão diferente de cliente
-  if (idPermissao != 4) {
-    return (
-      <Tab.Navigator>
-        <Tab.Screen name="Viagens" component={ListaEditarViagens} />
-        <Tab.Screen name="Cadastros" component={MenuLaboratorioCadastro} />
-      </Tab.Navigator>
-    );
-  } else {
-    return (
-      <Tab.Navigator>
-        <Tab.Screen name="Viagens" component={ListaEditarViagens} />
-      </Tab.Navigator>
-    );
-  }
-
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Viagens" component={ListaEditarViagens} />
+      {/* mostra aba de cadastro se o usuario tiver permissão diferente de cliente */}
+      {idPermissao != 4 ? <Tab.Screen name="Cadastros" component={MenuLaboratorioCadastro} /> : null}
+    </Tab.Navigator>
+  );
 }
