@@ -151,36 +151,32 @@ export default function CriarViagem() {
         <View style={styles.container}>
             <TextInput placeholder={"Apelido da viagem"} value={apelido} onChangeText={(text) => setApelido(text)} style={styles.input} />
             <View style={styles.containerData}>
-                <Text style={styles.labelData}>Data de Inicio</Text>
-                <Text style={styles.labelData}>Data de Fim</Text>
-            </View>
-            <View style={styles.containerData}>
-            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
-                <Text>Data início</Text>
-                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                    keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                {showDataInicio && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={dataInicio}
-                        display="default"
-                        onChange={onChangeDataInicio}
-                    />
-                )}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
-                <Text>Data fim</Text>
-                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                    keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                {showDataFim && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={dataFim}
-                        display="default"
-                        onChange={onChangeDataFim}
-                    />
-                )}
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
+                    <Text style={styles.labelData}>Data de Inicio</Text>
+                    <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                        keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                    {showDataInicio && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={dataInicio}
+                            display="default"
+                            onChange={onChangeDataInicio}
+                        />
+                    )}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataFim}>
+                    <Text style={styles.labelData}>Data de Fim</Text>
+                    <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                        keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                    {showDataFim && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={dataFim}
+                            display="default"
+                            onChange={onChangeDataFim}
+                        />
+                    )}
+                </TouchableOpacity>
             </View>
             <View style={styles.containerAddFuncionarios}>
                 <TextInput placeholder={"Email do proprietário"} value={email} onChangeText={texto => onChangeTextEmail(texto)}
@@ -199,7 +195,12 @@ export default function CriarViagem() {
             </View>
 
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
-                salvar();
+                if (apelido == "") {
+                    alert('A viagem precisa ter um apelido!');
+                }
+                else {
+                    salvar();
+                }
             }}>
                 <Text style={styles.botaoCriarTexto}>Criar viagem</Text>
             </TouchableOpacity>
@@ -212,6 +213,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#fff',
+        justifyContent: 'flex-start'
     },
     containerData: {
         flexDirection: 'row',
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: '3%',
-        width: '95%',
+        width: '90%',
         padding: 15,
         fontSize: 16,
         borderRadius: 41,
@@ -237,11 +239,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         color: '#999999',
-        width: '45%'
+        //width: '45%'
     },
     inputAddParticipante: {
         marginTop: '3%',
-        width: '85%',
+        width: '90%',
         height: 'auto',
         padding: 15,
         fontSize: 16,
@@ -281,7 +283,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     containerDataCelular: {
-        flexDirection: 'row',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
     },
     inputDataCelular: {
         marginTop: 25,
@@ -299,13 +302,14 @@ const styles = StyleSheet.create({
     },
     inputDate: {
         marginTop: '3%',
-        width: '90%',
+        width: 130,
         padding: 15,
         fontSize: 16,
         borderRadius: 41,
         backgroundColor: '#EBEBEB',
         textAlign: 'center',
-        color: '#333333'
+        color: '#333333',
+        marginHorizontal: '3%',
     },
 
 });
