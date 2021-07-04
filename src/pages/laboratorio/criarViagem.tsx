@@ -192,7 +192,6 @@ export default function CriarViagem() {
                     renderItem={({ item }) => (
                         <CardProprietario usuario={item} nome={item.nome} dono={true} proprietario={true} excluir={removeProprietario} />
                     )}
-
                 />
             </View>
 

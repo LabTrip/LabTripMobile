@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     nome:{
+        textAlign: 'center',
         maxWidth: '90%'
     }
 });

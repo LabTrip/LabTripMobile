@@ -42,7 +42,7 @@ export default function ListaPropostaDeRoteiro({ route }) {
     const [ocultarReprovados, setOcultarReprovados] = useState(true);
     const [idPermissao, setIdPermissao] = useState(4);
 
-    let botaoChat = (<TouchableOpacity style={{ marginTop: '4%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem, topico: { id: 0, descricao: 'Roteiro' } })}>
+    let botaoChat = (<TouchableOpacity style={{ marginBottom: '1%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem, topico: { id: 0, descricao: 'Roteiro' } })}>
         <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
     </TouchableOpacity>);
 
