@@ -149,6 +149,7 @@ export default function CriarViagem() {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.labelData}>Apelido da viagem</Text>
             <TextInput placeholder={"Apelido da viagem"} value={apelido} onChangeText={(text) => setApelido(text)} style={styles.input} />
             <View style={styles.containerData}>
                 <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
@@ -178,6 +179,7 @@ export default function CriarViagem() {
                     )}
                 </TouchableOpacity>
             </View>
+            <Text style={styles.labelData}>Adicionar usuário dono na viagem</Text>
             <View style={styles.containerAddFuncionarios}>
                 <TextInput placeholder={"Email do proprietário"} value={email} onChangeText={texto => onChangeTextEmail(texto)}
                     style={styles.inputAddParticipante} />
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         color: '#999999',
-        //width: '45%'
+        maxWidth: '90%'
     },
     inputAddParticipante: {
         marginTop: '3%',
