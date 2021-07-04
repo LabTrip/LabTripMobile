@@ -41,6 +41,7 @@ export default function DetalhesOrcamento({ route }) {
     const rota = route.name;
     let botaoChat;
     let alterar = true
+    let tipoOrcamento = "Individual"
     //adicionando icone de chat quando usuario vier pelas rotas de orçamento geral.
     if (rota == 'Geral' || rota == 'Orçamento') {
         botaoChat = <TouchableOpacity style={{ marginTop: '4%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Orçamento'}})}>
@@ -48,6 +49,7 @@ export default function DetalhesOrcamento({ route }) {
                     </TouchableOpacity>;
         //mostrando botão de criar despesa adicional caso o usuário tenha permissão de membro na viagem
         alterar = route.params.viagem.alterar;
+        tipoOrcamento = "Geral"
     }
 
     useEffect(() => {
@@ -163,7 +165,7 @@ export default function DetalhesOrcamento({ route }) {
                             : null}
                         {botaoChat}
                     </View>
-                    <CardOrcamento planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} />
+                    <CardOrcamento roteiro={roteiro} atualizarEstado={onRefresh} tipoOrcamento={tipoOrcamento} planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} />
                     <Text style={styles.label}>Despesas adicionais: </Text>
                     {
                         orcamento?.despesasExtras.map((d, index) => {
