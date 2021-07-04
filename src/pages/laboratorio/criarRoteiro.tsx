@@ -1,31 +1,71 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
 import normalize from '../../components/fontSizeResponsive';
-import DatePicker from 'react-native-datepicker'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+interface Roteiro {
+    id: number,
+    viagemId: string,
+    descricaoRoteiro: string,
+    statusId: number,
+    versao: number
+}
 
-const moment = require('moment');
-
-
-export default function CriarRoteiro() {
+export default function CriarRoteiro({ route }) {
+    let token;
     const navigation = useNavigation();
     const [apelido, onChangeApelido] = useState("");
-    const [selectedValue, setSelectedValue] = useState(1);
 
-    let comboBox;
+    const salvaRoteiros = async () => {
+        return await fetch('https://labtrip-backend.herokuapp.com/roteiros/', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            },
+            body: JSON.stringify({
+                viagemId: route.params.viagem.id.toString(),
+                statusId: '1',
+                versao: 1,
+                descricaoRoteiro: apelido
 
+            })
+        });
+    }
+    const salvar = async () => {
+        const value = await AsyncStorage.getItem('AUTH');
+        if (value !== null) {
+            token = JSON.parse(value)
+            const response = await salvaRoteiros();
+            const json = await response.json();
+            if (response.status == 201) {
+                alert('Roteiro criado com sucesso!');
+                navigation.goBack();
+            } else {
+                alert(json.mensagem)
+            }
+        }
+        else {
+            alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+        }
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.containerTop}>
-                <Text style={styles.tituloTop}>Propostas de roteiro</Text>
+                <Text style={styles.tituloTop}>Criação da proposta de roteiro</Text>
             </View>
-            <TextInput placeholder={"Apelido do roteiro"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
+            <Text style={styles.labelData}>Descrição do roteiro</Text>
+            <TextInput placeholder={"Descrição"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
-                alert(apelido)
-                navigation.goBack();
+                if (apelido != "") {
+                    salvar();
+                } else {
+                    alert('O roteiro precisa ter uma descrição!')
+                }
+
             }}>
                 <Text style={styles.botaoCriarTexto}>Salvar</Text>
             </TouchableOpacity>
@@ -50,14 +90,15 @@ const styles = StyleSheet.create({
         marginTop: '5%',
     },
     tituloTop: {
-        fontSize: normalize(18)
+        fontSize: normalize(18),
+        maxWidth: '80%'
     },
     containerData: {
         flexDirection: 'row',
     },
     input: {
         marginTop: '3%',
-        width: '95%',
+        width: '90%',
         padding: 15,
         fontSize: 16,
         borderRadius: 41,
