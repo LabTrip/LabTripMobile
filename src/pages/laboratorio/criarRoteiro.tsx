@@ -12,7 +12,7 @@ interface Roteiro {
     versao: number
 }
 
-export default function CriarRoteiro({ route }) {
+export default function CriarRoteiro({route}) {
     let token;
     const navigation = useNavigation();
     const [apelido, onChangeApelido] = useState("");
@@ -42,6 +42,7 @@ export default function CriarRoteiro({ route }) {
             const json = await response.json();
             if (response.status == 201) {
                 alert('Roteiro criado com sucesso!');
+                route.params.atualizarEstado()
                 navigation.goBack();
             } else {
                 alert(json.mensagem)
