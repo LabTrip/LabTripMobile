@@ -37,6 +37,14 @@ const messages = {
                 loginInvalido: 'Invalid email and/or password',
                 emailInvalido: 'Invalid email',
                 codigoInvalido: 'Incorrect code',
+            },
+            adicionarAtividadeRoteiro: {
+                atividade: 'Activity',
+                custo: 'Price',
+                dataInicio: 'Start date',
+                dataFim: 'End date',
+                observacoes: 'Observations',
+                adicionar: 'Add'
             }
 
 

@@ -132,7 +132,6 @@ export default function CriarViagem() {
         const currentDate = selectedDate || new Date();
         setShowDataInicio(Platform.OS === 'ios');
         onChangeTextDataInicio(currentDate);
-        console.log(currentDate)
     };
 
     const mostrarDataFim = () => {
@@ -144,7 +143,6 @@ export default function CriarViagem() {
         const currentDate = selectedDate || new Date();
         setShowDataFim(Platform.OS === 'ios');
         onChangeTextDataFim(currentDate);
-        console.log(currentDate)
     };
 
     return (
@@ -155,32 +153,30 @@ export default function CriarViagem() {
                 <Text style={styles.labelData}>Data de Fim</Text>
             </View>
             <View style={styles.containerData}>
-            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
-                <Text>Data início</Text>
-                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                    keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                {showDataInicio && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={dataInicio}
-                        display="default"
-                        onChange={onChangeDataInicio}
-                    />
-                )}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
-                <Text>Data fim</Text>
-                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                    keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                {showDataFim && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={dataFim}
-                        display="default"
-                        onChange={onChangeDataFim}
-                    />
-                )}
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
+                    <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                        keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                    {showDataInicio && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={dataInicio}
+                            display="default"
+                            onChange={onChangeDataInicio}
+                        />
+                    )}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataFim}>
+                    <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                        keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                    {showDataFim && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={dataFim}
+                            display="default"
+                            onChange={onChangeDataFim}
+                        />
+                    )}
+                </TouchableOpacity>
             </View>
             <View style={styles.containerAddFuncionarios}>
                 <TextInput placeholder={"Email do proprietário"} value={email} onChangeText={texto => onChangeTextEmail(texto)}
@@ -215,6 +211,9 @@ const styles = StyleSheet.create({
     },
     containerData: {
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '90%'
     },
     containerAddFuncionarios: {
         width: '90%',
@@ -282,10 +281,13 @@ const styles = StyleSheet.create({
     },
     containerDataCelular: {
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '55%'
     },
     inputDataCelular: {
         marginTop: 25,
-        width: 266,
+        width: '100%',
         height: 50,
         backgroundColor: '#fff',
         textAlign: 'center',

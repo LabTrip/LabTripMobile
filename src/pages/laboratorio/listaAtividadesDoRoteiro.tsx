@@ -37,6 +37,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
     const [atividadesAux, setAtividadesAux] = useState<Atividade[]>([])
     const [refreshing, setRefreshing] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState('');
+    const [idPermissao, setIdPermissao] = useState(4);
 
     //captura o token local do usuário.
     const retornaToken = async () => {
@@ -86,6 +87,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
 
     useEffect(() => {
         request();
+        getIdPermissao()
         setSelectedValue(filtroDatas[0]);
         //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
         setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == filtroDatas[0]));
@@ -101,10 +103,33 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         }, 0);
     }, [refreshing]);
 
+    const getUsuario = async (idUsuario, token) => {
+        return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + idUsuario, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'x-access-token': token
+          }
+        });
+      }
+
+    const getIdPermissao = async () => {
+        const token = await AsyncStorage.getItem('AUTH') || "";
+        const idUsuario = await AsyncStorage.getItem('USER_ID') || "";
+        const response = await getUsuario(JSON.parse(idUsuario), JSON.parse(token));
+        const json = await response.json();
+        setIdPermissao(json.perfilId);
+      }
+
+
     return (
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>
-                <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', {roteiro: route.params.roteiro})}></BotaoMais>
+                {idPermissao != 4 ?
+                    <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', {roteiro: route.params.roteiro})}></BotaoMais>
+                : null}
+                
                 <Picker style={styles.pickerComponente}
                     prompt="Tipo de usuário"
                     mode="dropdown"

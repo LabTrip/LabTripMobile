@@ -36,7 +36,15 @@ const messages  = {
                 loginInvalido: 'E-mail e/ou senha inválidos',
                 emailInvalido: 'Email inválido',
                 codigoInvalido: 'Código inválido',
-            }    
+            },
+            adicionarAtividadeRoteiro: {
+                atividade: 'Atividade',
+                custo: 'Custo',
+                dataInicio: 'Data de início',
+                dataFim: 'Data fim',
+                observacoes: 'Observações',
+                adicionar: 'adicionar'
+            }
             
 
         }
