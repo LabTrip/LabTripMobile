@@ -40,7 +40,7 @@ export default function CardRoteiro(props) {
         <TouchableOpacity style={[styles.cardViagens,
         { backgroundColor: corDoCard, borderLeftColor: corBordaDoCard }]}
             onPress={() => navigation.navigate(props.navigate, { roteiro: props.item , viagem: props.viagem})}>
-            <Text>{props.nome}</Text>
+            <Text style={styles.nome}>{props.nome}</Text>
             <Text>
                 <Text style={styles.label}>Status: </Text>
                 <Text style={{ color: corDoStatus }}>{props.statusDesc}</Text>
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 13,
         borderLeftWidth: 6,
+        minWidth: '100%',
         width: '100%',
         height: 143,
         flexDirection: 'column',
@@ -67,6 +68,10 @@ const styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold'
+    },
+    nome:{
+        textAlign: 'center',
+        maxWidth: '90%'
     }
 });
 

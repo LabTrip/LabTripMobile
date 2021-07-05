@@ -103,7 +103,7 @@ export default function CardViagem(props) {
         <TouchableOpacity style={[styles.cardViagens,
         { backgroundColor: corDoCard, borderLeftColor: corBordaDoCard }]}
             onPress={() => navigation.navigate(props.navigate, { viagem: props.viagem })}>
-            <Text>{props.nome}</Text>
+            <Text style={styles.nome}>{props.nome}</Text>
             <Text>
                 <Text style={styles.label}>Início:</Text> {props.dataInicio}
                 <Text style={styles.label}> Fim:</Text> {props.dataFim}
@@ -125,14 +125,20 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 13,
         borderLeftWidth: 6,
-        width: '85%',
-        height: 143,
+        width: '80%',
+        minWidth: '80%',
+        maxWidth: '80%',
+        minHeight: 143,
         flexDirection: 'column',
         justifyContent: 'space-around',
         alignItems: 'center',
     },
     label: {
         fontWeight: 'bold'
+    },
+    nome:{
+        textAlign: 'center',
+        flexWrap: 'wrap'
     }
 });
 

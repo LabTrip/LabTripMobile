@@ -147,6 +147,7 @@ export default function CriarViagem() {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.labelData}>Apelido da viagem</Text>
             <TextInput placeholder={"Apelido da viagem"} value={apelido} onChangeText={(text) => setApelido(text)} style={styles.input} />
             <View style={styles.containerData}>
                 <Text style={styles.labelData}>Data de Inicio</Text>
@@ -178,6 +179,7 @@ export default function CriarViagem() {
                     )}
                 </TouchableOpacity>
             </View>
+            <Text style={styles.labelData}>Adicionar usuário dono na viagem</Text>
             <View style={styles.containerAddFuncionarios}>
                 <TextInput placeholder={"Email do proprietário"} value={email} onChangeText={texto => onChangeTextEmail(texto)}
                     style={styles.inputAddParticipante} />
@@ -190,12 +192,16 @@ export default function CriarViagem() {
                     renderItem={({ item }) => (
                         <CardProprietario usuario={item} nome={item.nome} dono={true} proprietario={true} excluir={removeProprietario} />
                     )}
-
                 />
             </View>
 
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
-                salvar();
+                if (apelido == "") {
+                    alert('A viagem precisa ter um apelido!');
+                }
+                else {
+                    salvar();
+                }
             }}>
                 <Text style={styles.botaoCriarTexto}>Criar viagem</Text>
             </TouchableOpacity>
@@ -208,12 +214,13 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#fff',
+        justifyContent: 'flex-start'
     },
     containerData: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '90%'
+        width: '100%'
     },
     containerAddFuncionarios: {
         width: '90%',
@@ -223,7 +230,7 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: '3%',
-        width: '95%',
+        width: '90%',
         padding: 15,
         fontSize: 16,
         borderRadius: 41,
@@ -236,11 +243,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         color: '#999999',
-        width: '45%'
+        maxWidth: '90%'
     },
     inputAddParticipante: {
         marginTop: '3%',
-        width: '85%',
+        width: '90%',
         height: 'auto',
         padding: 15,
         fontSize: 16,
@@ -281,9 +288,8 @@ const styles = StyleSheet.create({
     },
     containerDataCelular: {
         flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '55%'
+        justifyContent: 'space-around',
+        flexGrow: 1
     },
     inputDataCelular: {
         marginTop: 25,
@@ -301,13 +307,14 @@ const styles = StyleSheet.create({
     },
     inputDate: {
         marginTop: '3%',
-        width: '90%',
+        width: 130,
         padding: 15,
         fontSize: 16,
         borderRadius: 41,
         backgroundColor: '#EBEBEB',
         textAlign: 'center',
-        color: '#333333'
+        color: '#333333',
+        marginHorizontal: '3%',
     },
 
 });

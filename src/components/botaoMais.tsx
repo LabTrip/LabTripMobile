@@ -12,6 +12,6 @@ export default function BotaoMais(props){
 
 const styles = StyleSheet.create({
     botaoMais:{
-        margin: '4%',
+        margin: '2%',
     }
 })

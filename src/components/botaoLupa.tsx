@@ -12,6 +12,6 @@ export default function BotaoLupa(props){
 
 const styles = StyleSheet.create({
     botaoMais:{
-        margin: '8%',
+        //margin: '5%',
     }
 })

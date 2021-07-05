@@ -2,12 +2,50 @@ import React, { useState } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import { TextInputMask } from 'react-native-masked-text';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function EditarOrcamentoPlanejado({ route }) {
     const [orcPlanejado, setOrcPlanejado] = useState(route.params.orcamento.toString());
+    const [roteiro, setRoteiro] = useState(route.params.roteiro);
     const navigation = useNavigation();
-    let valorUnmasked;
+    let valorUnmasked, token;
+
+    const salvaOrcPlanejado = async () => {
+        console.log(route.params)
+        return await fetch('https://labtrip-backend.herokuapp.com/orcamentos/' + roteiro.id + '/' + roteiro.versao + '?tipoOrcamento=' + route.params.tipoOrcamento, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            },
+            body: JSON.stringify({
+                valorTotal: valorUnmasked.getRawValue(),
+            })
+        });
+    }
+
+    const salvar = async () => {
+        const value = await AsyncStorage.getItem('AUTH');
+        if (value !== null) {
+            token = JSON.parse(value)
+            const response = await salvaOrcPlanejado();
+            const json = await response.json();
+            if (response.status == 200) {
+                alert('Orçamento planejado alterado com sucesso!');
+                route.params.atualizarEstado();
+                navigation.goBack();
+            } else {
+                alert(json.mensagem)
+            }
+        }
+        else {
+            alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+        }
+    }
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Orçamento planejado*</Text>
@@ -28,7 +66,7 @@ export default function EditarOrcamentoPlanejado({ route }) {
             <Text style={styles.texto}>*O orçamento planejado terá no mínimo o valor da soma de todas atividades já agendadas.</Text>
             <View style={styles.containerBotoes}>
                 <TouchableOpacity style={styles.botaoSalvar} onPress={() => {
-
+                    salvar();
                 }}>
                     <Text style={styles.textoBotao}>Salvar</Text>
                 </TouchableOpacity>

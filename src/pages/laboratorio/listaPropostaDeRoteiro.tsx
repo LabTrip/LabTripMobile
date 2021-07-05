@@ -40,14 +40,17 @@ export default function ListaPropostaDeRoteiro({ route }) {
     const [viagem, setViagem] = useState(route.params.viagem);
     const [showLoader, setShowLoader] = React.useState(false);
     const [ocultarReprovados, setOcultarReprovados] = useState(true);
-    let botaoChat = (<TouchableOpacity style={{ marginTop: '4%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Roteiro'}})}>
-                        <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
-                    </TouchableOpacity>);
+    const [idPermissao, setIdPermissao] = useState(4);
+
+    let botaoChat = (<TouchableOpacity style={{ marginBottom: '1%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem, topico: { id: 0, descricao: 'Roteiro' } })}>
+        <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
+    </TouchableOpacity>);
 
     useEffect(() => {
         const request = async () => {
             try {
                 const response = await buscaRoteiros();
+                getIdPermissao();
             }
             catch (e) {
                 console.log(e)
@@ -83,6 +86,25 @@ export default function ListaPropostaDeRoteiro({ route }) {
         }
     }
 
+    const getUsuario = async (idUsuario, token) => {
+        return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + idUsuario, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
+        });
+    }
+
+    const getIdPermissao = async () => {
+        const token = await AsyncStorage.getItem('AUTH') || "";
+        const idUsuario = await AsyncStorage.getItem('USER_ID') || "";
+        const response = await getUsuario(JSON.parse(idUsuario), JSON.parse(token));
+        const json = await response.json();
+        setIdPermissao(json.perfilId);
+    }
+
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
         const response = await buscaRoteiros();
@@ -92,12 +114,12 @@ export default function ListaPropostaDeRoteiro({ route }) {
     }, [refreshing]);
 
     const ocultarRoteirosOnPress = () => {
-        if(!ocultarReprovados){
+        if (!ocultarReprovados) {
             const r = roteirosFull.filter((roteiro) => roteiro.status != 'Reprovado')
             setRoteiros(r);
             setOcultarReprovados(true);
         }
-        else{
+        else {
             setRoteiros(roteirosFull);
             setOcultarReprovados(false);
         }
@@ -122,10 +144,14 @@ export default function ListaPropostaDeRoteiro({ route }) {
                     </View>
                 </View>
             </Modal>
-            {/*<BotaoMais onPress={() => navigation.navigate('CriarRoteiro')} />*/}
+            {idPermissao != 4 ?
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <BotaoMais onPress={() => navigation.navigate('CriarRoteiro', {viagem: viagem, atualizarEstado: useEffect})} />
+                </View>
+                : null}
             <View style={styles.containerTop}>
                 <Text style={styles.tituloTop}>Propostas de roteiro</Text>
-                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                     <Checkbox
                         status={ocultarReprovados ? 'checked' : 'unchecked'}
                         onPress={ocultarRoteirosOnPress}
