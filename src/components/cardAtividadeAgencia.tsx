@@ -31,9 +31,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#F2F2F2',
         justifyContent: 'center',
         marginTop: '3%',
-        width: '100%'
+        width: '100%',
+        padding: 5,
+        borderRadius: 10
     },
     textoTitulo: {
+        fontWeight: '300',
         fontSize: 18,
         color: '#999999',
         marginLeft: 15,

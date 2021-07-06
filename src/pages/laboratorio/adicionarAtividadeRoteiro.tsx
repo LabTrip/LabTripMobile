@@ -110,7 +110,8 @@ export default function AdicionarAtividadeRoteiro({ route }) {
         const currentDate = selectedDate || new Date();
         let date = new Date(currentDate);
         date.setDate(dataInicio.getDate())
-        console.log(date)
+        date.setMonth(dataInicio.getMonth())
+        date.setFullYear(dataInicio.getFullYear())
         setShowHoraInicio(Platform.OS === 'ios');
         onChangeTextHoraInicio(date);
         onChangeTextDataInicio(date);
@@ -133,6 +134,8 @@ export default function AdicionarAtividadeRoteiro({ route }) {
         const currentDate = selectedDate || new Date();
         let date = new Date(currentDate);
         date.setDate(dataFim.getDate())
+        date.setMonth(dataFim.getMonth())
+        date.setFullYear(dataFim.getFullYear())
         setShowHoraFim(Platform.OS === 'ios');
         onChangeTextHoraFim(date);
         onChangeTextDataFim(date);
