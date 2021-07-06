@@ -44,7 +44,7 @@ export default function Notificacoes() {
       const json = await response.json();
       //console.log(json)
       if (response.status == 200) {
-        setNotificacoes(json);
+        setNotificacoes(json.reverse());
       }
       else{
         console.log(json)
@@ -54,7 +54,6 @@ export default function Notificacoes() {
   useEffect(() => {
     try {
       buscaNotificacoes();
-      //console.log('alou')
     }
     catch (e) {
         console.log(e)
