@@ -14,7 +14,30 @@ export default function DetalhesAtividade({ route }) {
     const [showLoader, setShowLoader] = React.useState(false);
     let valorFormatado = route.params.atividade.custo.toFixed(2)
     const navigation = useNavigation();
-    let token, userId;
+    let token, userId, status, corDoStatus;
+
+    switch (route.params.atividade.statusId) {
+        case 1:
+            status = "Em Planejamento";
+            corDoStatus = '#B7AF0B'
+            break;
+        case 2:
+            status = "Planejado";
+            corDoStatus = '#B7AF0B'
+            break;
+        case 3:
+            status = "Em andamento";
+            corDoStatus = '#00AEFF';
+            break;
+        case 5:
+            status = "Concluído";
+            corDoStatus = '#0FD06F';
+            break;
+        default:
+            status = "Cancelado"
+            corDoStatus = '#333333';
+            break;
+    }
 
     const retornaToken = async () => {
         let localToken = await AsyncStorage.getItem('AUTH');
@@ -95,7 +118,7 @@ export default function DetalhesAtividade({ route }) {
     }
 
     const excluiAtividade = async () => {
-        try{
+        try {
             setShowLoader(true);
             let localToken = await retornaToken() || '';
             const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + atividade.id, {
@@ -112,21 +135,21 @@ export default function DetalhesAtividade({ route }) {
                 alert('Sucesso ao excluir atividade do roteiro.');
                 navigation.goBack()
             }
-            else{
+            else {
                 alert('Erro ao excluir atividade do roteiro.');
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e)
             alert('Erro ao excluir atividade do roteiro.');
         }
-        finally{
+        finally {
             setShowLoader(false);
         }
     }
 
     const confirmaExcluir = async () => {
-        try{
+        try {
             Alert.alert(
                 'Excluir atividade',
                 'Deseja mesmo excluir a atividade?',
@@ -146,7 +169,7 @@ export default function DetalhesAtividade({ route }) {
                 ]
             )
         }
-        catch(e){
+        catch (e) {
             alert('Erro ao excluir atividade.')
         }
     }
@@ -166,7 +189,7 @@ export default function DetalhesAtividade({ route }) {
                         <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                         <Text style={styles.textStyle}>
                             Aguarde...
-                    </Text>
+                        </Text>
                     </View>
                 </View>
 
@@ -175,15 +198,15 @@ export default function DetalhesAtividade({ route }) {
                 <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
                 <View style={styles.containerDataStatus}>
                     <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('DD/MM/yyyy')}</Text>
-                    <Text style={styles.textoStatus}>Agendada</Text>
+                    
                 </View>
                 <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('HH:mm')}</Text>
                 <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
-                <Text style={styles.textoDetalhes}>Ensolarado, 25°</Text>
+                <Text style={[styles.textoDetalhes, {color: corDoStatus}]}>{status}</Text>
             </View>
             <View style={styles.containerBotoes}>
                 <TouchableOpacity style={styles.botaoEditar} onPress={() => {
-                    navigation.navigate('EditarAtividadeRoteiro', {atividade: atividade});
+                    navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade });
                 }}>
                     <Text style={styles.botaoTexto}>Editar</Text>
                 </TouchableOpacity>
