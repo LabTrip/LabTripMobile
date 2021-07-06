@@ -198,9 +198,12 @@ export default function EditarViagem({ route }) {
                         )}
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaViagem}>
-                    <Text style={styles.botaoCriarTexto}>Salvar viagem</Text>
-                </TouchableOpacity>
+                {route.params.viagem.alterar?
+                    <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaViagem}>
+                        <Text style={styles.botaoCriarTexto}>Salvar viagem</Text>
+                    </TouchableOpacity>
+                    :null
+                }
             </View>
         </ScrollView>
 
