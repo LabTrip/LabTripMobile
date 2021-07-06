@@ -357,6 +357,7 @@ const styles = StyleSheet.create({
     input: {
         marginTop: '3%',
         width: '95%',
+        maxWidth: '95%',
         padding: 15,
         fontSize: 16,
         borderRadius: 41,
