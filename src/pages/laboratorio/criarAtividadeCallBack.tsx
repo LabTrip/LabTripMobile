@@ -67,7 +67,6 @@ export default function CriarAtividade() {
 
     const buscaLocais = async () => {
         const descLocal = encodeURI(nomeLocal);
-        console.log('https://api.tomtom.com/search/2/search/'+descLocal+'.json?key=SNN6XwXIPAa7ZUEq6Bexqtza6ii6oVgs&limit=10&language=pt-BR&idxSet=POI,Str')
         const uri = 'https://api.tomtom.com/search/2/search/'+descLocal+'.json?key=SNN6XwXIPAa7ZUEq6Bexqtza6ii6oVgs&limit=10&language=pt-BR&idxSet=POI,Str'
         const response =  await fetch(uri, {
             method: 'GET',
