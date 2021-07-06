@@ -1,15 +1,87 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { createIconSetFromFontello, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DetalhesAtividade({ route }) {
     const moment = require('moment');
     const [gostei, setGostei] = useState(parseInt(route.params.atividade.votoPositivo) || 0);
     const [naoGostei, setNaoGostei] = useState(parseInt(route.params.atividade.votoNegativo) || 0);
+    const [gostou, setGostou] = useState(Boolean);
     let valorFormatado = route.params.atividade.custo.toFixed(2)
     const navigation = useNavigation();
+    let token, userId;
+
+
+    const votaAtividade = async (gostou) => {
+        return await fetch('https://labtrip-backend.herokuapp.com/votacoes', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            },
+            body: JSON.stringify({
+                roteiroAtividadeId: route.params.atividade.id,
+                usuarioId: userId,
+                gostou: gostou
+            })
+        });
+    }
+
+    const atualizaAtividade = async (gostou) => {
+        return await fetch('https://labtrip-backend.herokuapp.com/votacoes/' + route.params.atividade.id + '/' + userId, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            },
+            body: JSON.stringify({
+                roteiroAtividadeId: route.params.atividade.id,
+                usuarioId: userId,
+                gostou: gostou
+            })
+        });
+    }
+
+    const votar = async (gostou) => {
+        try {
+            let value = await AsyncStorage.getItem('AUTH');
+            let user = await AsyncStorage.getItem('USER_ID');
+            if (value !== null && user !== null) {
+                token = JSON.parse(value)
+                userId = JSON.parse(user)
+                const response = await votaAtividade(gostou);
+                if (response.status == 201) {
+                    if (gostou == true) {
+                        setGostei(gostei + 1);
+                    }
+                    else {
+                        setNaoGostei(naoGostei + 1);
+                    }
+                } else if (response.status == 204) {
+                    if (gostou == true) {
+                        setGostei(gostei - 1);
+                    }
+                    else {
+                        setNaoGostei(naoGostei - 1);
+                    }
+                }
+                else {
+                    const json = await response.json()
+                    alert(json.mensagem)
+                }
+            }
+            else {
+                alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+            }
+        } catch (e) {
+            alert(e)
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -34,11 +106,17 @@ export default function DetalhesAtividade({ route }) {
                     </TouchableOpacity>
                 </View>) :
                 (<View style={styles.containerVotos}>
-                    <TouchableOpacity style={styles.botaoVoto} onPress={() => setGostei(gostei + 1)}>
+                    <TouchableOpacity style={styles.botaoVoto} onPress={() => {
+                        setGostou(true)
+                        votar(true);
+                    }}>
                         <MaterialCommunityIcons name="heart" color={'#FF2424'} size={31} />
                         <Text>{gostei}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.botaoVoto} onPress={() => setNaoGostei(naoGostei + 1)}>
+                    <TouchableOpacity style={styles.botaoVoto} onPress={() => {
+                        setGostou(false)
+                        votar(false);
+                    }}>
                         <MaterialCommunityIcons name="close-thick" color={'#000000'} size={31} />
                         <Text>{naoGostei}</Text>
                     </TouchableOpacity>
