@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, ActivityIndicator } from 'react-native';
 import { createIconSetFromFontello, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -7,21 +7,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DetalhesAtividade({ route }) {
     const moment = require('moment');
+    const [atividade, setAtividade] = useState(route.params.atividade);
     const [gostei, setGostei] = useState(parseInt(route.params.atividade.votoPositivo) || 0);
     const [naoGostei, setNaoGostei] = useState(parseInt(route.params.atividade.votoNegativo) || 0);
     const [gostou, setGostou] = useState(Boolean);
+    const [showLoader, setShowLoader] = React.useState(false);
     let valorFormatado = route.params.atividade.custo.toFixed(2)
     const navigation = useNavigation();
     let token, userId;
 
+    const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+            localToken = JSON.parse(localToken)
+        }
+        return localToken;
+    }
 
     const votaAtividade = async (gostou) => {
+        let localToken = await retornaToken() || '';
+
         return await fetch('https://labtrip-backend.herokuapp.com/votacoes', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'x-access-token': token
+                'x-access-token': localToken
             },
             body: JSON.stringify({
                 roteiroAtividadeId: route.params.atividade.id,
@@ -83,8 +94,83 @@ export default function DetalhesAtividade({ route }) {
         }
     }
 
+    const excluiAtividade = async () => {
+        try{
+            setShowLoader(true);
+            let localToken = await retornaToken() || '';
+            const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + atividade.id, {
+                method: 'DELETE',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token': localToken
+                }
+            });
+
+            const json = await response.json();
+            if (response.status == 200) {
+                alert('Sucesso ao excluir atividade do roteiro.');
+                navigation.goBack()
+            }
+            else{
+                alert('Erro ao excluir atividade do roteiro.');
+            }
+        }
+        catch(e){
+            console.log(e)
+            alert('Erro ao excluir atividade do roteiro.');
+        }
+        finally{
+            setShowLoader(false);
+        }
+    }
+
+    const confirmaExcluir = async () => {
+        try{
+            Alert.alert(
+                'Excluir atividade',
+                'Deseja mesmo excluir a atividade?',
+                [
+                    {
+                        text: 'sim',
+                        onPress: async () => {
+                            excluiAtividade();
+                        }
+                    },
+                    {
+                        text: 'não',
+                        onPress: () => {
+
+                        }
+                    }
+                ]
+            )
+        }
+        catch(e){
+            alert('Erro ao excluir atividade.')
+        }
+    }
+
     return (
         <View style={styles.container}>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={showLoader}
+                onRequestClose={() => {
+                    setShowLoader(!showLoader)
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
+                        <Text style={styles.textStyle}>
+                            Aguarde...
+                    </Text>
+                    </View>
+                </View>
+
+            </Modal>
             <View style={styles.containerDetalhes}>
                 <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
                 <View style={styles.containerDataStatus}>
@@ -94,6 +180,18 @@ export default function DetalhesAtividade({ route }) {
                 <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('HH:mm')}</Text>
                 <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
                 <Text style={styles.textoDetalhes}>Ensolarado, 25°</Text>
+            </View>
+            <View style={styles.containerBotoes}>
+                <TouchableOpacity style={styles.botaoEditar} onPress={() => {
+                    navigation.navigate('EditarAtividadeRoteiro', {atividade: atividade});
+                }}>
+                    <Text style={styles.botaoTexto}>Editar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.botaoExcluir} onPress={async () => {
+                    confirmaExcluir();
+                }} >
+                    <Text style={styles.botaoTexto}>Excluir</Text>
+                </TouchableOpacity>
             </View>
             <Text style={styles.tituloDetalhes}>Custo: R$ {valorFormatado}</Text>
             {route.params.planejamento != true ?
@@ -170,5 +268,66 @@ const styles = StyleSheet.create({
     },
     botaoVoto: {
         flexDirection: 'row',
+    },
+    containerBotoes: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
+    botaoEditar: {
+        backgroundColor: '#3385FF',
+        width: '35%',
+        padding: 10,
+        borderRadius: 40,
+        marginTop: '5%',
+        alignContent: 'center',
+        justifyContent: 'center',
+        marginHorizontal: '5%'
+    },
+    botaoExcluir: {
+        backgroundColor: '#FF3333',
+        width: '35%',
+        padding: 10,
+        borderRadius: 40,
+        marginTop: '5%',
+        alignContent: 'center',
+        justifyContent: 'center',
+        marginHorizontal: '5%'
+    },
+    botaoTexto: {
+        color: '#fff',
+        fontSize: 20,
+        textAlign: 'center'
+    },
+    loader: {
+        flexDirection: 'column',
+        alignContent: 'center',
+        justifyContent: 'center',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        opacity: 0.9,
+        borderRadius: 20,
+        padding: '20%',
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    textStyle: {
+        color: "black",
+        fontWeight: "bold",
+        textAlign: "center"
     }
 })
