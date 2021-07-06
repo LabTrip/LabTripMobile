@@ -9,6 +9,7 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInputMask } from 'react-native-masked-text';
 import i18n from '../../translate/i18n';
+import BotaoMais from '../../components/botaoMais'
 const moment = require('moment');
 
 const atividadesDropdownModel = (atividade, index) => ({
@@ -178,46 +179,51 @@ export default function AdicionarAtividadeRoteiro({ route }) {
 
     return (
             <SafeAreaView style={styles.container}>
-                <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.atividade')}</Text>
-                <SearchableDropdown
-                    multi={false}
-                    onItemSelect={(item) => {
-                        setAtividade(item);
-                        setDescAtividade(item.name);
-                    }}
-                    containerStyle={{ padding: 5 , width: '100%', alignItems: 'center', justifyContent: 'center'}}
-                    itemStyle={{
-                        padding: 10,
-                        marginTop: 2,
-                        backgroundColor: '#EBEBEB',
-                        borderColor: '#bbb',
-                        borderWidth: 1,
-                        borderRadius: 5,
-                        width: '100%',
-                        flexGrow: 1
-                    }}
-                    itemTextStyle={{ color: '#222' }}
-                    itemsContainerStyle={{ maxHeight: 140, width: '90%'}}
-                    items={items}
-                    resetValue={false}
-                    textInputProps={
-                        {
-                            placeholder: "Pesquisar atividades",
-                            underlineColorAndroid: "transparent",
-                            style: styles.input,
-                            value: descAtividade,
-                            onTextChange: async (text) => {
-                                setDescAtividade(text);
-                                buscaAtividades(text) 
+                <View style={styles.centeredContainer}>
+                    <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.atividade')}</Text>
+                    <View style={styles.containerRow}>
+                        <SearchableDropdown
+                            multi={false}
+                            onItemSelect={(item) => {
+                                setAtividade(item);
+                                setDescAtividade(item.name);
+                            }}
+                            containerStyle={{ padding: 5 , width: '92%', alignItems: 'center', justifyContent: 'center'}}
+                            itemStyle={{
+                                padding: 10,
+                                marginTop: 2,
+                                backgroundColor: '#EBEBEB',
+                                borderColor: '#bbb',
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                width: '100%',
+                                flexGrow: 1
+                            }}
+                            itemTextStyle={{ color: '#222' }}
+                            itemsContainerStyle={{ maxHeight: 140, width: '90%'}}
+                            items={items}
+                            resetValue={false}
+                            textInputProps={
+                                {
+                                    placeholder: "Pesquisar atividades",
+                                    underlineColorAndroid: "transparent",
+                                    style: styles.input,
+                                    value: descAtividade,
+                                    onTextChange: async (text) => {
+                                        setDescAtividade(text);
+                                        buscaAtividades(text) 
+                                    }
+                                }
                             }
-                        }
-                    }
-                    listProps={
-                    {
-                        nestedScrollEnabled: true,
-                    }
-                    }
-                />
+                            listProps={
+                            {
+                                nestedScrollEnabled: true,
+                            }
+                            }
+                        />
+                        <BotaoMais style={{width: '100%', alignitems: 'center', justifyContent: 'center', marginHorizontal: '1%'}} onPress={() => navigation.navigate('CriarAtividade')}></BotaoMais>
+                    </View>
+                </View>
                 <ScrollView>
                     <View style={{alignItems: 'center'}}>
                         <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.custo')}</Text>
@@ -313,6 +319,17 @@ export default function AdicionarAtividadeRoteiro({ route }) {
 }
 
 const styles = StyleSheet.create({
+    containerRow:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    centeredContainer:{
+        width: '92%',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     scrollcontainer: {
         flex: 1,
         backgroundColor: '#fff',
