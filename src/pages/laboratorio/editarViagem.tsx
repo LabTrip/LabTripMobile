@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Platform, Modal, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Modal, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ScrollViewFlat from '../../components/scrollViewFlat';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -31,6 +31,8 @@ export default function EditarViagem({ route }) {
     const [showLoader, setShowLoader] = React.useState(false);
     const [Token, setToken] = useState('');
     const [refreshing, setRefreshing] = React.useState(false);
+    const [selectedValue, setSelectedValue] = useState(route.params.viagem.statusId);
+
 
     useEffect(() => {
         const request = async () => {
@@ -115,7 +117,7 @@ export default function EditarViagem({ route }) {
                     descricao: descricao,
                     dataInicio: dataInicio,
                     dataFim: dataFim,
-                    statusId: viagem.statusId,
+                    statusId: selectedValue,
                     agenciaId: viagem.agenciaId,
                     usuarioDonoId: viagem.usuarioDonoId,
                     criadoPorId: viagem.criadoPorId
@@ -198,11 +200,25 @@ export default function EditarViagem({ route }) {
                         )}
                     </TouchableOpacity>
                 </View>
-                {route.params.viagem.alterar?
+                <Picker
+                    prompt="Status do roteiro"
+                    mode="dropdown"
+                    selectedValue={selectedValue}
+                    style={{ height: 50, width: '95%' }}
+                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                >
+                    <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
+                    <Picker.Item label="Planejado" value={2} color="#B7AF0B" />
+                    <Picker.Item label="Em andamento" value={3} color="#00AEFF" />
+                    <Picker.Item label="Cancelado" value={3} color="#D12323" />
+                    <Picker.Item label="Concluído" value={3} color="#0FD06F" />
+
+                </Picker>
+                {route.params.viagem.alterar ?
                     <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaViagem}>
                         <Text style={styles.botaoCriarTexto}>Salvar viagem</Text>
                     </TouchableOpacity>
-                    :null
+                    : null
                 }
             </View>
         </ScrollView>

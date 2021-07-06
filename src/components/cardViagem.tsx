@@ -16,8 +16,6 @@ interface Viagem {
     usuarioDonoId: number,
 }
 
-
-
 export default function CardViagem(props) {
 
     const navigation = useNavigation();
