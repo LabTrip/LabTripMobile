@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import SearchFromAPI from '../../components/searchFromAPI'
+import Routes from '../../routes';
 
 const moment = require('moment');
 
@@ -26,7 +27,7 @@ const localViewModel = (local) => ({
     position: local.position
   });
 
-export default function CriarAtividade() {
+export default function CriarAtividade({ route }) {
     const navigation = useNavigation();
     const [descricao, setDescricao] = useState('');
     const [nomeLocal, setNomeLocal] = useState('');
@@ -57,8 +58,13 @@ export default function CriarAtividade() {
             })
         });
 
+        const json = await response.json();
         if(response.status == 201){
-            alert('Atividade criada com sucesso');         
+            alert('Atividade criada com sucesso');
+            if(route.params.callBackCriaAtividade != undefined){
+                route.params.callBackCriaAtividade(json);
+                navigation.goBack();
+            }       
         }
         else{
             alert('Erro ao salvar atividade: ' + response)

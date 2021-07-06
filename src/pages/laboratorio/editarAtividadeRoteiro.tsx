@@ -12,6 +12,11 @@ import i18n from '../../translate/i18n';
 import BotaoMais from '../../components/botaoMais'
 const moment = require('moment');
 import { useIsFocused } from '@react-navigation/native';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+]);
 
 const atividadesDropdownModel = (atividade, index) => ({
     id: atividade.id,
@@ -252,6 +257,11 @@ export default function EditarAtividadeRoteiro({ route }) {
         }
     }
 
+    const callbackAtividade = (atividade) => {
+        setAtividade(atividade);
+        setDescAtividade(atividade.descricao)
+    }
+
     return (
             <SafeAreaView style={styles.container}>
                 <Modal
@@ -314,7 +324,7 @@ export default function EditarAtividadeRoteiro({ route }) {
                             }
                             }
                         />
-                        <BotaoMais style={{width: '100%', alignitems: 'center', justifyContent: 'center', marginHorizontal: '1%'}} onPress={() => navigation.navigate('CriarAtividade')}></BotaoMais>
+                        <BotaoMais style={{width: '100%', alignitems: 'center', justifyContent: 'center', marginHorizontal: '1%'}} onPress={() => navigation.navigate('CriarAtividade', {callBackCriaAtividade: callbackAtividade})}></BotaoMais>
                     </View>
                 </View>
                 <ScrollView>

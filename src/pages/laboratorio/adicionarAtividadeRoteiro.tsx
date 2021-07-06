@@ -13,7 +13,7 @@ import BotaoMais from '../../components/botaoMais'
 const moment = require('moment');
 
 const atividadesDropdownModel = (atividade, index) => ({
-    id: index,
+    id: atividade.id,
     atividadeId: atividade.id,
     name: atividade.descricao
   });
@@ -153,7 +153,7 @@ export default function AdicionarAtividadeRoteiro({ route }) {
                     'x-access-token': localToken
                 },
                 body: JSON.stringify({
-                    "atividadeId": atividade?.atividadeId,
+                    "atividadeId": atividade?.id,
                     "roteiroId": roteiro.id,
                     "versaoRoteiro": roteiro.versao,
                     "dataInicio": dataInicio.toString(),
@@ -164,6 +164,18 @@ export default function AdicionarAtividadeRoteiro({ route }) {
                     "observacaoAgente": observacoesAgente
                 })
             });
+
+            console.log({
+                "atividadeId": atividade?.atividadeId,
+                "roteiroId": roteiro.id,
+                "versaoRoteiro": roteiro.versao,
+                "dataInicio": dataInicio.toString(),
+                "dataFim":  dataFim.toString(),
+                "custo": custoRefField.getRawValue(),
+                "statusId": 1,
+                "observacaoCliente": "",
+                "observacaoAgente": observacoesAgente
+            })
             const json = await response.json();
             //seta lista de atividades se o status da resposta for 200
             if (response.status == 201 || response.status == 304) {
@@ -178,6 +190,11 @@ export default function AdicionarAtividadeRoteiro({ route }) {
             console.log(e)
             alert('Erro ao adicionar atividade.')
         }
+    }
+
+    const callbackAtividade = (atividade) => {
+        setAtividade(atividade);
+        setDescAtividade(atividade.descricao)
     }
 
     return (
@@ -224,7 +241,7 @@ export default function AdicionarAtividadeRoteiro({ route }) {
                             }
                             }
                         />
-                        <BotaoMais style={{width: '100%', alignitems: 'center', justifyContent: 'center', marginHorizontal: '1%'}} onPress={() => navigation.navigate('CriarAtividade')}></BotaoMais>
+                        <BotaoMais style={{width: '100%', alignitems: 'center', justifyContent: 'center', marginHorizontal: '1%'}} onPress={() => navigation.navigate('CriarAtividade', {callBackCriaAtividade: callbackAtividade})}></BotaoMais>
                     </View>
                 </View>
                 <ScrollView>
