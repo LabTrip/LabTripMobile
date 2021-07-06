@@ -141,7 +141,7 @@ export default function EditarRoteiro({ route }) {
                 prompt="Status do roteiro"
                 mode="dropdown"
                 selectedValue={selectedValue}
-                style={{ height: 50, width: '50%' }}
+                style={{ height: 50, width: '95%' }}
                 onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
             >
                 <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
@@ -161,7 +161,7 @@ export default function EditarRoteiro({ route }) {
                 prompt="Status do roteiro"
                 mode="dropdown"
                 selectedValue={selectedValue}
-                style={{ height: 50, width: '50%' }}
+                style={{ height: 50, width: '95%' }}
                 onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
             >
                 <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
