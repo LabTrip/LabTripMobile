@@ -53,7 +53,7 @@ export default function AdicionarMidias({ route }) {
             body: JSON.stringify({
                 usuarioId: userId,
                 roteiroAtividadeId: route.params.atividade.id,
-                nomeArquivo: arquivo.nomeArquivo,
+                nomeArquivo: arquivo.name,
                 chaveArquivo: null,
                 urlArquivo: null,
                 privado: false
