@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, ActivityIndicat
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlatList } from 'react-native-gesture-handler';
 
 export default function DetalhesAtividade({ route }) {
     const moment = require('moment');
@@ -173,7 +174,7 @@ export default function DetalhesAtividade({ route }) {
         }
     }
     return (
-        <View style={styles.container}>
+        <View style={{flex: 1, backgroundColor: '#fff'}}>
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -192,11 +193,69 @@ export default function DetalhesAtividade({ route }) {
                 </View>
 
             </Modal>
-            <View style={styles.containerDetalhes}>
-                <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
-                <View style={styles.containerDataStatus}>
-                    <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('DD/MM/yyyy')}</Text>
-                    
+            <ScrollView style={{flexDirection: 'column'}}>
+                <View style={{alignItems: 'center', height: '100%'}}>
+                    <View style={styles.containerDetalhes}>
+                        <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
+                        <View style={styles.containerDataStatus}>
+                            <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('DD/MM/yyyy')}</Text>
+                            
+                        </View>
+                        <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('HH:mm')}</Text>
+                        <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
+                        <Text style={[styles.textoDetalhes, {color: corDoStatus}]}>{status}</Text>
+                    </View>
+                    <View style={styles.containerBotoes}>
+                        <TouchableOpacity style={styles.botaoEditar} onPress={() => {
+                            navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade });
+                        }}>
+                            <Text style={styles.botaoTexto}>Editar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.botaoExcluir} onPress={async () => {
+                            confirmaExcluir();
+                        }} >
+                            <Text style={styles.botaoTexto}>Excluir</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={styles.tituloDetalhes}>Custo: R$ {valorFormatado}</Text>
+                    {route.params.planejamento == true && (
+                        <View style={styles.containerVotos}>
+                            <TouchableOpacity style={styles.botaoVoto} onPress={() => {
+                                setGostou(true)
+                                votar(true);
+                            }}>
+                                <MaterialCommunityIcons name="heart" color={'#FF2424'} size={31} />
+                                <Text>{gostei}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.botaoVoto} onPress={() => {
+                                setGostou(false)
+                                votar(false);
+                            }}>
+                                <MaterialCommunityIcons name="close-thick" color={'#000000'} size={31} />
+                                <Text>{naoGostei}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                    <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', padding: '3%' }]}>
+                        <View style={{width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={styles.tituloDetalhes}>
+                                Midias
+                            </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('AdicionarMidias')}>
+                                <AntDesign name="pluscircleo" size={30} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                            <FlatList
+                                style={{ flexGrow: 1, flex: 1, flexDirection: 'row' }}
+                                contentContainerStyle={{ alignItems: 'center' }}
+                                extraData={[]}
+                                data={[]}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item }) => (<Text></Text>)}
+                            />
+                        </View>
+                    </View>
                 </View>
                 <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('HH:mm')}</Text>
                 <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
@@ -247,6 +306,8 @@ export default function DetalhesAtividade({ route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        flexGrow: 1,
+        height: '100%',
         backgroundColor: '#fff',
         alignItems: 'center',
         flexDirection: 'column',
@@ -265,9 +326,9 @@ const styles = StyleSheet.create({
     },
     containerVotos: {
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-around',
         width: '96%',
-        marginBottom: '3%'
+        margin: '3%'
     },
     textoStatus: {
         color: '#0FD06F',
@@ -284,8 +345,12 @@ const styles = StyleSheet.create({
     },
     tituloDetalhes: {
         textAlign: 'center',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        width: '80%',
         color: '#999999',
         fontSize: 24,
+        margin: 5
     },
     botaoVoto: {
         flexDirection: 'row',
