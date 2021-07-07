@@ -23,7 +23,7 @@ export default function TelasListaViagens() {
             <Screen name="EditarOrcamentoPlanejado" options={{ title: "Editar orçamento planejado" }} component={EditarOrcamentoPlanejado} />
             <Screen name="EditarDespesaAdicional" options={{ title: "Editar despesa adicional" }} component={EditarDespesaAdicional} />
             <Screen name="AdicionarDespesa" options={{ title: "Adicionar despesa" }} component={AdicionarDespesa} />
-            <Screen name="AdicionarMidias" options={{ title: "Adicionar midias" }} component={AdicionarMidias} />
+            <Screen name="AdicionarMidias" options={{ title: "Editar midias" }} component={AdicionarMidias} />
             <Screen name="Chat" options={{ title: "Chat" }} component={Chat} />
             <Screen name="EditarAtividadeRoteiro" options={{ title: "Editar atividades" }} component={EditarAtividadeRoteiro} />
 

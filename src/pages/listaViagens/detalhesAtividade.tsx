@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, ActivityIndicator } from 'react-native';
-import { createIconSetFromFontello, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DetalhesAtividade({ route }) {
@@ -173,7 +172,6 @@ export default function DetalhesAtividade({ route }) {
             alert('Erro ao excluir atividade.')
         }
     }
-
     return (
         <View style={styles.container}>
             <Modal
@@ -222,7 +220,7 @@ export default function DetalhesAtividade({ route }) {
                     <Text style={styles.tituloDetalhes}>
                         Midias
                     </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('AdicionarMidias')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('AdicionarMidias', {atividade: atividade})}>
                         <MaterialCommunityIcons name="pencil" color={'black'} size={31} />
                     </TouchableOpacity>
                 </View>) :
