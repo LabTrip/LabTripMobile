@@ -130,6 +130,7 @@ export default function AdicionarMidias({ route }) {
         requestListarArquivos();
         setRefreshing(false);
     }, [refreshing]);
+    
     return (
         <View style={styles.conteudo}>
             <BotaoMais onPress={UploadFile} />

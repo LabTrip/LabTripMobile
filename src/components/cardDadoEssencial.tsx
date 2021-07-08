@@ -56,16 +56,36 @@ export default function CardParticipante(props) {
     }
   }
 
+  const excluiDocumento = async () => {
+      let localToken = await retornaToken() || '';
+      const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + metaDados.id, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'x-access-token': localToken
+        }
+      });
+    
+
+    if (response.status == 204) {
+      alert('Arquivo deletado com sucesso!');
+      props.refresh();
+    }
+    else{
+      alert('Erro ao deletar arquivo!');
+    }
+  }
+
   return (
     <TouchableOpacity key={metaDados.id} style={styles.conteudoCard} onPress={() => alert('baixou o arquivo: ' + metaDados.nomeArquivo + ', id: ' + metaDados.id)}>
         <View style={styles.textContainer}>
-          <Text style={styles.textoCard}>{metaDados.nomeArquivo}</Text>
+          <Text style={styles.textoCard}  numberOfLines={3} ellipsizeMode={'head'}>{metaDados.nomeArquivo}</Text>
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={() => alert('Baixar')}>
             <MaterialCommunityIcons name="file-download" color={'#848484'} size={30} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => alert('excluiu')}>
+          <TouchableOpacity onPress={async () => excluiDocumento()}>
             <MaterialCommunityIcons name="close-thick" color={'red'} size={30} />
           </TouchableOpacity>
         </View>

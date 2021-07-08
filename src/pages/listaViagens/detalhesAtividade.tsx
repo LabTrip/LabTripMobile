@@ -236,66 +236,93 @@ export default function DetalhesAtividade({ route }) {
         setRefreshing(false)
     }, [refreshing]);
 
-      const salvaArquivo = async (arquivo) => {
-        const value = await AsyncStorage.getItem('AUTH');
-        const user = await AsyncStorage.getItem('USER_ID');
-        if (value !== null && user !== null) {
-            token = JSON.parse(value)
-            userId = JSON.parse(user)
-        }
+    const salvaArquivo = async (arquivo) => {
+        try{
+            let localToken = await retornaToken() || '';
 
-        const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'x-access-token': token
-            },
-            body: JSON.stringify({
+            const user = await AsyncStorage.getItem('USER_ID');
+            if (user !== null) {
+                userId = JSON.parse(user)
+            }
+
+            const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token': localToken
+                },
+                body: JSON.stringify({
+                    usuarioId: userId,
+                    roteiroAtividadeId: atividade.id,
+                    nomeArquivo: arquivo.name,
+                    chaveArquivo: null,
+                    urlArquivo: null,
+                    privado: false
+                })
+            });
+            const json = await response.json();
+            console.log({
                 usuarioId: userId,
-                roteiroAtividadeId: route.params.atividade.id,
+                roteiroAtividadeId: atividade.id,
                 nomeArquivo: arquivo.name,
                 chaveArquivo: null,
                 urlArquivo: null,
                 privado: false
             })
-        });
-        const json = await response.json();
-        console.log(token)
-        console.log('status da primeira requestAddDadoEssencial: ' + response.status);
-        if (response.status == 201) {
-            const form = new FormData();
-            form.append('file', arquivo);
-            const responseArquivo = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + json.id, {
-                method: 'PUT',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'multipart/form-data',
-                    'x-access-token': token
-                },
-                body: form
-            });
-            console.log('id do dado essencial: ' + json.id);
-            console.log('token do segundo request: ' + token)
-            console.log('status da segunda requestAddAquivo: ' + responseArquivo.status)
-            const jsonArquivo = await responseArquivo.json()
-            alert(jsonArquivo.mensagem)
+            console.log('status da primeira requestAddDadoEssencial: ' + response.status);
+            if (response.status == 201) {
+                const form = new FormData();
+                form.append('file', arquivo);
+                const responseArquivo = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + json.id, {
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                        'x-access-token': localToken
+                    },
+                    body: form
+                });
+                console.log('id do dado essencial: ' + json.id);
+                console.log('status da segunda requestAddAquivo: ' + responseArquivo.status)
+                if(responseArquivo.status == 200){
+                    alert('Arquivo salvo com sucesso!');
+                    onRefresh()
+                }
+                else{                
+                    const jsonArquivo = await responseArquivo.json()
+                    alert('Erro ao salvar arquivo: ' + jsonArquivo.mensagem)
+                }
+            }
+        }
+        catch(e){
+            console.log(e)
         }
     }
 
     const UploadFile = async () => {
-        let result = await DocumentPicker.getDocumentAsync({
-        });
-        if (result.type == "cancel") {
-            alert('cancelou mano :(')
+        try{
+            let result = await DocumentPicker.getDocumentAsync({
+            });
+            if (result.type == "cancel") {
+                alert('cancelou mano :(')
+            }
+            else {
+                const fileToUpload = {
+                    uri: result.uri,
+                    name: result.name,
+                    type: mime.getType(result.uri)
+                };
+                console.log(fileToUpload)
+                setShowLoader(true)
+                await salvaArquivo(fileToUpload);
+            }
         }
-        else {
-            const fileToUpload = {
-                uri: result.uri,
-                name: result.name,
-                type: mime.getType(result.uri)
-            };
-            salvaArquivo(fileToUpload);
+        catch(e){
+            console.log(e)
+        }
+        finally{
+            setShowLoader(false)
         }
     }
 
@@ -374,17 +401,17 @@ export default function DetalhesAtividade({ route }) {
                             <Text style={styles.tituloDetalhes}>
                                 Midias
                             </Text>
-                            <TouchableOpacity onPress={() => alert('Chamar upload file')}>
+                            <TouchableOpacity onPress={() => UploadFile()}>
                                 <AntDesign name="pluscircleo" size={30} color="black" />
                             </TouchableOpacity>
                         </View>
                         <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', minHeight: 110 }}>
-                            <ScrollView style={{width: '100%', flexDirection: 'row' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                            <ScrollView horizontal={true} style={{ flexDirection: 'row' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', padding: 5}}>
                                     {
                                         dadosEssenciais.map((d) => {
                                             console.log(d)
                                             return (<CardDadoEssencial key={d.id.toString()}
-                                                metaDados={d}
+                                                metaDados={d} refresh={onRefresh}
                                             />)
                                         })
                                     }
