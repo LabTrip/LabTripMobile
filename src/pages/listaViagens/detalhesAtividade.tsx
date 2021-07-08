@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal, ActivityIndicator, FlatList, ScrollView, RefreshControl } from 'react-native';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CardDadoEssencial from '../../components/cardDadoEssencial';
+import * as DocumentPicker from 'expo-document-picker';
+import mime from 'mime';
+
+interface DadoEssencial {
+    id: number,
+    usuarioId: string,
+    roteiroAtividadeId: number,
+    nomeArquivo: string,
+    chaveArquivo: string,
+    urlArquivo: string,
+    dataUpload: string,
+    privado: boolean
+}
 
 export default function DetalhesAtividade({ route }) {
     const moment = require('moment');
@@ -11,6 +25,8 @@ export default function DetalhesAtividade({ route }) {
     const [naoGostei, setNaoGostei] = useState(parseInt(route.params.atividade.votoNegativo) || 0);
     const [gostou, setGostou] = useState(Boolean);
     const [showLoader, setShowLoader] = React.useState(false);
+    const [dadosEssenciais, setDadosEssenciais] = useState<DadoEssencial[]>([]);
+    const [refreshing, setRefreshing] = useState(false);
     let valorFormatado = route.params.atividade.custo.toFixed(2)
     const navigation = useNavigation();
     let token, userId, status, corDoStatus;
@@ -36,6 +52,29 @@ export default function DetalhesAtividade({ route }) {
             status = "Cancelado"
             corDoStatus = '#333333';
             break;
+    }
+
+    const getDadosEssenciais = async () => {
+        try{
+            let localToken = await retornaToken() || '';
+
+            const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/roteiroAtividade/' + atividade.id, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token': localToken
+                }
+            });
+
+            if(response.status == 200){
+                const json = await response.json();
+                setDadosEssenciais(json);
+            }
+        }
+        catch(e){
+            console.log(e)
+        }
     }
 
     const retornaToken = async () => {
@@ -172,6 +211,94 @@ export default function DetalhesAtividade({ route }) {
             alert('Erro ao excluir atividade.')
         }
     }
+
+    const request = async() =>{
+        try{
+            setShowLoader(true)
+            await getDadosEssenciais();
+            console.log(dadosEssenciais)
+        }
+        catch(e){
+            console.log(e)
+        }
+        finally{
+            setShowLoader(false);
+        }
+    }
+
+    useEffect(() => {
+        request();
+    }, []);
+
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        await request()
+        setRefreshing(false)
+    }, [refreshing]);
+
+      const salvaArquivo = async (arquivo) => {
+        const value = await AsyncStorage.getItem('AUTH');
+        const user = await AsyncStorage.getItem('USER_ID');
+        if (value !== null && user !== null) {
+            token = JSON.parse(value)
+            userId = JSON.parse(user)
+        }
+
+        const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            },
+            body: JSON.stringify({
+                usuarioId: userId,
+                roteiroAtividadeId: route.params.atividade.id,
+                nomeArquivo: arquivo.name,
+                chaveArquivo: null,
+                urlArquivo: null,
+                privado: false
+            })
+        });
+        const json = await response.json();
+        console.log(token)
+        console.log('status da primeira requestAddDadoEssencial: ' + response.status);
+        if (response.status == 201) {
+            const form = new FormData();
+            form.append('file', arquivo);
+            const responseArquivo = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + json.id, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                    'x-access-token': token
+                },
+                body: form
+            });
+            console.log('id do dado essencial: ' + json.id);
+            console.log('token do segundo request: ' + token)
+            console.log('status da segunda requestAddAquivo: ' + responseArquivo.status)
+            const jsonArquivo = await responseArquivo.json()
+            alert(jsonArquivo.mensagem)
+        }
+    }
+
+    const UploadFile = async () => {
+        let result = await DocumentPicker.getDocumentAsync({
+        });
+        if (result.type == "cancel") {
+            alert('cancelou mano :(')
+        }
+        else {
+            const fileToUpload = {
+                uri: result.uri,
+                name: result.name,
+                type: mime.getType(result.uri)
+            };
+            salvaArquivo(fileToUpload);
+        }
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <Modal
@@ -192,7 +319,14 @@ export default function DetalhesAtividade({ route }) {
                 </View>
 
             </Modal>
-            <ScrollView style={{ flexDirection: 'column' }}>
+            <ScrollView style={{ flexDirection: 'column' }} 
+                refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+            >
                 <View style={{ alignItems: 'center', height: '100%' }}>
                     <View style={styles.containerDetalhes}>
                         <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
@@ -235,24 +369,26 @@ export default function DetalhesAtividade({ route }) {
                             </TouchableOpacity>
                         </View>
                     )}
-                    <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', padding: '3%' }]}>
+                    <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', alignItems:'center', padding: '3%' }]}>
                         <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={styles.tituloDetalhes}>
                                 Midias
                             </Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('AdicionarMidias')}>
+                            <TouchableOpacity onPress={() => alert('Chamar upload file')}>
                                 <AntDesign name="pluscircleo" size={30} color="black" />
                             </TouchableOpacity>
                         </View>
-                        <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                            <FlatList
-                                style={{ flexGrow: 1, flex: 1, flexDirection: 'row' }}
-                                contentContainerStyle={{ alignItems: 'center' }}
-                                extraData={[]}
-                                data={[]}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item }) => (<Text></Text>)}
-                            />
+                        <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', minHeight: 110 }}>
+                            <ScrollView style={{width: '100%', flexDirection: 'row' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                                    {
+                                        dadosEssenciais.map((d) => {
+                                            console.log(d)
+                                            return (<CardDadoEssencial key={d.id.toString()}
+                                                metaDados={d}
+                                            />)
+                                        })
+                                    }
+                            </ScrollView>
                         </View>
                     </View>
 
@@ -263,45 +399,6 @@ export default function DetalhesAtividade({ route }) {
                 <Text style={[styles.textoDetalhes, { color: corDoStatus }]}>{status}</Text>
                 
             </ScrollView>
-
-            <View style={styles.containerBotoes}>
-                <TouchableOpacity style={styles.botaoEditar} onPress={() => {
-                    navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade });
-                }}>
-                    <Text style={styles.botaoTexto}>Editar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.botaoExcluir} onPress={async () => {
-                    confirmaExcluir();
-                }} >
-                    <Text style={styles.botaoTexto}>Excluir</Text>
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.tituloDetalhes}>Custo: R$ {valorFormatado}</Text>
-            {route.params.planejamento != true ?
-                (<View style={[styles.containerDetalhes, { height: '40%', flexDirection: 'row', justifyContent: 'space-between', padding: '3%' }]}>
-                    <Text style={styles.tituloDetalhes}>
-                        Midias
-                    </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('AdicionarMidias', { atividade: atividade })}>
-                        <MaterialCommunityIcons name="pencil" color={'black'} size={31} />
-                    </TouchableOpacity>
-                </View>) :
-                (<View style={styles.containerVotos}>
-                    <TouchableOpacity style={styles.botaoVoto} onPress={() => {
-                        setGostou(true)
-                        votar(true);
-                    }}>
-                        <MaterialCommunityIcons name="heart" color={'#FF2424'} size={31} />
-                        <Text>{gostei}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.botaoVoto} onPress={() => {
-                        setGostou(false)
-                        votar(false);
-                    }}>
-                        <MaterialCommunityIcons name="close-thick" color={'#000000'} size={31} />
-                        <Text>{naoGostei}</Text>
-                    </TouchableOpacity>
-                </View>)}
         </View>
     );
 }
@@ -322,6 +419,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#F2F2F2',
         width: '96%',
         borderRadius: 7,
+        borderStyle: 'solid',
+        borderWidth: 2,
+        borderColor: '#E2E0E0'
     },
     containerDataStatus: {
         flexDirection: 'row',
