@@ -30,7 +30,7 @@ interface Atividade {
 export default function DetalhesRoteiro({ route }) {
     const moment = require('moment');
     const navigation = useNavigation();
-    const [selectedValue, setSelectedValue] = useState();
+    const [selectedValue, setSelectedValue] = useState(moment().format('DD/MM/yyyy'));
     const viagem = route.params.viagem;
     const [atividades, setAtividades] = useState<Atividade[]>([]);
     //variavel auxiliar de atividades
@@ -48,11 +48,9 @@ export default function DetalhesRoteiro({ route }) {
         return localToken;
     }
 
-
     //faz a request para listar as atividade do roteiro
     const buscaAtividades = async () => {
         let localToken = await retornaToken() || '';
-
 
         const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + viagem.roteiro.id + '/' + viagem.roteiro.versao, {
             signal: abortController.signal,
@@ -71,7 +69,7 @@ export default function DetalhesRoteiro({ route }) {
 
             console.log(json)
             setAtividadesAux(json);
-            setAtividades(json);
+            //setAtividades(json);
         }
     }
 
@@ -89,21 +87,44 @@ export default function DetalhesRoteiro({ route }) {
         }*/
     }
 
+    function mudarPosicao(array) {
+        let valorAux;
+        if (array != null && array.length > 0) {
+            
+            array.map(
+                (valor, index) => {
+                     valor == moment().format('DD/MM/yyyy')
+                        ? (valorAux = array[0], array[0] = valor, array[index] = valorAux)
+                        : null
+                }
+            )
+        }
+    }
+
     let datas = new Array();
     let filtroDatas = new Array();
     //criando lista com as datas de todas atividades
     atividadesAux.forEach((a) => datas.push(moment(a.dataInicio).format('DD/MM/yyyy')));
+    datas.sort();
     //removendo valores de datas repetidas da lista
     filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
 
+    //se o array conter a data do dia atual, deixa ela como primeiro elemento
+    mudarPosicao(filtroDatas)
+
+
+
     useEffect(() => {
         request();
-        setSelectedValue(filtroDatas[0]);
+        if (filtroDatas.filter((data) => data == moment().format('DD/MM/yyyy')).length > 0) {
+            setSelectedValue(filtroDatas.filter((data) => data == moment().format('DD/MM/yyyy'))[0]);
+        }
+        else {
+            setSelectedValue(filtroDatas[0]);
+        }
         //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
-        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == filtroDatas[0]));
-        //setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == selectedValue));
-
-        console.log()
+        //setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == filtroDatas[0]));
+        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).format('DD/MM/yyyy') == selectedValue));
     }, [refreshing]);
 
     const onRefresh = React.useCallback(() => {
@@ -124,6 +145,7 @@ export default function DetalhesRoteiro({ route }) {
                     style={{ height: 48, width: 150 }}
                     onValueChange={(itemValue) => {
                         setSelectedValue(itemValue);
+                        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == itemValue));
                     }}
                 >
                     {

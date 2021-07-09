@@ -55,7 +55,6 @@ export default function CriarViagem() {
                 usuarioDonoId: participantes[0].id,
                 criadoPorId: userId,
                 statusId: 1,
-                agenciaId: "98f54c2d-9522-4e25-93cb-815a30ab2ae4",
                 participantes: [
                     {
                         usuarioId: participantes[0].id,
