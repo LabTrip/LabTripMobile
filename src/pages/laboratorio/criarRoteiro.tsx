@@ -42,7 +42,7 @@ export default function CriarRoteiro({route}) {
             const json = await response.json();
             if (response.status == 201) {
                 alert('Roteiro criado com sucesso!');
-                route.params.atualizarEstado()
+                route.params.atualizarEstado(true)
                 navigation.goBack();
             } else {
                 alert(json.mensagem)
