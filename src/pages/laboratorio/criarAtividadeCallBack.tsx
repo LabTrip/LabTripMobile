@@ -67,7 +67,7 @@ export default function CriarAtividade({ route }) {
             }       
         }
         else{
-            alert('Erro ao salvar atividade: ' + response)
+            alert('Erro ao salvar atividade: ' + json.mensagem)
         }
     }
 
