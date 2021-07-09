@@ -28,8 +28,28 @@ export default function DetalhesAtividade({ route }) {
     const [dadosEssenciais, setDadosEssenciais] = useState<DadoEssencial[]>([]);
     const [refreshing, setRefreshing] = useState(false);
     let valorFormatado = route.params.atividade.custo.toFixed(2)
+    const [idPermissao, setIdPermissao] = useState(4);
     const navigation = useNavigation();
     let token, userId, status, corDoStatus;
+
+    const getUsuario = async (idUsuario, token) => {
+        return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + idUsuario, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
+        });
+    }
+
+    const getIdPermissao = async () => {
+        const token = await AsyncStorage.getItem('AUTH') || "";
+        const idUsuario = await AsyncStorage.getItem('USER_ID') || "";
+        const response = await getUsuario(JSON.parse(idUsuario), JSON.parse(token));
+        const json = await response.json();
+        setIdPermissao(json.perfilId);
+    }
 
     switch (route.params.atividade.statusId) {
         case 1:
@@ -55,7 +75,7 @@ export default function DetalhesAtividade({ route }) {
     }
 
     const getDadosEssenciais = async () => {
-        try{
+        try {
             let localToken = await retornaToken() || '';
 
             const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/roteiroAtividade/' + atividade.id, {
@@ -67,12 +87,12 @@ export default function DetalhesAtividade({ route }) {
                 }
             });
 
-            if(response.status == 200){
+            if (response.status == 200) {
                 const json = await response.json();
                 setDadosEssenciais(json);
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e)
         }
     }
@@ -212,21 +232,22 @@ export default function DetalhesAtividade({ route }) {
         }
     }
 
-    const request = async() =>{
-        try{
+    const request = async () => {
+        try {
             setShowLoader(true)
             await getDadosEssenciais();
             console.log(dadosEssenciais)
         }
-        catch(e){
+        catch (e) {
             console.log(e)
         }
-        finally{
+        finally {
             setShowLoader(false);
         }
     }
 
     useEffect(() => {
+        getIdPermissao();
         request();
     }, []);
 
@@ -237,7 +258,7 @@ export default function DetalhesAtividade({ route }) {
     }, [refreshing]);
 
     const salvaArquivo = async (arquivo) => {
-        try{
+        try {
             let localToken = await retornaToken() || '';
 
             const user = await AsyncStorage.getItem('USER_ID');
@@ -282,23 +303,23 @@ export default function DetalhesAtividade({ route }) {
                     },
                     body: form
                 });
-                if(responseArquivo.status == 200){
+                if (responseArquivo.status == 200) {
                     alert('Arquivo salvo com sucesso!');
                     onRefresh()
                 }
-                else{                
+                else {
                     const jsonArquivo = await responseArquivo.json()
                     alert('Erro ao salvar arquivo: ' + jsonArquivo.mensagem)
                 }
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e)
         }
     }
 
     const UploadFile = async () => {
-        try{
+        try {
             let result = await DocumentPicker.getDocumentAsync({
             });
             if (result.type == "cancel") {
@@ -314,10 +335,10 @@ export default function DetalhesAtividade({ route }) {
                 await salvaArquivo(fileToUpload);
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e)
         }
-        finally{
+        finally {
             setShowLoader(false)
         }
     }
@@ -342,13 +363,13 @@ export default function DetalhesAtividade({ route }) {
                 </View>
 
             </Modal>
-            <ScrollView style={{ flexDirection: 'column' }} 
+            <ScrollView style={{ flexDirection: 'column' }}
                 refreshControl={
                     <RefreshControl
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
                     />
-                  }
+                }
             >
                 <View style={{ alignItems: 'center', height: '100%' }}>
                     <View style={styles.containerDetalhes}>
@@ -361,18 +382,21 @@ export default function DetalhesAtividade({ route }) {
                         <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
                         <Text style={[styles.textoDetalhes, { color: corDoStatus }]}>{status}</Text>
                     </View>
-                    <View style={styles.containerBotoes}>
-                        <TouchableOpacity style={styles.botaoEditar} onPress={() => {
-                            navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade });
-                        }}>
-                            <Text style={styles.botaoTexto}>Editar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.botaoExcluir} onPress={async () => {
-                            confirmaExcluir();
-                        }} >
-                            <Text style={styles.botaoTexto}>Excluir</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {idPermissao != 4
+                        ? <View style={styles.containerBotoes}>
+                            <TouchableOpacity style={styles.botaoEditar} onPress={() => {
+                                navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade });
+                            }}>
+                                <Text style={styles.botaoTexto}>Editar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.botaoExcluir} onPress={async () => {
+                                confirmaExcluir();
+                            }} >
+                                <Text style={styles.botaoTexto}>Excluir</Text>
+                            </TouchableOpacity>
+                        </View>
+                        : null
+                    }
                     <Text style={styles.tituloDetalhes}>Custo: R$ {valorFormatado}</Text>
                     {route.params.planejamento == true && (
                         <View style={styles.containerVotos}>
@@ -392,7 +416,7 @@ export default function DetalhesAtividade({ route }) {
                             </TouchableOpacity>
                         </View>
                     )}
-                    <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', alignItems:'center', padding: '3%' }]}>
+                    <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '3%' }]}>
                         <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={styles.tituloDetalhes}>
                                 Midias
@@ -402,15 +426,15 @@ export default function DetalhesAtividade({ route }) {
                             </TouchableOpacity>
                         </View>
                         <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', minHeight: 110 }}>
-                            <ScrollView horizontal={true} style={{ flexDirection: 'row' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', padding: 5}}>
-                                    {
-                                        dadosEssenciais.map((d) => {
-                                            console.log(d)
-                                            return (<CardDadoEssencial key={d.id.toString()}
-                                                metaDados={d} refresh={onRefresh}
-                                            />)
-                                        })
-                                    }
+                            <ScrollView horizontal={true} style={{ flexDirection: 'row' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', padding: 5 }}>
+                                {
+                                    dadosEssenciais.map((d) => {
+                                        console.log(d)
+                                        return (<CardDadoEssencial key={d.id.toString()}
+                                            metaDados={d} refresh={onRefresh}
+                                        />)
+                                    })
+                                }
                             </ScrollView>
                         </View>
                     </View>
@@ -420,7 +444,7 @@ export default function DetalhesAtividade({ route }) {
                 <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('HH:mm')}</Text>
                 <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
                 <Text style={[styles.textoDetalhes, { color: corDoStatus }]}>{status}</Text>
-                
+
             </ScrollView>
         </View>
     );
