@@ -3,7 +3,6 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CardViagem from './cardViagem';
 
 export default function CardAtividade(props) {
     const navigation = useNavigation();
@@ -21,6 +20,47 @@ export default function CardAtividade(props) {
             setIdUsuario(id.toString().replace(/"/g, ''));
         }
     };
+
+    const retornaToken = async () => {
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+            localToken = JSON.parse(localToken)
+        }
+        return localToken;
+    }
+
+    const atualizaAtividade = async (statusId) => {
+        let localToken = await retornaToken() || '';
+
+        const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + props.item.id, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': localToken
+            },
+            body: JSON.stringify({
+                "id": props.item.id,
+                "atividadeId": props.item.atividadeId,
+                "roteiroId": props.item.roteiroId,
+                "versaoRoteiro": props.item.versaoRoteiro,
+                "dataInicio": props.item.dataInicio.toString(),
+                "dataFim":  props.item.dataFim.toString(),
+                "custo": props.item.custo,
+                "statusId": statusId,
+                "observacaoCliente": props.item.observacaoAgente,
+                "observacaoAgente": props.item.observacaoAgente
+            })
+        });
+        const json = await response.json();
+        //seta lista de atividades se o status da resposta for 200
+        if (response.status == 200) {
+            alert('Atividade atualizada!')
+        }
+        else {
+            alert(json.mensagem);
+        }
+    }
 
     //propriedades do botao confimar e cancelar atividade.
     let corBotaoConfimar = '#0FD06F';
@@ -41,10 +81,10 @@ export default function CardAtividade(props) {
             <Text style={styles.textoTitulo}>{props.nome} </Text>
             <View style={styles.detalhes}>
                 <Text style={styles.textoDetalhes}>Local: {props.local}{"\n"}Horário: {props.horario}</Text>
-                <TouchableOpacity disabled={disabled}>
+                <TouchableOpacity onPress={() => atualizaAtividade(5)} disabled={disabled}>
                     <MaterialCommunityIcons name="check-bold" color={corBotaoConfimar} size={29} />
                 </TouchableOpacity>
-                <TouchableOpacity disabled={disabled}>
+                <TouchableOpacity onPress={() => atualizaAtividade(4)} disabled={disabled}>
                     <MaterialCommunityIcons name="close-thick" color={corBotaoCancelar} size={29} />
                 </TouchableOpacity>
             </View>
