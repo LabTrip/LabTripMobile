@@ -126,9 +126,11 @@ export default function DetalhesRoteiro({ route }) {
                         setSelectedValue(itemValue);
                     }}
                 >
-                    <Picker.Item label="21/01/2021" value="21/01/2021" />
-                    <Picker.Item label="22/01/2021" value="22/01/2021" />
-
+                    {
+                        filtroDatas?.map((a) => {
+                            return <Picker.Item key={a} label={a} value={a} />
+                        })
+                    }
                 </Picker>
                 <TouchableOpacity style={styles.botaoIconeTop} onPress={() => Linking.openURL('https://dl.dropbox.com/s/0skuwdlhg6q4fol/History%20of%20GIF.gif?dl=1')}>
                     <MaterialCommunityIcons name={'file-download'} color={'#575757'} size={30} />
