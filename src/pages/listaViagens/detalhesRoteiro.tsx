@@ -148,7 +148,7 @@ export default function DetalhesRoteiro({ route }) {
             >
                 {
                     atividades?.map((a) => {
-                        return <CardAtividade key={a.id} nome={a.local} local={a.endereco} horario={'18h'} item={a} viagem={viagem} data={selectedValue} />
+                        return <CardAtividade callback={setRefreshing} key={a.id} nome={a.local} local={a.endereco} horario={'18h'} item={a} viagem={viagem} data={selectedValue} />
                     })
                 }
             </ScrollView>

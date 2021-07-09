@@ -31,6 +31,7 @@ export default function CardAtividade(props) {
 
     const atualizaAtividade = async (statusId) => {
         let localToken = await retornaToken() || '';
+        props.callback(true);
 
         const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + props.item.id, {
             method: 'PUT',
@@ -45,7 +46,7 @@ export default function CardAtividade(props) {
                 "roteiroId": props.item.roteiroId,
                 "versaoRoteiro": props.item.versaoRoteiro,
                 "dataInicio": props.item.dataInicio.toString(),
-                "dataFim":  props.item.dataFim.toString(),
+                "dataFim": props.item.dataFim.toString(),
                 "custo": props.item.custo,
                 "statusId": statusId,
                 "observacaoCliente": props.item.observacaoAgente,
@@ -55,9 +56,11 @@ export default function CardAtividade(props) {
         const json = await response.json();
         //seta lista de atividades se o status da resposta for 200
         if (response.status == 200) {
+            props.callback(false);
             alert('Atividade atualizada!')
         }
         else {
+            props.callback(false);
             alert(json.mensagem);
         }
     }

@@ -270,7 +270,6 @@ export default function DetalhesAtividade({ route }) {
                 urlArquivo: null,
                 privado: false
             })
-            console.log('status da primeira requestAddDadoEssencial: ' + response.status);
             if (response.status == 201) {
                 const form = new FormData();
                 form.append('file', arquivo);
@@ -283,8 +282,6 @@ export default function DetalhesAtividade({ route }) {
                     },
                     body: form
                 });
-                console.log('id do dado essencial: ' + json.id);
-                console.log('status da segunda requestAddAquivo: ' + responseArquivo.status)
                 if(responseArquivo.status == 200){
                     alert('Arquivo salvo com sucesso!');
                     onRefresh()
@@ -305,7 +302,6 @@ export default function DetalhesAtividade({ route }) {
             let result = await DocumentPicker.getDocumentAsync({
             });
             if (result.type == "cancel") {
-                alert('cancelou mano :(')
             }
             else {
                 const fileToUpload = {
