@@ -8,6 +8,7 @@ import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CriarRoteiro from './criarRoteiro';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import i18n from '../../translate/i18n';
 
 interface Viagem {
     id: string,
@@ -139,7 +140,7 @@ export default function ListaPropostaDeRoteiro({ route }) {
                     <View style={styles.modalView}>
                         <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                         <Text style={styles.textStyle}>
-                            Aguarde...
+                            {i18n.t('modais.aguarde')}
                         </Text>
                     </View>
                 </View>
@@ -150,13 +151,13 @@ export default function ListaPropostaDeRoteiro({ route }) {
                 </View>
                 : null}
             <View style={styles.containerTop}>
-                <Text style={styles.tituloTop}>Propostas de roteiro</Text>
+                <Text style={styles.tituloTop}>{i18n.t('listaPropostaDeRoteiro.propostasRoteiro')}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                     <Checkbox
                         status={ocultarReprovados ? 'checked' : 'unchecked'}
                         onPress={ocultarRoteirosOnPress}
                     />
-                    <Text>Esconder roteiros reprovados</Text>
+                    <Text>{i18n.t('listaPropostaDeRoteiro.esconderRoteiros')}</Text>
                 </View>
             </View>
             {botaoChat}

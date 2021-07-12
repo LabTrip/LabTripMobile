@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Platform, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import CardProprietario from '../../components/cardProprietario';
-import BotaoLupa from '../../components/botaoLupa';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SearchableDropdown from 'react-native-searchable-dropdown';
-import SearchFromAPI from '../../components/searchFromAPI'
-import Routes from '../../routes';
+import i18n from '../../translate/i18n';
 
 const moment = require('moment');
 
@@ -60,14 +55,14 @@ export default function CriarAtividade({ route }) {
 
         const json = await response.json();
         if(response.status == 201){
-            alert('Atividade criada com sucesso');
+            alert(i18n.t('criarAtividadeCallback.sucesso'));
             if(route.params.callBackCriaAtividade != undefined){
                 route.params.callBackCriaAtividade(json);
                 navigation.goBack();
             }       
         }
         else{
-            alert('Erro ao salvar atividade: ' + response)
+            alert(i18n.t('criarAtividadeCallback.erro') + response)
         }
     }
 
@@ -99,7 +94,7 @@ export default function CriarAtividade({ route }) {
             
         }
         else{
-            alert('Erro ao busca locais: ' + response)
+            alert(i18n.t('criarAtividadeCallback.erroLocal') + response)
             setLocais([]);
         }
 
@@ -111,11 +106,11 @@ export default function CriarAtividade({ route }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.labelData}>Descrição da atividade</Text>
-            <TextInput placeholder={"Descrição da atividade"} value={descricao} onChangeText={(text) => setDescricao(text)} style={styles.input} />
-            <Text style={styles.labelData}>Local</Text>
+            <Text style={styles.labelData}>{i18n.t('criarAtividadeCallback.descricaoAtividade')}</Text>
+            <TextInput placeholder={i18n.t('criarAtividadeCallback.descricaoAtividade')} value={descricao} onChangeText={(text) => setDescricao(text)} style={styles.input} />
+            <Text style={styles.labelData}>{i18n.t('criarAtividadeCallback.local')}</Text>
             <View style={styles.containerRow}>
-                <TextInput placeholder={"Descrição do local"} value={nomeLocal} onChangeText={(text) => setNomeLocal(text)} style={styles.input} />
+                <TextInput placeholder={i18n.t('criarAtividadeCallback.local')} value={nomeLocal} onChangeText={(text) => setNomeLocal(text)} style={styles.input} />
                 <TouchableOpacity style={{}} onPress={buscaLocais}>
                     <Image source={require('../../imgs/search-icon.png')} />
                 </TouchableOpacity>
@@ -139,13 +134,13 @@ export default function CriarAtividade({ route }) {
 
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
                 if (descricao == "") {
-                    alert('A viagem precisa ter um apelido!');
+                    alert(i18n.t('criarAtividadeCallback.deveTerDescricao'));
                 }
                 else {
                     salvaAtividade();
                 }
             }}>
-                <Text style={styles.botaoCriarTexto}>Criar atividade</Text>
+                <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.criar')}</Text>
             </TouchableOpacity>
         </View>
     );

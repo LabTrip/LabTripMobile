@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, Image, View, Switch, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Picker } from '@react-native-picker/picker';
-import { black } from 'react-native-paper/lib/typescript/styles/colors';
+import * as FileSystem from 'expo-file-system';
 
 interface Permissoes {
   id: string,
@@ -30,30 +29,23 @@ export default function CardParticipante(props) {
   }
 
   const getdocumentProfile = async () => {
+    let localToken = await retornaToken() || '';
 
-    const buscaFoto = async () => {
-      let localToken = await retornaToken() || '';
-      return await fetch('https://labtrip-backend.herokuapp.com/usuarios/fotoperfil/' + metaDados.usuarioId, {
-        method: 'GET',
+    FileSystem.downloadAsync(
+      'https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + metaDados.id,
+      FileSystem.documentDirectory + metaDados.nomeArquivo,
+      {
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'image/jpeg',
-          'x-access-token': localToken
+                'x-access-token': localToken
         }
-      });
-    }
-
-    const responseFoto = await buscaFoto();
-    const blob = await responseFoto.blob();
-
-    if (responseFoto.status == 200) {
-      var reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = function () {
-        var base64data = reader.result?.toString() || "";
-        setImage(base64data)
       }
-    }
+    ).then(({ uri }) => {
+      console.log('Finished downloading to ', uri);
+      alert(uri)
+    })
+    .catch(error => {
+      console.error(error);
+    });
   }
 
   const excluiDocumento = async () => {
@@ -82,7 +74,7 @@ export default function CardParticipante(props) {
           <Text style={styles.textoCard}  numberOfLines={3} ellipsizeMode={'head'}>{metaDados.nomeArquivo}</Text>
         </View>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={() => alert('Baixar')}>
+          <TouchableOpacity onPress={async () => await getdocumentProfile()}>
             <MaterialCommunityIcons name="file-download" color={'#848484'} size={30} />
           </TouchableOpacity>
           <TouchableOpacity onPress={async () => excluiDocumento()}>

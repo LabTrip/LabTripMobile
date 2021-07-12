@@ -244,16 +244,16 @@ export default function EditarAtividadeRoteiro({ route }) {
             const json = await response.json();
             //seta lista de atividades se o status da resposta for 200
             if (response.status == 200 || response.status == 304) {
-                alert('Atividade alterada com sucesso!')
+                alert(i18n.t('adicionarAtividadeRoteiro.sucessoAlterar'))
                 setTimeout(() => navigation.goBack(), 1500)
             }
             else{
-                alert('Erro ao alterar atividade: ' + json)
+                alert(i18n.t('adicionarAtividadeRoteiro.erroAlterar') + json)
             }
         }
         catch(e){
             console.log(e)
-            alert('Erro ao adicionar atividade.')
+            alert(i18n.t('adicionarAtividadeRoteiro.erroAlterar'))
         }
     }
 
@@ -276,8 +276,8 @@ export default function EditarAtividadeRoteiro({ route }) {
                         <View style={styles.modalView}>
                             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                             <Text style={styles.textStyle}>
-                                Aguarde...
-                        </Text>
+                                {i18n.t('modais.aguarde')}
+                            </Text>
                         </View>
                     </View>
 
@@ -413,7 +413,7 @@ export default function EditarAtividadeRoteiro({ route }) {
                         <TouchableOpacity style={styles.botaoCriar} onPress={async () => {
                             const res = await salvarAtividadeRoteiro();
                         }}>
-                            <Text style={styles.botaoCriarTexto}>Salvar</Text>
+                            <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.salvar')}</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

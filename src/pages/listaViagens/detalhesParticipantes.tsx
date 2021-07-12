@@ -4,6 +4,7 @@ import BotaoMais from '../../components/botaoMais';
 import CardParticipante from '../../components/cardParticipante';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 interface Viagem {
   id: string,
@@ -89,11 +90,11 @@ export default function DetalhesParticipantes({ route }) {
 
     const json = await response.json();
     if (response.status == 204) {
-      alert('Participante removido com sucesso!');
+      alert(i18n.t('detalhesParticipantes.sucessoRemover'));
       const response = await getParticipantesViagem();
     }
     else {
-      alert('Erro ao remover participante.');
+      alert(i18n.t('detalhesParticipantes.erroRemover'));
     }
   }
 
@@ -133,13 +134,13 @@ export default function DetalhesParticipantes({ route }) {
       });
       let json = await response.json();
       if (response.status >= 200 && response.status <= 299) {
-        alert('Participantes salvos com sucesso!')
+        alert(i18n.t('detalhesParticipantes.sucessoSalvar'))
       } else {
         alert(json.mensagem);
       }
     }
     catch (e) {
-      alert('Erro ao salvar participantes.')
+      alert(i18n.t('detalhesParticipantes.erroSalvar'))
     }
     finally {
       setShowLoader(false);
@@ -160,18 +161,18 @@ export default function DetalhesParticipantes({ route }) {
 
   const removerParticipante = async (item) => {
     Alert.alert(
-      'Remover participante',
-      'Deseja mesmo remover o participante?',
+      i18n.t('detalhesParticipantes.removerParticipante'),
+      i18n.t('detalhesParticipantes.desejaRemover'),
       [
         {
-          text: 'sim',
+          text: i18n.t('botoes.sim'),
           onPress: async () => {
             let participantesRemovidos = [item];
             const response = await deleteParticipantesViagem(participantesRemovidos);
           }
         },
         {
-          text: 'não',
+          text: i18n.t('botoes.nao'),
           onPress: () => {
           }
         }
@@ -193,7 +194,7 @@ export default function DetalhesParticipantes({ route }) {
           <View style={styles.modalView}>
             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
             <Text style={styles.textStyle}>
-              Aguarde...
+              {i18n.t('modais.aguarde')}
             </Text>
           </View>
         </View>
@@ -224,7 +225,7 @@ export default function DetalhesParticipantes({ route }) {
         }
       />
       {viagem.alterar? <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaParticipantes}>
-        <Text style={styles.botaoCriarTexto}>Salvar participantes</Text>
+        <Text style={styles.botaoCriarTexto}>{i18n.t('detalhesParticipantes.salvarParticipantes')}</Text>
       </TouchableOpacity>: null}
     </View>
   );

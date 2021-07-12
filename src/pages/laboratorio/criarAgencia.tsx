@@ -8,7 +8,7 @@ import BotaoLupa from '../../components/botaoLupa'
 import { DataTable } from 'react-native-paper';
 import LinhaOpcaoUsuario from '../../components/linhaOpcaoUsuario';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { setStatusBarBackgroundColor } from 'expo-status-bar';
+import i18n from '../../translate/i18n';
 
 interface Usuario {
   id: string,
@@ -107,7 +107,7 @@ export default function CriarAgencia() {
           <View style={styles.modalView}>
             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
             <Text style={styles.textStyle}>
-              Aguarde...
+              {i18n.t('modais.aguarde')}
             </Text>
           </View>
         </View>
@@ -115,10 +115,10 @@ export default function CriarAgencia() {
       </Modal>
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
-          <TextInput placeholder='Nome da agencia' style={styles.input} value={nomeAgencia}
+          <TextInput placeholder={i18n.t('editarAgencia.nomeAgencia')} style={styles.input} value={nomeAgencia}
             onChangeText={text => onChangeTextnomeAgencia(text)}   />
           <View style={styles.containerAddFuncionarios}>
-            <TextInput placeholder={"Adicionar Funcionarios"} style={styles.inputAddFuncionario}
+            <TextInput placeholder={i18n.t('editarAgencia.addFuncionario')} style={styles.inputAddFuncionario}
              onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'} />
 
             <BotaoLupa onPress={async () => {
@@ -134,11 +134,11 @@ export default function CriarAgencia() {
                 }
                 else{
                   //console.log(jsonUsuario)
-                  alert("Erro ao buscar usuário.")
+                  alert(i18n.t('editarAgencia.erroBuscarUsuario'))
                 }
               }
               catch(e){
-                alert("Erro ao buscar usuário.")
+                alert(i18n.t('editarAgencia.erroBuscarUsuario'))
               }
               finally{
                 setShowLoader(false);
@@ -169,7 +169,7 @@ export default function CriarAgencia() {
                       setParticipantes(participantesAux.concat(p));
                     }
                     else{
-                      alert("Este usuário já foi inserido.")
+                      alert(i18n.t('editarAgencia.usuarioJaAdicionado'))
                     }
                     
                     setUsuarios([])
@@ -214,10 +214,10 @@ export default function CriarAgencia() {
                   let jsonP = await responseP.json();
 
                   if (responseP.status >= 200 && response.status <= 299) {
-                    alert('Participantes adicionados com sucesso!')
+                    alert(i18n.t('editarAgencia.sucessoFuncionario'))
                   }
                   else{
-                    alert('Erro ao adicionados participantes.')
+                    alert(i18n.t('editarAgencia.erroFuncionario'))
                   }
                 }              
 
@@ -228,14 +228,14 @@ export default function CriarAgencia() {
               }
             }
             catch(e){
-              alert('Erro ao salvar agência.');
+              alert(i18n.t('editarAgencia.erroSalvar'));
             }
             finally{
               setShowLoader(false);
             }
             
           }}>
-            <Text style={styles.botaoSalvarTexto}>Criar agencia</Text>
+            <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.criar')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

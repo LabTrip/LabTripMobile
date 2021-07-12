@@ -3,6 +3,7 @@ import { Modal, ActivityIndicator, Text, StyleSheet, TextInput, TouchableOpacity
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import RNPasswordStrengthMeter, { BarPasswordStrengthDisplay } from 'react-native-password-strength-meter';
+import i18n from '../../translate/i18n';
 
 export default function AlterarSenha({route}) {
     const navigation = useNavigation();
@@ -65,15 +66,15 @@ export default function AlterarSenha({route}) {
                 <View style={styles.modalView}>
                     <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                     <Text style={styles.textStyle}>
-                    Aguarde...
+                        {i18n.t('modais.aguarde')}
                     </Text>
                 </View>
                 </View>
                 
             </Modal>
-            <TextInput placeholder='Senha atual' secureTextEntry={true} style={styles.input} value={senhaAntiga} onChangeText={text => setSenhaAntiga(text)}/>          
+            <TextInput placeholder={i18n.t('redefinirSenha.senhaAtual')} secureTextEntry={true} style={styles.input} value={senhaAntiga} onChangeText={text => setSenhaAntiga(text)}/>          
             
-            <TextInput placeholder='Nova senha' secureTextEntry={true} style={styles.input} value={novaSenha} onChangeText={text => {setNovaSenha(text); validaForcaSenha()}}/>
+            <TextInput placeholder={i18n.t('redefinirSenha.digiteSenha')} secureTextEntry={true} style={styles.input} value={novaSenha} onChangeText={text => {setNovaSenha(text); validaForcaSenha()}}/>
             {
                 senhaForte 
                 ? <View style={styles.passwordContainerValid} ></View> 
@@ -81,7 +82,7 @@ export default function AlterarSenha({route}) {
             }
             
             
-            <TextInput placeholder='Confirme a nova senha' secureTextEntry={true} style={styles.input} value={confNovaSenha} onChangeText={text => setConfNovaSenha(text)}/>
+            <TextInput placeholder={i18n.t('redefinirSenha.confirmeSenha')} secureTextEntry={true} style={styles.input} value={confNovaSenha} onChangeText={text => setConfNovaSenha(text)}/>
             <TouchableOpacity style={styles.botaoSalvar}  onPress={async ()=> {
                     if(senhaForte){
                         if(await verificaSenhas()){
@@ -93,7 +94,7 @@ export default function AlterarSenha({route}) {
                                 let json = await response.json();
                                 
                                 if(response.status == 200){
-                                    alert('Senha alterada com sucesso');
+                                    alert(i18n.t('redefinirSenha.sucesso'));
                                     navigation.goBack();
                                 }
                                 else{
@@ -101,7 +102,7 @@ export default function AlterarSenha({route}) {
                                 }
                             }
                             catch(e){
-                                alert('Erro ao alterar senha.');
+                                alert(i18n.t('redefinirSenha.erro'));
                             }
                             finally{
                                 setShowLoader(false);
@@ -109,12 +110,12 @@ export default function AlterarSenha({route}) {
                         }
                     }
                     else{
-                        alert('A senha deve conter ao menos sete caracteres e um número.')
+                        alert(i18n.t('redefinirSenha.erroCriterios'))
                     }
                     
                 }
             }>
-                <Text style={styles.botaoSalvarTexto}>Salvar</Text>
+                <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.salvar')}</Text>
             </TouchableOpacity>
         </ScrollView>
     );

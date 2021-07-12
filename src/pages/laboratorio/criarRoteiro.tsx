@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import normalize from '../../components/fontSizeResponsive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 interface Roteiro {
     id: number,
@@ -41,7 +42,7 @@ export default function CriarRoteiro({route}) {
             const response = await salvaRoteiros();
             const json = await response.json();
             if (response.status == 201) {
-                alert('Roteiro criado com sucesso!');
+                alert(i18n.t('criarRoteiro.sucesso'));
                 route.params.atualizarEstado()
                 navigation.goBack();
             } else {
@@ -49,26 +50,26 @@ export default function CriarRoteiro({route}) {
             }
         }
         else {
-            alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+            alert(i18n.t('criarRoteiro.erro'))
         }
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.containerTop}>
-                <Text style={styles.tituloTop}>Criação da proposta de roteiro</Text>
+                <Text style={styles.tituloTop}>{i18n.t('criarRoteiro.criacaoRoteiro')}</Text>
             </View>
-            <Text style={styles.labelData}>Descrição do roteiro</Text>
-            <TextInput placeholder={"Descrição"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
+            <Text style={styles.labelData}>{i18n.t('criarRoteiro.descricaoRoteiro')}</Text>
+            <TextInput placeholder={i18n.t('criarRoteiro.descricaoRoteiro')} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
                 if (apelido != "") {
                     salvar();
                 } else {
-                    alert('O roteiro precisa ter uma descrição!')
+                    alert(i18n.t('criarRoteiro.deveTerDescricao'))
                 }
 
             }}>
-                <Text style={styles.botaoCriarTexto}>Salvar</Text>
+                <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.salvar')}</Text>
             </TouchableOpacity>
         </View>
 

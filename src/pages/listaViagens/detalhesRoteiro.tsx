@@ -5,6 +5,7 @@ import CardAtividade from '../../components/cardAtividade';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 interface Atividade {
     id: number,
@@ -130,9 +131,6 @@ export default function DetalhesRoteiro({ route }) {
                     <Picker.Item label="22/01/2021" value="22/01/2021" />
 
                 </Picker>
-                <TouchableOpacity style={styles.botaoIconeTop} onPress={() => Linking.openURL('https://dl.dropbox.com/s/0skuwdlhg6q4fol/History%20of%20GIF.gif?dl=1')}>
-                    <MaterialCommunityIcons name={'file-download'} color={'#575757'} size={30} />
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.botaoIconeTop} onPress={() => navigation.navigate('Chat', { viagem: viagem, topico: { id: 0, descricao: 'Roteiro' } })}>
                     <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={30} />
                 </TouchableOpacity>

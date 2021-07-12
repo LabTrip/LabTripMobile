@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import { DataTable } from 'react-native-paper';
 import LinhaOpcaoUsuario from '../../components/linhaOpcaoUsuario';
+import i18n from '../../translate/i18n';
 
 interface Usuario {
   id: string,
@@ -177,7 +178,7 @@ export default function EditarAgencia({route}) {
           <View style={styles.modalView}>
             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
             <Text style={styles.textStyle}>
-              Aguarde...
+              {i18n.t('modais.aguarde')}
             </Text>
           </View>
         </View>
@@ -185,10 +186,10 @@ export default function EditarAgencia({route}) {
       </Modal>
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
-          <TextInput placeholder='Nome da agencia' style={styles.input} 
+          <TextInput placeholder={i18n.t('editarAgencia.nomeAgencia')} style={styles.input} 
             onChangeText={texto => setNomeAgencia(texto)} value={nomeAgencia}/>
           <View style={styles.containerAddFuncionarios}>
-            <TextInput placeholder={"Adicionar Funcionarios"} style={styles.inputAddFuncionario}
+            <TextInput placeholder={i18n.t('editarAgencia.addFuncionario')} style={styles.inputAddFuncionario}
              onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'} />
 
             <BotaoLupa onPress={async () => {
@@ -208,11 +209,11 @@ export default function EditarAgencia({route}) {
                 }
                 else{
                   //console.log(jsonUsuario)
-                  alert("Erro ao buscar usuário.")
+                  alert(i18n.t('editarAgencia.erroBuscarUsuario'))
                 }
               }
               catch(e){
-                alert("Erro ao buscar usuário.")
+                alert(i18n.t('editarAgencia.erroBuscarUsuario'))
               }
               finally{
                 setShowLoader(false);
@@ -248,7 +249,7 @@ export default function EditarAgencia({route}) {
                       setParticipantesAdicionados(participantesAdicionadosAux.concat(usuario));
                     }
                     else{
-                      alert("Este usuário já foi inserido.")
+                      alert(i18n.t('editarAgencia.usuarioJaAdicionado'))
                     }
                     
                     setUsuarios([])
@@ -307,14 +308,14 @@ export default function EditarAgencia({route}) {
               }
             }
             catch(e){
-              alert('Erro ao salvar dados da agência');
+              alert(i18n.t('editarAgencia.erroSalvar'));
             }
             finally{
               setShowLoader(false);
             }
             
           }}>
-            <Text style={styles.botaoSalvarTexto}>Salvar agencia</Text>
+            <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.salvar')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

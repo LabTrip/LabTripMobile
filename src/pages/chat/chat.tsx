@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {io} from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
-
+import i18n from '../../translate/i18n';
 
 interface Mensagem {
   metadata: {
@@ -145,7 +145,7 @@ export default function Chat({ route }) {
               <View style={styles.modalView}>
                   <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                   <Text style={styles.textStyle}>
-                      Aguarde...
+                    {i18n.t('modais.aguarde')}
                   </Text>
               </View>
           </View>

@@ -13,6 +13,8 @@ import DatePicker from 'react-native-datepicker'
 const moment = require('moment');
 import { TextInputMask } from 'react-native-masked-text'
 import DateTimePicker from '@react-native-community/datetimepicker';
+import i18n from '../../translate/i18n';
+
 
 interface Usuario {
   id: string,
@@ -172,14 +174,14 @@ export default function EditarUsuario({ route }) {
       </Modal>
       <ScrollView>
         <View style={{ alignItems: 'center' }}>
-        <Text style={styles.label}>Nome:</Text>
-          <TextInput placeholder='Nome do usuário' style={styles.input}
+        <Text style={styles.label}>{i18n.t('editarUsuario.nomeUsuario')}</Text>
+          <TextInput placeholder={i18n.t('editarUsuario.nomeUsuario')} style={styles.input}
             onChangeText={texto => setNomeUsuario(texto)} value={nomeUsuario} />
-          <Text style={styles.label}>E-mail:</Text>
-          <TextInput placeholder={"E-mail"} style={styles.input}
+          <Text style={styles.label}>{i18n.t('editarUsuario.emailUsuario')}</Text>
+          <TextInput placeholder={i18n.t('editarUsuario.emailUsuario')} style={styles.input}
             keyboardType="email-address"
             onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'} />
-          <Text style={styles.label}>Data de nascimento:</Text>
+          <Text style={styles.label}>{i18n.t('editarUsuario.dataNascimentoUsuario')}</Text>
 
           <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
             <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
@@ -194,7 +196,7 @@ export default function EditarUsuario({ route }) {
             )}
           </TouchableOpacity>
 
-          <Text style={styles.label}>Celular:</Text>
+          <Text style={styles.label}>{i18n.t('editarUsuario.celularUsuario')}</Text>
           <TextInputMask
               type={'cel-phone'}
               options={{
@@ -208,7 +210,7 @@ export default function EditarUsuario({ route }) {
                   onChangeTextTelefone(text)
               }}
           />
-          <Text style={styles.label}>Tipo de usuário:</Text>
+          <Text style={styles.label}>{i18n.t('editarUsuario.tipoUsuario')}</Text>
           <Picker style={styles.pickerComponente}
             prompt="Tipo de usuário"
             mode="dropdown"
@@ -252,7 +254,7 @@ export default function EditarUsuario({ route }) {
               setShowLoader(false);
             }
           }}>
-            <Text style={styles.botaoSalvarTexto}>Salvar Usuário</Text>
+            <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.salvar')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

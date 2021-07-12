@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CardDadoEssencial from '../../components/cardDadoEssencial';
 import * as DocumentPicker from 'expo-document-picker';
 import mime from 'mime';
+import i18n from '../../translate/i18n';
 
 interface DadoEssencial {
     id: number,
@@ -33,23 +34,23 @@ export default function DetalhesAtividade({ route }) {
 
     switch (route.params.atividade.statusId) {
         case 1:
-            status = "Em Planejamento";
+            status = i18n.t('status.planejamento');
             corDoStatus = '#B7AF0B'
             break;
         case 2:
-            status = "Planejado";
+            status = i18n.t('status.planejado');
             corDoStatus = '#B7AF0B'
             break;
         case 3:
-            status = "Em andamento";
+            status = i18n.t('status.emAndamento');
             corDoStatus = '#00AEFF';
             break;
         case 5:
-            status = "Concluído";
+            status = i18n.t('status.concluido');
             corDoStatus = '#0FD06F';
             break;
         default:
-            status = "Cancelado"
+            status = i18n.t('status.Canceled')
             corDoStatus = '#333333';
             break;
     }
@@ -148,7 +149,7 @@ export default function DetalhesAtividade({ route }) {
                 }
             }
             else {
-                alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+                alert(i18n.t('detalhesAtividade.erroCapturarDetalhes'))
             }
         } catch (e) {
             alert(e)
@@ -170,16 +171,16 @@ export default function DetalhesAtividade({ route }) {
 
             const json = await response.json();
             if (response.status == 200) {
-                alert('Sucesso ao excluir atividade do roteiro.');
+                alert(i18n.t('detalhesAtividade.sucessoExcluir'));
                 navigation.goBack()
             }
             else {
-                alert('Erro ao excluir atividade do roteiro.');
+                alert(i18n.t('detalhesAtividade.erroExcluir'));
             }
         }
         catch (e) {
             console.log(e)
-            alert('Erro ao excluir atividade do roteiro.');
+            alert(i18n.t('detalhesAtividade.erroExcluir'));
         }
         finally {
             setShowLoader(false);
@@ -189,17 +190,17 @@ export default function DetalhesAtividade({ route }) {
     const confirmaExcluir = async () => {
         try {
             Alert.alert(
-                'Excluir atividade',
-                'Deseja mesmo excluir a atividade?',
+                i18n.t('detalhesAtividade.excluirAtividade'),
+                i18n.t('detalhesAtividade.desejaRemover'),
                 [
                     {
-                        text: 'sim',
+                        text: i18n.t('botoes.sim'),
                         onPress: async () => {
                             excluiAtividade();
                         }
                     },
                     {
-                        text: 'não',
+                        text: i18n.t('botoes.nao'),
                         onPress: () => {
 
                         }
@@ -208,7 +209,7 @@ export default function DetalhesAtividade({ route }) {
             )
         }
         catch (e) {
-            alert('Erro ao excluir atividade.')
+            alert(i18n.t('detalhesAtividade.erroExcluir'))
         }
     }
 
@@ -286,12 +287,12 @@ export default function DetalhesAtividade({ route }) {
                 console.log('id do dado essencial: ' + json.id);
                 console.log('status da segunda requestAddAquivo: ' + responseArquivo.status)
                 if(responseArquivo.status == 200){
-                    alert('Arquivo salvo com sucesso!');
+                    alert(i18n.t('detalhesAtividade.sucessoSalvarArquivo'));
                     onRefresh()
                 }
                 else{                
                     const jsonArquivo = await responseArquivo.json()
-                    alert('Erro ao salvar arquivo: ' + jsonArquivo.mensagem)
+                    alert(i18n.t('detalhesAtividade.erroSalvarArquivo') + jsonArquivo.mensagem)
                 }
             }
         }
@@ -305,7 +306,6 @@ export default function DetalhesAtividade({ route }) {
             let result = await DocumentPicker.getDocumentAsync({
             });
             if (result.type == "cancel") {
-                alert('cancelou mano :(')
             }
             else {
                 const fileToUpload = {
@@ -340,7 +340,7 @@ export default function DetalhesAtividade({ route }) {
                     <View style={styles.modalView}>
                         <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                         <Text style={styles.textStyle}>
-                            Aguarde...
+                            {i18n.t('modais.aguarde')}
                         </Text>
                     </View>
                 </View>

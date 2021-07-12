@@ -7,6 +7,7 @@ import { useLinkProps, useNavigation } from '@react-navigation/native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
+import i18n from '../../translate/i18n';
 
 interface Orcamento {
     despesasExtras: [{
@@ -82,7 +83,7 @@ export default function DetalhesOrcamento({ route }) {
             setViagem(json);
         }
         else {
-            alert('Não foi possível buscar detalhes da viagem: ' + json.mensagem);
+            alert(i18n.t('detalhesOrcamento.erroBuscarDetalhes') + json.mensagem);
         }
     }
 
@@ -134,7 +135,7 @@ export default function DetalhesOrcamento({ route }) {
             buscaOrcamento();
         }
         else {
-            alert('Erro ao criar orçamento: ' + json.mensagem);
+            alert(i18n.t('detalhesOrcamento.erroCriarOrcamento') + json.mensagem);
         }
     }
 
@@ -186,7 +187,7 @@ export default function DetalhesOrcamento({ route }) {
                     <TouchableOpacity style={styles.botaoCriar} onPress={() => {
                         criaOrcamento();
                     }}>
-                        <Text style={styles.botaoCriarTexto}>Ativar orçamento</Text>
+                        <Text style={styles.botaoCriarTexto}>{i18n.t('detalhesOrcamento.ativarOrcamento')}</Text>
                     </TouchableOpacity>
                 </View>
             )}

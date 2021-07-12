@@ -6,6 +6,7 @@ import normalize from '../../components/fontSizeResponsive';
 import DatePicker from 'react-native-datepicker'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { stringify } from 'uuid';
+import i18n from '../../translate/i18n';
 
 const moment = require('moment');
 
@@ -81,11 +82,11 @@ export default function EditarRoteiro({ route }) {
         });
 
         if (response.status == 200) {
-            alert("Roteiro alterado com sucesso!")
+            alert(i18n.t('editarRoteiro.sucessoAlterar'))
             navigation.goBack();
         }
         else {
-            alert("Erro ao alterar roteiro.")
+            alert(i18n.t('editarRoteiro.erroAlterar'))
         }
     }
 
@@ -105,11 +106,11 @@ export default function EditarRoteiro({ route }) {
 
         const json = await response.json()
         if (response.status == 201) {
-            alert("Roteiro versionado com sucesso!")
+            alert(i18n.t('editarRoteiro.sucessoVersionar'))
             navigation.goBack();
         }
         else {
-            alert("Erro ao versionar roteiro: " + json.mensagem)
+            alert(i18n.t('editarRoteiro.erroVersionar') + json.mensagem)
         }
     }
 
@@ -126,11 +127,11 @@ export default function EditarRoteiro({ route }) {
         });
 
         if (response.status >= 200 && response.status <= 299) {
-            alert("Roteiro deletado com sucesso!")
+            alert(i18n.t('editarRoteiro.sucessoExcluir'))
             navigation.goBack();
         }
         else {
-            alert("Erro ao deletar roteiro.")
+            alert(i18n.t('editarRoteiro.erroExcluir'))
         }
     }
 
@@ -144,9 +145,9 @@ export default function EditarRoteiro({ route }) {
                 style={{ height: 50, width: '95%' }}
                 onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
             >
-                <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
-                <Picker.Item label="Aprovado" value={6} color="#0FD06F" />
-                <Picker.Item label="Reprovado" value={7} color="#D12323" />
+                <Picker.Item label={i18n.t('status.planejamento')} value={1} color="#B7AF0B" />
+                <Picker.Item label={i18n.t('status.aprovado')} value={6} color="#0FD06F" />
+                <Picker.Item label={i18n.t('status.reprovado')} value={7} color="#D12323" />
             </Picker>;
     }
 
@@ -164,16 +165,16 @@ export default function EditarRoteiro({ route }) {
                 style={{ height: 50, width: '95%' }}
                 onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
             >
-                <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
-                <Picker.Item label="Aprovado" value={6} color="#0FD06F" />
-                <Picker.Item label="Reprovado" value={7} color="#D12323" />
+                <Picker.Item label={i18n.t('status.planejamento')} value={1} color="#B7AF0B" />
+                <Picker.Item label={i18n.t('status.aprovado')} value={6} color="#0FD06F" />
+                <Picker.Item label={i18n.t('status.reprovado')} value={7} color="#D12323" />
             </Picker>
             {route.params.viagem.alterar
                 ? <TouchableOpacity style={styles.botaoCriar} onPress={() => {
 
                     salvaRoteiro();
                 }}>
-                    <Text style={styles.botaoCriarTexto}>Salvar</Text>
+                    <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.salvar')}</Text>
                 </TouchableOpacity>
                 : null}
             {route.params.viagem.alterar
@@ -181,7 +182,7 @@ export default function EditarRoteiro({ route }) {
 
                     versionaRoteiro();
                 }}>
-                    <Text style={styles.botaoCriarTexto}>Versionar</Text>
+                    <Text style={styles.botaoCriarTexto}>{i18n.t('status.versionar')}</Text>
                 </TouchableOpacity>
                 : null}
 

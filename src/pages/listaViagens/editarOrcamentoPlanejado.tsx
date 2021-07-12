@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { useNavigation } from '@react-navigation/native'
 import { TextInputMask } from 'react-native-masked-text';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import i18n from '../../translate/i18n';
 
 export default function EditarOrcamentoPlanejado({ route }) {
     const [orcPlanejado, setOrcPlanejado] = useState(route.params.orcamento.toString());
@@ -33,7 +33,7 @@ export default function EditarOrcamentoPlanejado({ route }) {
             const response = await salvaOrcPlanejado();
             const json = await response.json();
             if (response.status == 200) {
-                alert('Orçamento planejado alterado com sucesso!');
+                alert(i18n.t('editarOrcamentoPlanejado.sucesso'));
                 route.params.atualizarEstado();
                 navigation.goBack();
             } else {
@@ -41,14 +41,14 @@ export default function EditarOrcamentoPlanejado({ route }) {
             }
         }
         else {
-            alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+            alert(i18n.t('editarOrcamentoPlanejado.erro'))
         }
     }
 
 
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Orçamento planejado*</Text>
+            <Text style={styles.label}>{i18n.t('editarOrcamentoPlanejado.orcamentoGeral')}</Text>
             <TextInputMask
                 type={'money'}
                 options={{
@@ -63,15 +63,15 @@ export default function EditarOrcamentoPlanejado({ route }) {
                 placeholder="Valor da despesa"
                 ref={(ref) => valorUnmasked = ref}
             />
-            <Text style={styles.texto}>*O orçamento planejado terá no mínimo o valor da soma de todas atividades já agendadas.</Text>
+            <Text style={styles.texto}>{i18n.t('editarOrcamentoPlanejado.orcamentoGeralDesc')}</Text>
             <View style={styles.containerBotoes}>
                 <TouchableOpacity style={styles.botaoSalvar} onPress={() => {
                     salvar();
                 }}>
-                    <Text style={styles.textoBotao}>Salvar</Text>
+                    <Text style={styles.textoBotao}>{i18n.t('botoes.salvar')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.botaoCancelar} onPress={() => navigation.goBack()}>
-                    <Text style={styles.textoBotao}>Cancelar</Text>
+                    <Text style={styles.textoBotao}>{i18n.t('botoes.cancelar')}</Text>
                 </TouchableOpacity>
 
             </View>

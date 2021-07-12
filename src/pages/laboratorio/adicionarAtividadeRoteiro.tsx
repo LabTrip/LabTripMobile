@@ -179,16 +179,16 @@ export default function AdicionarAtividadeRoteiro({ route }) {
             const json = await response.json();
             //seta lista de atividades se o status da resposta for 200
             if (response.status == 201 || response.status == 304) {
-                alert('Atividade adicionada com sucesso!')
+                alert(i18n.t('adicionarAtividadeRoteiro.sucessoAdicionar'))
                 setTimeout(() => navigation.goBack(), 1500)
             }
             else{
-                alert('Erro ao adicionar atividade: ' + json)
+                alert(i18n.t('adicionarAtividadeRoteiro.erroAdicionar') + json)
             }
         }
         catch(e){
             console.log(e)
-            alert('Erro ao adicionar atividade.')
+            alert(i18n.t('adicionarAtividadeRoteiro.erroAdicionar'))
         }
     }
 
@@ -225,7 +225,7 @@ export default function AdicionarAtividadeRoteiro({ route }) {
                             resetValue={false}
                             textInputProps={
                                 {
-                                    placeholder: "Pesquisar atividades",
+                                    placeholder: i18n.t('adicionarAtividadeRoteiro.pesquisarAtividades'),
                                     underlineColorAndroid: "transparent",
                                     style: styles.input,
                                     value: descAtividade,

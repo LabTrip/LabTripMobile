@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-datepicker'
 const moment = require('moment');
 import { TextInputMask } from 'react-native-masked-text'
+import i18n from '../../translate/i18n';
 
 interface Usuario {
   nome: string,
@@ -103,7 +104,7 @@ export default function CriarUsuario() {
   async function verificaCamposPrenchidos() {
     if (nomeUsuario == '' || email == '' || telefone == '' ||
       nomeUsuario == undefined || email == undefined || dataNasc == undefined || telefone == undefined) {
-      alert("Preencha todos os campos para prosseguir com o cadastro")
+      alert(i18n.t('criarUsuario.preencherTodosCampos'))
       return false;
     } else
       return true
@@ -125,20 +126,20 @@ export default function CriarUsuario() {
           <View style={styles.modalView}>
             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
             <Text style={styles.textStyle}>
-              Aguarde...
+              {i18n.t('modais.aguarde')}
             </Text>
           </View>
         </View>
 
       </Modal>
-      <TextInput placeholder={"Nome"} style={styles.input}
+      <TextInput placeholder={i18n.t('criarUsuario.nome')} style={styles.input}
         autoCompleteType={'name'}
         onChangeText={text => onChangeTextnomeUsuario(text.trim())} value={nomeUsuario} autoCapitalize={'none'} />
-      <TextInput placeholder={"E-mail"} style={styles.input}
+      <TextInput placeholder={i18n.t('criarUsuario.email')} style={styles.input}
         keyboardType="email-address"
         onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'} />
 
-      <Text style={styles.label}>Data de nascimento:</Text>
+      <Text style={styles.label}>{i18n.t('criarUsuario.dataNascimento')}</Text>
       <View style={styles.containerDataCelular}>
         <DatePicker
           placeholder={"Data Nascimento"} style={styles.inputDataCelular}
@@ -160,7 +161,7 @@ export default function CriarUsuario() {
               onChangeTextTelefone(text)
           }}
       />
-      <Text style={styles.label}>Tipo de usuário:</Text>
+      <Text style={styles.label}>{i18n.t('criarUsuario.perfilUsuario')}</Text>
       <Picker style={styles.pickerComponente}
         prompt="Tipo de usuário"
         mode="dropdown"
@@ -219,7 +220,7 @@ export default function CriarUsuario() {
         }
 
       }}>
-        <Text style={styles.botaoCadastrarTexto}>Cadastrar</Text>
+        <Text style={styles.botaoCadastrarTexto}>{i18n.t('botoes.criar')}</Text>
       </TouchableOpacity>
     </View>
   );

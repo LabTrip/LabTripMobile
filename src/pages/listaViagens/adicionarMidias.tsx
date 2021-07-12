@@ -86,7 +86,6 @@ export default function AdicionarMidias({ route }) {
         let result = await DocumentPicker.getDocumentAsync({
         });
         if (result.type == "cancel") {
-            alert('cancelou mano :(')
         }
         else {
             const fileToUpload = {

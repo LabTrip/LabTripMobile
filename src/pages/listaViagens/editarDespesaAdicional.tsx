@@ -5,6 +5,7 @@ import DatePicker from 'react-native-datepicker'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInputMask } from 'react-native-masked-text';
+import i18n from '../../translate/i18n';
 
 const moment = require('moment');
 
@@ -47,11 +48,11 @@ export default function EditarDespesaAdicional({ route }) {
         console.log()
         const json = await response.json();
         if (response.status == 200) {
-            alert('Despesa extra atualizada com sucesso!')
+            alert(i18n.t('boeditarDespesaAdicionaltoes.sucesso'))
             navigation.goBack()
         }
         else {
-            alert('Erro ao atualizar despesa extra: ' + json.mensagem.toString());
+            alert(i18n.t('boeditarDespesaAdicionaltoes.erro') + json.mensagem.toString());
         }
     }
 
@@ -72,7 +73,7 @@ export default function EditarDespesaAdicional({ route }) {
     const navigation = useNavigation();
     return (
         <View style={styles.container}>
-            <TextInput placeholder='Descrição' style={styles.input}
+            <TextInput placeholder={i18n.t('boeditarDespesaAdicionaltoes.descricao')} style={styles.input}
                 value={descricao} onChangeText={(texto) => setDescricao(texto)} />
             <TextInputMask
                 type={'money'}
@@ -105,10 +106,10 @@ export default function EditarDespesaAdicional({ route }) {
                 <TouchableOpacity style={styles.botaoSalvar} onPress={() => {
                     atualizaDespesaExtra();
                 }}>
-                    <Text style={styles.textoBotao}>Salvar</Text>
+                    <Text style={styles.textoBotao}>{i18n.t('botoes.salvar')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.botaoCancelar} onPress={() => navigation.goBack()}>
-                    <Text style={styles.textoBotao}>Cancelar</Text>
+                    <Text style={styles.textoBotao}>{i18n.t('botoes.cancelar')}</Text>
                 </TouchableOpacity>
 
             </View>

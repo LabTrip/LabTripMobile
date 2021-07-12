@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInputMask } from 'react-native-masked-text';
+import i18n from '../../translate/i18n';
 
 const moment = require('moment');
 
@@ -48,11 +49,11 @@ export default function AdicionarDespesa({ route }) {
         console.log()
         const json = await response.json();
         if (response.status == 200) {
-            alert('Despesa extra adicionada com sucesso!')
+            alert(i18n.t('adicionarDespesa.sucessoAdicionar'))
             navigation.goBack()
         }
         else {
-            alert('Erro ao adicionar despesa extra: ' + json.mensagem.toString());
+            alert(i18n.t('adicionarDespesa.erroAdicionar') + json.mensagem.toString());
         }
     }
 
@@ -73,7 +74,7 @@ export default function AdicionarDespesa({ route }) {
     const navigation = useNavigation();
     return (
         <View style={styles.container}>
-            <TextInput placeholder='Descrição' style={styles.input}
+            <TextInput placeholder={i18n.t('adicionarDespesa.descricao')} style={styles.input}
                 value={descricao} onChangeText={(texto) => setDescricao(texto)} />
             <TextInputMask
                 type={'money'}
@@ -86,7 +87,7 @@ export default function AdicionarDespesa({ route }) {
                 onChangeText={(valor) => {
                     setValor(valor);
                 }}
-                placeholder="Valor da despesa"
+                placeholder={i18n.t('adicionarDespesa.valorDespesa')}
                 ref={(ref) => valorUnmasked = ref}
             />
             <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
@@ -106,10 +107,10 @@ export default function AdicionarDespesa({ route }) {
                 <TouchableOpacity style={styles.botaoSalvar} onPress={() => {
                     salvaDespesaExtra();
                 }}>
-                    <Text style={styles.textoBotao}>Salvar</Text>
+                    <Text style={styles.textoBotao}>{i18n.t('botoes.salvar')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.botaoCancelar} onPress={() => navigation.goBack()}>
-                    <Text style={styles.textoBotao}>Cancelar</Text>
+                    <Text style={styles.textoBotao}>{i18n.t('botoes.cancelar')}</Text>
                 </TouchableOpacity>
 
             </View>

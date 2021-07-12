@@ -5,6 +5,7 @@ import BarraPesquisa from '../../components/barraPesquisa';
 import CardViagem from '../../components/cardViagem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BotaoMais from '../../components/botaoMais';
+import i18n from '../../translate/i18n';
 
 interface Viagem {
   id: string,
@@ -101,7 +102,7 @@ export default function ListaEditarViagens({ route }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <BarraPesquisa texto={'Pesquisar viagem...'} auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
+      <BarraPesquisa texto={i18n.t('listaViagens.pequisarViagem')} auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
       {idPermissao != 4 ?
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <BotaoMais onPress={() => navigation.navigate('CriarViagem')} />

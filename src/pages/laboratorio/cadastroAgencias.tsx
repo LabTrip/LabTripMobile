@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { DataTable } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinhaTabelaAgencia from '../../components/linhaTabelaAgencia';
+import i18n from '../../translate/i18n';
 
 interface Agencia {
   id: string,
@@ -62,10 +63,10 @@ export default function CadastroAgencia() {
       <DataTable style={{ flex: 1 }} >
         <DataTable.Header style={styles.cabecalhoTabela}>
           <DataTable.Title>
-            <Text style={styles.textoCabecalho}>Agência</Text>
+            <Text style={styles.textoCabecalho}>{i18n.t('cadastroAgencias.agencia')}</Text>
           </DataTable.Title>
           <DataTable.Title>
-            <Text style={styles.textoCabecalho}>Status</Text>
+            <Text style={styles.textoCabecalho}>{i18n.t('cadastroAgencias.status')}</Text>
           </DataTable.Title>
         </DataTable.Header>
 

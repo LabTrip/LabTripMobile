@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, RefreshControl } from 'react-native';
 import BarraPesquisa from '../../components/barraPesquisa';
 import CardViagem from '../../components/cardViagem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 interface Viagem {
   id: string,
@@ -74,7 +75,7 @@ export default function ListaViagens() {
 
   return (
     <View style={styles.conteudo}>
-      <BarraPesquisa texto="Pesquisar Viagem..." auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
+      <BarraPesquisa texto={i18n.t('listaViagens.pequisarViagem')} auxViagens={auxViagens} viagens={viagens} callbackFunction={setViagens} />
       <FlatList
         style={{ flexGrow: 1, flex: 1, flexDirection: 'column' }}
         contentContainerStyle={{ alignItems: 'center' }}

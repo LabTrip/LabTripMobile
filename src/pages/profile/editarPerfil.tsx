@@ -10,6 +10,7 @@ import { TextInputMask } from 'react-native-masked-text'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import mime from 'mime';
 const moment = require('moment');
+import i18n from '../../translate/i18n';
 
 
 export default function EditarPerfil() {
@@ -264,8 +265,8 @@ export default function EditarPerfil() {
                     <View style={styles.modalView}>
                         <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                         <Text style={styles.textStyle}>
-                            Aguarde...
-                    </Text>
+                            {i18n.t('modais.aguarde')}
+                        </Text>
                     </View>
                 </View>
 
@@ -325,7 +326,7 @@ export default function EditarPerfil() {
                     }
                     }>
                         <Text style={styles.link}>
-                            Alterar senha
+                        {i18n.t('botoes.alterarSenha')}
                         </Text>
                     </TouchableOpacity>
                     <View style={styles.containerBotoes}>
@@ -342,14 +343,14 @@ export default function EditarPerfil() {
                             }
                             console.log(moment(data, "DD/MM/YYYY").format("YYYY-MM-DD"))
                         }}>
-                            <Text style={styles.botaoSalvarTexto}>Salvar</Text>
+                            <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.salvar')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.botaoSair} onPress={async () => {
 
                             await confirmaLogout();
 
                         }} >
-                            <Text style={styles.botaoSalvarTexto}>Sair da conta</Text>
+                            <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.sairDaConta')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

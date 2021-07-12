@@ -5,6 +5,8 @@ import CardProprietario from '../../components/cardProprietario';
 import BotaoLupa from '../../components/botaoLupa';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
+
 
 const moment = require('moment');
 
@@ -79,17 +81,17 @@ export default function CriarViagem() {
                 const response = await salvaViagens();
                 const json = await response.json();
                 if (response.status == 201) {
-                    alert('Viagem salva com sucesso!');
+                    alert(i18n.t('editarViagem.sucessoSalvar'));
                     navigation.goBack();
                 } else {
                     alert(json.mensagem)
                 }
             }
             else {
-                alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+                alert(i18n.t('editarViagem.erroSalvar'))
             }
         } else {
-            alert('Adicione o proprietário da viagem!')
+            alert(i18n.t('editarViagem.adicionarProprietario'))
         }
     }
 
@@ -108,10 +110,10 @@ export default function CriarViagem() {
                     setParticipantes(json);
                 }
                 else if (json.length > 1) {
-                    alert('Digite o e-mail completo!')
+                    alert(i18n.t('editarViagem.digiteEmailCompleto'))
                 }
                 else {
-                    alert('Nenhum usuário encontrado');
+                    alert(i18n.t('editarViagem.buscarNovamente'));
                 }
             }
             else {
@@ -119,7 +121,7 @@ export default function CriarViagem() {
             }
         }
         else {
-            alert('Erro ao ao capturar informações no dispositivo, feche o app e tente novamente.')
+            alert(i18n.t('editarViagem.erroSalvar'))
         }
     }
 
@@ -147,11 +149,11 @@ export default function CriarViagem() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.labelData}>Apelido da viagem</Text>
-            <TextInput placeholder={"Apelido da viagem"} value={apelido} onChangeText={(text) => setApelido(text)} style={styles.input} />
+            <Text style={styles.labelData}>{i18n.t('editarViagem.nomeViagem')}</Text>
+            <TextInput placeholder={i18n.t('editarViagem.nomeViagem')} value={apelido} onChangeText={(text) => setApelido(text)} style={styles.input} />
             <View style={styles.containerData}>
-                <Text style={styles.labelData}>Data de Inicio</Text>
-                <Text style={styles.labelData}>Data de Fim</Text>
+                <Text style={styles.labelData}>{i18n.t('editarViagem.dataInicio')}</Text>
+                <Text style={styles.labelData}>{i18n.t('editarViagem.dataFim')}</Text>
             </View>
             <View style={styles.containerData}>
                 <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
@@ -179,7 +181,7 @@ export default function CriarViagem() {
                     )}
                 </TouchableOpacity>
             </View>
-            <Text style={styles.labelData}>Adicionar usuário dono na viagem</Text>
+            <Text style={styles.labelData}>{i18n.t('editarViagem.adicionarProprietarioLabel')}</Text>
             <View style={styles.containerAddFuncionarios}>
                 <TextInput placeholder={"Email do proprietário"} value={email} onChangeText={texto => onChangeTextEmail(texto)}
                     style={styles.inputAddParticipante} />
@@ -197,13 +199,13 @@ export default function CriarViagem() {
 
             <TouchableOpacity style={styles.botaoCriar} onPress={() => {
                 if (apelido == "") {
-                    alert('A viagem precisa ter um apelido!');
+                    alert(i18n.t('editarViagem.deveTerApelido'));
                 }
                 else {
                     salvar();
                 }
             }}>
-                <Text style={styles.botaoCriarTexto}>Criar viagem</Text>
+                <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.criar')}</Text>
             </TouchableOpacity>
         </View>
     );

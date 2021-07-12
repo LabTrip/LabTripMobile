@@ -6,6 +6,7 @@ import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import BotaoMais from '../../components/botaoMais'
+import i18n from '../../translate/i18n';
 
 interface Atividade {
     id: number,

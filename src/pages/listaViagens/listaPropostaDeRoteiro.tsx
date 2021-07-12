@@ -5,6 +5,7 @@ import BotaoMais from '../../components/botaoMais';
 import CardRoteiro from '../../components/cardRoteiro';
 import normalize from '../../components/fontSizeResponsive'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 interface Viagem {
     id: string,
@@ -99,14 +100,14 @@ export default function ListaPropostaDeRoteiro({ route }) {
                 <View style={styles.modalView}>
                     <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                     <Text style={styles.textStyle}>
-                        Aguarde...
+                        {i18n.t('modais.aguarde')}
                 </Text>
                 </View>
             </View>
             </Modal>
             <BotaoMais onPress={() => navigation.navigate('CriarRoteiro')} />
             <View style={styles.containerTop}>
-                <Text style={styles.tituloTop}>Propostas de roteiro</Text>
+                <Text style={styles.tituloTop}>{i18n.t('listaPropostaDeRoteiro.propostasRoteiro')}</Text>
             </View>
             <FlatList
                 contentContainerStyle={{flexGrow: 1}}

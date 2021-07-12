@@ -5,6 +5,7 @@ import { DataTable } from 'react-native-paper';
 import TabelaCadastroUsuario from '../../components/tabelaCadastroUsuario';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinhaTabelaUsuario from '../../components/linhaTabelaUsuario';
+import i18n from '../../translate/i18n';
 
 interface Usuario {
   id: string,
@@ -67,13 +68,13 @@ export default function CadastroUsuario() {
       <DataTable style={{ flex: 1 }}>
         <DataTable.Header style={styles.cabecalhoTabela}>
           <DataTable.Title>
-            <Text style={styles.textoCabecalho}>Nome</Text>
+            <Text style={styles.textoCabecalho}>{i18n.t('cadastroUsuarios.nome')}</Text>
           </DataTable.Title>
           <DataTable.Title>
-            <Text style={styles.textoCabecalho}>E-mail</Text>
+            <Text style={styles.textoCabecalho}>{i18n.t('cadastroUsuarios.email')}</Text>
           </DataTable.Title>
           <DataTable.Title>
-            <Text style={styles.textoCabecalho}>Perfil</Text>
+            <Text style={styles.textoCabecalho}>{i18n.t('cadastroUsuarios.perfil')}</Text>
           </DataTable.Title>
         </DataTable.Header>
         <ScrollView refreshControl={

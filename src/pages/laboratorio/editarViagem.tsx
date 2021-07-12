@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 const moment = require('moment');
 
@@ -125,13 +126,13 @@ export default function EditarViagem({ route }) {
             });
             let json = await response.json();
             if (response.status >= 200 && response.status <= 299) {
-                alert('Viagem salva com sucesso!')
+                alert(i18n.t('editarViagem.sucessoSalvar'))
             } else {
                 alert(json.mensagem);
             }
         }
         catch (e) {
-            alert('Erro ao salvar usuário.')
+            alert(i18n.t('editarViagem.erroSalvar'))
         }
         finally {
             setShowLoader(false);
@@ -161,14 +162,14 @@ export default function EditarViagem({ route }) {
                         <View style={styles.modalView}>
                             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                             <Text style={styles.textStyle}>
-                                Aguarde...
+                                {i18n.t('modais.aguarde')}
                             </Text>
                         </View>
                     </View>
 
                 </Modal>
                 <Text style={styles.labelData}>Apelido da viagem</Text>
-                <TextInput placeholder={"Nome dado a viagem"} style={styles.input} keyboardType="default"
+                <TextInput placeholder={i18n.t('editarViagem.nomeViagem')} style={styles.input} keyboardType="default"
                     onChangeText={(text) => { onChangeDescricao(text) }} value={descricao} />
                 <View style={styles.containerData}>
                     <Text style={styles.labelData}>Data de Inicio</Text>
@@ -207,16 +208,16 @@ export default function EditarViagem({ route }) {
                     style={{ height: 50, width: '95%' }}
                     onValueChange={(itemValue) => setSelectedValue(itemValue)}
                 >
-                    <Picker.Item label="Em planejamento" value={1} color="#B7AF0B" />
-                    <Picker.Item label="Planejado" value={2} color="#B7AF0B" />
-                    <Picker.Item label="Em andamento" value={3} color="#00AEFF" />
-                    <Picker.Item label="Cancelado" value={3} color="#D12323" />
-                    <Picker.Item label="Concluído" value={3} color="#0FD06F" />
+                    <Picker.Item label={i18n.t('status.planejamento')} value={1} color="#B7AF0B" />
+                    <Picker.Item label={i18n.t('status.planejado')} value={2} color="#B7AF0B" />
+                    <Picker.Item label={i18n.t('status.emAndamento')} value={3} color="#00AEFF" />
+                    <Picker.Item label={i18n.t('status.cancelado')} value={3} color="#D12323" />
+                    <Picker.Item label={i18n.t('status.concluido')} value={3} color="#0FD06F" />
 
                 </Picker>
                 {route.params.viagem.alterar ?
                     <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaViagem}>
-                        <Text style={styles.botaoCriarTexto}>Salvar viagem</Text>
+                        <Text style={styles.botaoCriarTexto}>{i18n.t('editarViagem.salvarViagem')}</Text>
                     </TouchableOpacity>
                     : null
                 }

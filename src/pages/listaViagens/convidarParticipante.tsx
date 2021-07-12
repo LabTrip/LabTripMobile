@@ -3,6 +3,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
+import i18n from '../../translate/i18n';
 
 interface Permissoes{
     id: string,
@@ -117,11 +118,11 @@ export default function ConvidarParticipantes({route}) {
             setShowLoader(true);
             const response = await convidaUsuario();
             if(response.status == 200){
-                alert('Convite enviado com sucesso.')
+                alert(i18n.t('convidarParticipante.sucessoConvite'))
                 navigation.goBack();
             }
             else{
-                alert('Erro ao enviar convite.')
+                alert(i18n.t('convidarParticipante.erroConvite'))
             }
           }
           catch(e){
@@ -143,16 +144,16 @@ export default function ConvidarParticipantes({route}) {
                         <View style={styles.modalView}>
                             <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                             <Text style={styles.textStyle}>
-                                Aguarde...
+                              {i18n.t('modais.aguarde')}
                             </Text>
                         </View>
                     </View>
 
             </Modal>
-            <Text style={styles.texto}>Digite o email do participante que deseja inserir na viagem.</Text>
-            <TextInput placeholder='Email do convidado' autoCapitalize={'none'}
+            <Text style={styles.texto}>{i18n.t('convidarParticipante.message')}</Text>
+            <TextInput placeholder={i18n.t('convidarParticipante.emailConvidado')} autoCapitalize={'none'}
             autoCompleteType={'email'} style={styles.input} onChangeText={(text) => {setEmail(text.trim())}} value={email} />
-            <Text style={styles.label}>Permissao do usuário:</Text>
+            <Text style={styles.label}>{i18n.t('convidarParticipante.permissaoUsuario')}</Text>
                     <Picker style={styles.pickerComponente}
                         itemStyle={styles.pickerComponente}
                         prompt="Tipo de usuário"
@@ -172,7 +173,7 @@ export default function ConvidarParticipantes({route}) {
 
                     </Picker>
             <TouchableOpacity style={styles.botaoSalvar} onPress={() => {onClickConvidarParticipante()}}>
-                <Text style={styles.botaoSalvarTexto}>Convidar</Text>
+                <Text style={styles.botaoSalvarTexto}>{i18n.t('convidarParticipante.convidar')}</Text>
             </TouchableOpacity>
         </View>
     );
