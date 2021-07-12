@@ -204,11 +204,11 @@ export default function EditarPerfil() {
 
     const confirmaLogout = async () => {
         Alert.alert(
-            'Encerrar sessão',
-            'Deseja mesmo sair de sua conta?',
+            i18n.t('editarUsuario.encerrarSessao'),
+            i18n.t('editarUsuario.desejaMesmoSair'),
             [
                 {
-                    text: 'sim',
+                    text: i18n.t('botoes.sim'),
                     onPress: async () => {
                         const responseAuth = await storeData('', 'AUTH')
                         const responseUserId = await storeData('', 'USER_ID')
@@ -221,7 +221,7 @@ export default function EditarPerfil() {
                     }
                 },
                 {
-                    text: 'não',
+                    text: i18n.t('botoes.nao'),
                     onPress: () => {
 
                     }

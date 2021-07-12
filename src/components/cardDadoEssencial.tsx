@@ -2,15 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, Image, View, Switch, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-<<<<<<< HEAD
-import * as FileSystem from 'expo-file-system';
-=======
 import { Picker } from '@react-native-picker/picker';
 import { black } from 'react-native-paper/lib/typescript/styles/colors';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 
->>>>>>> c97e27c08a5d16ceb1cc10aad841478420469f9f
 
 interface Permissoes {
   id: string,
@@ -36,26 +32,6 @@ export default function CardParticipante(props) {
     return localToken;
   }
 
-<<<<<<< HEAD
-  const getdocumentProfile = async () => {
-    let localToken = await retornaToken() || '';
-
-    FileSystem.downloadAsync(
-      'https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + metaDados.id,
-      FileSystem.documentDirectory + metaDados.nomeArquivo,
-      {
-        headers: {
-                'x-access-token': localToken
-        }
-      }
-    ).then(({ uri }) => {
-      console.log('Finished downloading to ', uri);
-      alert(uri)
-    })
-    .catch(error => {
-      console.error(error);
-    });
-=======
   const baixaArquivo = async () => {
 
     const buscaArquivo = async () => {
@@ -87,7 +63,6 @@ export default function CardParticipante(props) {
     }else{
       alert('Não foi possível baixar o arquivo!');
     }
->>>>>>> c97e27c08a5d16ceb1cc10aad841478420469f9f
   }
 
   const excluiDocumento = async () => {
@@ -112,19 +87,6 @@ export default function CardParticipante(props) {
 
   return (
     <TouchableOpacity key={metaDados.id} style={styles.conteudoCard} onPress={() => alert('baixou o arquivo: ' + metaDados.nomeArquivo + ', id: ' + metaDados.id)}>
-<<<<<<< HEAD
-        <View style={styles.textContainer}>
-          <Text style={styles.textoCard}  numberOfLines={3} ellipsizeMode={'head'}>{metaDados.nomeArquivo}</Text>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={async () => await getdocumentProfile()}>
-            <MaterialCommunityIcons name="file-download" color={'#848484'} size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={async () => excluiDocumento()}>
-            <MaterialCommunityIcons name="close-thick" color={'red'} size={30} />
-          </TouchableOpacity>
-        </View>
-=======
       <View style={styles.textContainer}>
         <Text style={styles.textoCard} numberOfLines={3} ellipsizeMode={'head'}>{metaDados.nomeArquivo}</Text>
       </View>
@@ -136,7 +98,6 @@ export default function CardParticipante(props) {
           <MaterialCommunityIcons name="close-thick" color={'red'} size={30} />
         </TouchableOpacity>
       </View>
->>>>>>> c97e27c08a5d16ceb1cc10aad841478420469f9f
     </TouchableOpacity>
   )
 }

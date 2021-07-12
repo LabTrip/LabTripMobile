@@ -20,7 +20,7 @@ const messages = {
                 email: 'youremail@email.com',
                 redefinir: 'I forgot my password',
                 codigo: 'code',
-                senhaAtual: 'enter current password',
+                senhaAtual: 'Enter current password',
                 digiteSenha: 'Enter the new password',
                 confirmeSenha: 'Confirm the new password',
                 aguarde: 'Wait...'
@@ -91,7 +91,8 @@ const messages = {
             detalhesOrcamento: {
                 erroBuscarDetalhes: 'Error searching travel details. ',
                 erroCriarOrcamento: 'Error creating budget. ',
-                ativarOrcamento: 'Activate budget'
+                ativarOrcamento: 'Activate budget',
+                despesasAdicionais: 'Additional expenses'
             },
             status: {
                 planejamento: 'Planning',
@@ -145,7 +146,9 @@ const messages = {
                 emailUsuario: 'User email',
                 dataNascimentoUsuario: 'User birth date',
                 celularUsuario: 'Cell phone',
-                tipoUsuario: 'User role'
+                tipoUsuario: 'User role',
+                encerrarSessao: 'Logoff',
+                desejaMesmoSair: 'Are you sure you want to logoff?'
             },
             editarRoteiro: {
                 sucessoAlterar: 'Itinerary updated sucessful.',
@@ -162,14 +165,18 @@ const messages = {
                 usuarioJaAdicionado: 'User has already been added',
                 erroSalvar: 'Error saving agency details.',
                 sucessoFuncionario: 'Employees saved sucessful.',
-                erroFuncionario: 'Error adding employees'
+                erroFuncionario: 'Error adding employees',
+                sucesso: 'Agency saved sucessful.'
             },
             criarUsuario: {
                 preencherTodosCampos: 'You must fill all the fields to create an user.',
                 nome: 'Name',
                 email: 'Email',
                 dataNascimento: 'Birth date',
-                perfilUsuario: 'User role'
+                perfilUsuario: 'User role',
+                sucesso: 'User created sucessful.',
+                jaExiste: 'An user is already using this email.',
+                erro: 'Error saving user.'
             },
             criarRoteiro: {
                 sucesso: 'Itinerary created sucessful.',
@@ -194,6 +201,9 @@ const messages = {
             cadastroAgencias: {
                 agencia: 'Agency',
                 status: 'Status'
+            },
+            chat: {
+                digiteAqui: 'Type something...'
             }
         }
     }

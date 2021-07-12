@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: '3%',
-    width: '95%',
+    width: '87%',
     padding: 15,
     fontSize: 16,
     borderRadius: 41,

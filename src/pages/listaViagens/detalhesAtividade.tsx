@@ -304,15 +304,9 @@ export default function DetalhesAtividade({ route }) {
                     },
                     body: form
                 });
-<<<<<<< HEAD
-                console.log('id do dado essencial: ' + json.id);
-                console.log('status da segunda requestAddAquivo: ' + responseArquivo.status)
+                
                 if(responseArquivo.status == 200){
                     alert(i18n.t('detalhesAtividade.sucessoSalvarArquivo'));
-=======
-                if (responseArquivo.status == 200) {
-                    alert('Arquivo salvo com sucesso!');
->>>>>>> c97e27c08a5d16ceb1cc10aad841478420469f9f
                     onRefresh()
                 }
                 else {

@@ -88,7 +88,8 @@ const messages  = {
             detalhesOrcamento: {
                 erroBuscarDetalhes: 'Erro ao buscar detalhes da viagem. ',
                 erroCriarOrcamento: 'Erro ao criar orçamento. ',
-                ativarOrcamento: 'Ativar orçamento'
+                ativarOrcamento: 'Ativar orçamento',
+                despesasAdicionais: 'Despesas adicionais'
             },
             status: {
                 planejamento: 'Planejamento',
@@ -142,7 +143,9 @@ const messages  = {
                 emailUsuario: 'E-mail do usuário',
                 dataNascimentoUsuario: 'Data de nascimento',
                 celularUsuario: 'Celular',
-                tipoUsuario: 'Perfil de usuário'
+                tipoUsuario: 'Perfil de usuário',
+                encerrarSessao: 'Encerrar sessão',
+                desejaMesmoSair: 'Deseja mesmo encerrar a sessão?'
             },
             editarRoteiro: {
                 sucessoAlterar: 'Roteiro atualizado com sucesso.',
@@ -159,14 +162,18 @@ const messages  = {
                 usuarioJaAdicionado: 'O usuário já foi adicionado',
                 erroSalvar: 'Erro ao salvar detalhes da agencia.',
                 sucessoFuncionario: 'funcionário convidados com sucesso.',
-                erroFuncionario: 'Erro ao convidar funcionários.'
+                erroFuncionario: 'Erro ao convidar funcionários.',
+                sucesso: 'Agencia salva com sucesso.'
             },
             criarUsuario: {
                 preencherTodosCampos: 'Você precisa preencher todos os capos para criar um usuário.',
                 nome: 'Nome',
                 email: 'E-mail',
                 dataNascimento: 'Data de nascimento',
-                perfilUsuario: 'Perfil do usuário'
+                perfilUsuario: 'Perfil do usuário',
+                sucesso: 'Usuário criado com sucesso.',
+                jaExiste: 'Já existe um usuário usando este e-mail.',
+                erro: 'Erro ao salvar usuário.'
             },
             criarAtividadeCallback: {
                 sucesso: 'Atividade criada com sucesso.',
@@ -185,6 +192,9 @@ const messages  = {
                 agencia: 'Agencia',
                 status: 'Status'
             },
+            chat: {
+                digiteAqui: 'Digite algo...'
+            }
             
 
         }

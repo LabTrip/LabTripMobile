@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ActivityIndicator, Text, View, StyleSheet, TextInput, TouchableOpacity, RefreshControlComponent, RefreshControl } from 'react-native';
+import { Modal, ActivityIndicator, Text, View, StyleSheet, TextInput, TouchableOpacity, RefreshControlComponent, RefreshControl, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,7 @@ import DatePicker from 'react-native-datepicker'
 const moment = require('moment');
 import { TextInputMask } from 'react-native-masked-text'
 import i18n from '../../translate/i18n';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface Usuario {
   nome: string,
@@ -36,6 +37,31 @@ export default function CriarUsuario() {
   const [telefone, onChangeTextTelefone] = React.useState('');
   const [showLoader, setShowLoader] = React.useState(false);
   const [dataNasc, setDataNasc] = useState(new Date())
+
+  /************************************************************* */
+
+  const [date, setDate] = useState(new Date('1900-01-01T00:00:00.000Z'));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      setDataNasc(currentDate);
+      console.log(currentDate)
+  };
+
+  const showMode = (currentMode) => {
+      setShow(true);
+      setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+      showMode('date');
+  };
+
+
+  /************************************************************* */
 
   useEffect(() => {
     const request = async () => {
@@ -132,22 +158,31 @@ export default function CriarUsuario() {
         </View>
 
       </Modal>
+      <Text style={styles.label}>{i18n.t('editarUsuario.nomeUsuario')}</Text>
       <TextInput placeholder={i18n.t('criarUsuario.nome')} style={styles.input}
         autoCompleteType={'name'}
         onChangeText={text => onChangeTextnomeUsuario(text.trim())} value={nomeUsuario} autoCapitalize={'none'} />
+        <Text style={styles.label}>{i18n.t('editarUsuario.emailUsuario')}</Text>
       <TextInput placeholder={i18n.t('criarUsuario.email')} style={styles.input}
         keyboardType="email-address"
         onChangeText={text => onChangeTextEmail(text.trim())} value={email} autoCapitalize={'none'} />
 
       <Text style={styles.label}>{i18n.t('criarUsuario.dataNascimento')}</Text>
-      <View style={styles.containerDataCelular}>
-        <DatePicker
-          placeholder={"Data Nascimento"} style={styles.inputDataCelular}
-          date={dataNasc}
-          format="DD/MM/YYYY"
-          minDate="01/01/1900"
-          onDateChange={setDataNasc} />
-      </View>
+
+      <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
+          <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+              keyboardType="default" value={moment(dataNasc).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+          {show && (
+              <DateTimePicker
+                  testID="dateTimePicker"
+                  value={dataNasc}
+                  display="default"
+                  onChange={onChange}
+              />
+          )}
+      </TouchableOpacity>
+
+      <Text style={styles.label}>{i18n.t('editarUsuario.celularUsuario')}</Text>
       <TextInputMask
           type={'cel-phone'}
           options={{
@@ -155,8 +190,9 @@ export default function CriarUsuario() {
               withDDD: true,
               dddMask: '(99) '
           }}
+          placeholder={'(XX) XXXXX-XXXX'}
           value={telefone}
-          style={styles.input}
+          style={[styles.input, {textAlign: 'center'}]}
           onChangeText={text => {
               onChangeTextTelefone(text)
           }}
@@ -191,7 +227,7 @@ export default function CriarUsuario() {
             let responseConsultaEmail = await buscaUsuario(email, Token);
 
             if (responseConsultaEmail.status == 200) {
-              alert('Já existe um usuário cadastrado com esses dados!')
+              alert(i18n.t('criarUsuario.jaExiste'))
 
             } else {
               let response = await criaUsuario({
@@ -204,7 +240,7 @@ export default function CriarUsuario() {
 
               let json = await response.json();
               if (response.status >= 200 && response.status <= 299) {
-                alert('Usuário cadastrado com sucesso!')
+                alert(i18n.t('criarUsuario.sucesso'))
                 navigation.goBack();
               } else {
                 alert(json.mensagem);
@@ -213,7 +249,7 @@ export default function CriarUsuario() {
           }
         }
         catch (e) {
-          alert('Erro ao salvar usuário.')
+          alert(i18n.t('criarUsuario.erro'))
         }
         finally {
           setShowLoader(false);
@@ -318,5 +354,15 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
     textAlign: "center"
-  }
+  },
+  inputDate: {
+      marginTop: '3%',
+      width: '90%',
+      padding: 15,
+      fontSize: 16,
+      borderRadius: 41,
+      backgroundColor: '#EBEBEB',
+      textAlign: 'center',
+      color: '#333333'
+  },
 });

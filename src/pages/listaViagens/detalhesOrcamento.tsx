@@ -167,7 +167,7 @@ export default function DetalhesOrcamento({ route }) {
                         {botaoChat}
                     </View>
                     <CardOrcamento roteiro={roteiro} atualizarEstado={onRefresh} tipoOrcamento={tipoOrcamento} planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} />
-                    <Text style={styles.label}>Despesas adicionais: </Text>
+                    <Text style={styles.label}>{i18n.t('detalhesOrcamento.despesasAdicionais')}</Text>
                     {
                         orcamento?.despesasExtras.map((d, index) => {
                             let modificadoPor = "";

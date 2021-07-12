@@ -182,7 +182,7 @@ export default function EditarRoteiro({ route }) {
 
                     versionaRoteiro();
                 }}>
-                    <Text style={styles.botaoCriarTexto}>{i18n.t('status.versionar')}</Text>
+                    <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.versionar')}</Text>
                 </TouchableOpacity>
                 : null}
 

@@ -169,7 +169,7 @@ export default function Chat({ route }) {
         )}
       />
       <View style={styles.containerInline}>
-        <TextInput placeholder='Digite sua mensagem aqui' style={styles.input}
+        <TextInput placeholder={i18n.t('chat.digiteAqui')} style={styles.input}
             onChangeText={text => setMensagem(text)} value={mensagem} />
         <TouchableOpacity style={styles.iconContainer} onPress={onSendMessage}>
           <MaterialCommunityIcons name="send" style={styles.icon} />
