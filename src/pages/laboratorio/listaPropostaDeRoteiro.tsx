@@ -58,7 +58,8 @@ export default function ListaPropostaDeRoteiro({ route }) {
             }
         }
         request()
-    }, []);
+        setRefreshing(false)
+    }, [refreshing]);
 
     const retornaToken = async () => {
         let localToken = await AsyncStorage.getItem('AUTH');
@@ -147,7 +148,7 @@ export default function ListaPropostaDeRoteiro({ route }) {
             </Modal>
             {idPermissao != 4 ?
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <BotaoMais onPress={() => navigation.navigate('CriarRoteiro', {viagem: viagem, atualizarEstado: useEffect})} />
+                    <BotaoMais onPress={() => navigation.navigate('CriarRoteiro', {viagem: viagem, atualizarEstado: setRefreshing})} />
                 </View>
                 : null}
             <View style={styles.containerTop}>

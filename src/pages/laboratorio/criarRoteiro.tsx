@@ -43,7 +43,7 @@ export default function CriarRoteiro({route}) {
             const json = await response.json();
             if (response.status == 201) {
                 alert(i18n.t('criarRoteiro.sucesso'));
-                route.params.atualizarEstado()
+                route.params.atualizarEstado(true)
                 navigation.goBack();
             } else {
                 alert(json.mensagem)

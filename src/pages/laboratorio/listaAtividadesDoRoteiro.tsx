@@ -79,6 +79,20 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         }
     }
 
+    function mudarPosicao(array) {
+        let valorAux;
+        if (array != null && array.length > 0) {
+
+            array.map(
+                (valor, index) => {
+                    valor == moment().format('DD/MM/yyyy')
+                        ? (valorAux = array[0], array[0] = valor, array[index] = valorAux)
+                        : null
+                }
+            )
+        }
+    }
+
     let datas = new Array();
     let filtroDatas = new Array();
     //criando lista com as datas de todas atividades
@@ -86,12 +100,21 @@ export default function ListaAtividadesDoRoteiro({ route }) {
     //removendo valores de datas repetidas da lista
     filtroDatas = datas.filter((v, i, a) => a.indexOf(v) === i);
 
+    //se o array conter a data do dia atual, deixa ela como primeiro elemento
+    mudarPosicao(filtroDatas);
+
     useEffect(() => {
         request();
         getIdPermissao()
-        setSelectedValue(filtroDatas[0]);
+        if (filtroDatas.filter((data) => data == moment().format('DD/MM/yyyy')).length > 0) {
+            setSelectedValue(filtroDatas.filter((data) => data == moment().format('DD/MM/yyyy'))[0])
+        }
+        else {
+            setSelectedValue(filtroDatas[0]);
+        }
+
         //mostrando apenas as atividades que tem a mesma data que a data do primeiro item do picker
-        setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == filtroDatas[0]));
+        //setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == filtroDatas[0]));
         setAtividades(atividadesAux.filter(a => moment(a.dataInicio).local().format('DD/MM/yyyy') == selectedValue));
 
 
@@ -106,14 +129,14 @@ export default function ListaAtividadesDoRoteiro({ route }) {
 
     const getUsuario = async (idUsuario, token) => {
         return await fetch('https://labtrip-backend.herokuapp.com/usuarios/' + idUsuario, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': token
-          }
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
         });
-      }
+    }
 
     const getIdPermissao = async () => {
         const token = await AsyncStorage.getItem('AUTH') || "";
@@ -121,16 +144,16 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         const response = await getUsuario(JSON.parse(idUsuario), JSON.parse(token));
         const json = await response.json();
         setIdPermissao(json.perfilId);
-      }
+    }
 
 
     return (
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>
                 {idPermissao != 4 ?
-                    <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', {roteiro: route.params.roteiro})}></BotaoMais>
-                : null}
-                
+                    <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', { roteiro: route.params.roteiro })}></BotaoMais>
+                    : null}
+
                 <Picker style={styles.pickerComponente}
                     prompt="Tipo de usuário"
                     mode="dropdown"

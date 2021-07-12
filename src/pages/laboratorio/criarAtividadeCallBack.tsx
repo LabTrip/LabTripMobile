@@ -62,7 +62,7 @@ export default function CriarAtividade({ route }) {
             }       
         }
         else{
-            alert(i18n.t('criarAtividadeCallback.erro') + response)
+            alert(i18n.t('criarAtividadeCallback.erro') + json.mensagem)
         }
     }
 
