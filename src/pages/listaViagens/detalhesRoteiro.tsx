@@ -139,9 +139,9 @@ export default function DetalhesRoteiro({ route }) {
     return (
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>
-                <Text style={styles.texto}>Data</Text>
+                <Text style={styles.texto}>{i18n.t('detalhesRoteiro.data')}</Text>
                 <Picker
-                    prompt="Data"
+                    prompt={i18n.t('detalhesRoteiro.data')}
                     selectedValue={selectedValue}
                     style={{ height: 48, width: 150 }}
                     onValueChange={(itemValue) => {

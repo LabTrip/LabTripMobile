@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../translate/i18n'
 
 let corDoCard, corBordaDoCard, status, corDoStatus;
 let token
@@ -57,7 +58,7 @@ export default function CardViagem(props) {
                 props.viagem.alterar = json.alterar;
                 props.viagem.roteiro = jsonRoteiros[0];
             } else {
-                alert("Erro ao buscar informações da viagem: " + json.mensagem + "\nVerifique a sua conexão com a internet, reinicie o aplicativo e tente novamente!");
+                alert(i18n.t('cardViagem.erro') + ": " + json.mensagem + "\n" + i18n.t('cardViagem.verifiqueConexao'));
             }
         }
     }
@@ -68,31 +69,31 @@ export default function CardViagem(props) {
         case 1:
             corDoCard = '#FFFDD1';
             corBordaDoCard = '#F8EC12';
-            status = "Em Planejamento";
+            status = i18n.t('status.planejamento');
             corDoStatus = '#B7AF0B'
             break;
         case 2:
             corDoCard = '#FFFDD1';
             corBordaDoCard = '#F8EC12';
-            status = "Planejado";
+            status = i18n.t('status.planejado');
             corDoStatus = '#B7AF0B'
             break;
         case 3:
             corDoCard = '#CCEEFF';
             corBordaDoCard = '#00AEFF';
-            status = "Em andamento";
+            status = i18n.t('status.emAndamento');
             corDoStatus = '#00AEFF';
             break;
         case 5:
             corDoCard = '#CEF7E3';
             corBordaDoCard = '#0FD06F';
-            status = "Concluído";
+            status = i18n.t('status.concluido');
             corDoStatus = '#0FD06F';
             break;
         default:
             corDoCard = '#F0F0F0';
             corBordaDoCard = '#787878';
-            status = "Cancelado"
+            status = i18n.t('status.cancelado')
             corDoStatus = '#333333';
             break;
     }
@@ -103,15 +104,15 @@ export default function CardViagem(props) {
             onPress={() => navigation.navigate(props.navigate, { viagem: props.viagem })}>
             <Text style={styles.nome}>{props.nome}</Text>
             <Text>
-                <Text style={styles.label}>Início:</Text> {props.dataInicio}
-                <Text style={styles.label}> Fim:</Text> {props.dataFim}
+                <Text style={styles.label}>{i18n.t('cardViagem.inicio')}:</Text> {props.dataInicio}
+                <Text style={styles.label}> {i18n.t('cardViagem.fim')}:</Text> {props.dataFim}
             </Text>
             <Text>
                 <Text style={styles.label}>Status: </Text>
                 <Text style={{ color: corDoStatus }}>{status}</Text>
             </Text>
             <Text>
-                <Text style={styles.label}>Dono: </Text> {props.dono}
+                <Text style={styles.label}>{i18n.t('cardViagem.dono')}: </Text> {props.dono}
             </Text>
         </TouchableOpacity>
     )

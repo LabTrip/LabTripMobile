@@ -168,12 +168,12 @@ export default function EditarViagem({ route }) {
                     </View>
 
                 </Modal>
-                <Text style={styles.labelData}>Apelido da viagem</Text>
+                <Text style={styles.labelData}>{i18n.t('editarViagem.nomeViagem')}</Text>
                 <TextInput placeholder={i18n.t('editarViagem.nomeViagem')} style={styles.input} keyboardType="default"
                     onChangeText={(text) => { onChangeDescricao(text) }} value={descricao} />
                 <View style={styles.containerData}>
-                    <Text style={styles.labelData}>Data de Inicio</Text>
-                    <Text style={styles.labelData}>Data de Fim</Text>
+                    <Text style={styles.labelData}>{i18n.t('editarViagem.dataInicio')}</Text>
+                    <Text style={styles.labelData}>{i18n.t('editarViagem.dataFim')}</Text>
                 </View>
                 <View style={styles.containerData}>
                     <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataInicio}>

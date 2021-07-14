@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import normalize from './fontSizeResponsive';
+import i18n from '../translate/i18n';
 
 let corDoCard, corBordaDoCard, status, corDoStatus;
 
@@ -13,19 +14,19 @@ export default function CardRoteiro(props) {
         case 1:
             corDoCard = '#FFFDD1';
             corBordaDoCard = '#F8EC12';
-            status = "Em Planejamento";
+            status = i18n.t('status.planejamento');
             corDoStatus = '#B7AF0B'
             break;
         case 6:
             corDoCard = '#CEF7E3';
             corBordaDoCard = '#0FD06F';
-            status = "Aprovado";
+            status = i18n.t('status.aprovado');
             corDoStatus = '#0FD06F';
             break;
         case 7:
             corDoCard = '#FFCCCC';
             corBordaDoCard = '#FF0000';
-            status = "Reprovado";
+            status = i18n.t('status.reprovado');
             corDoStatus = '#D12323'
             break;
         default:
@@ -43,10 +44,10 @@ export default function CardRoteiro(props) {
             <Text style={styles.nome}>{props.nome}</Text>
             <Text>
                 <Text style={styles.label}>Status: </Text>
-                <Text style={{ color: corDoStatus }}>{props.statusDesc}</Text>
+                <Text style={{ color: corDoStatus }}>{status}</Text>
             </Text>
             <Text>
-                <Text style={styles.label}>Versão: </Text>
+                <Text style={styles.label}>{i18n.t('cardRoteiro.versao')}: </Text>
                 <Text style={{ color: corDoStatus }}>{props.versao}</Text>
             </Text>
         </TouchableOpacity>

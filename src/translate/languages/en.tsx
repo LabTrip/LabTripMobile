@@ -110,7 +110,9 @@ const messages = {
                 excluirAtividade: 'Remove activity',
                 desejaRemover: 'Do you really want remove activity?',
                 sucessoSalvarArquivo: 'File saved sucessful.',
-                erroSalvarArquivo: 'Error saving file: '
+                erroSalvarArquivo: 'Error saving file: ',
+                midias: 'Media',
+                custo: 'Cost'
             },
             convidarParticipante: {
                 sucessoConvite: 'Invite sent sucessful.',
@@ -137,7 +139,8 @@ const messages = {
                 digiteEmailCompleto: 'Insert the full email',
                 dataInicio: 'Start date',
                 dataFim: 'End date',
-                deveTerApelido: 'The travel must have a name.'
+                deveTerApelido: 'The travel must have a name.',
+                emailDoProprietario: "Owner's email"
             },
             editarUsuario: {
                 sucessoSalvar: 'User saved sucessful.',
@@ -204,6 +207,24 @@ const messages = {
             },
             chat: {
                 digiteAqui: 'Type something...'
+            },
+            detalhesRoteiro: {
+                titulo: 'Itinerary details',
+                apelidoPlaceholder: 'itinerary nickname',
+                data: 'Date'
+            },
+            cardParticipante: {
+                permissaoLabel: 'User role'
+            },
+            cardViagem: {
+                inicio: 'Start',
+                fim: 'End',
+                dono: 'Owner',
+                erro: 'Error fetching trip information',
+                verifiqueConexao: 'Check your internet connection, restart the app and try again!'
+            },
+            cardRoteiro: {
+                versao: 'Version'
             }
         }
     }
