@@ -107,7 +107,9 @@ const messages  = {
                 excluirAtividade: 'Remover atividade',
                 desejaRemover: 'Deseja mesmo remover a atividade?',
                 sucessoSalvarArquivo: 'Arquivo salvo com sucesso.',
-                erroSalvarArquivo: 'Erro ao salvar arquivo: '
+                erroSalvarArquivo: 'Erro ao salvar arquivo: ',
+                dataInicio: 'Data início: ',
+                dataFim: 'Data fim: ',
             },
             convidarParticipante: {
                 sucessoConvite: 'Convite enviado com sucesso.',

@@ -75,6 +75,30 @@ export default function DetalhesAtividade({ route }) {
             break;
     }
 
+    const getAtividade = async () => {
+        try {
+            let localToken = await retornaToken() || '';
+
+            const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + atividade.id, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-access-token': localToken
+                }
+            });
+
+            if (response.status == 200) {
+                const json = await response.json();
+                console.log(json)
+                setAtividade(json);
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
+
     const getDadosEssenciais = async () => {
         try {
             let localToken = await retornaToken() || '';
@@ -236,6 +260,7 @@ export default function DetalhesAtividade({ route }) {
     const request = async () => {
         try {
             setShowLoader(true)
+            await getAtividade();
             await getDadosEssenciais();
             console.log(dadosEssenciais)
         }
@@ -377,11 +402,12 @@ export default function DetalhesAtividade({ route }) {
                     <View style={styles.containerDetalhes}>
                         <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
                         <View style={styles.containerDataStatus}>
-                            <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('DD/MM/yyyy')}</Text>
-
+                            <Text style={styles.textoDetalhes}>{i18n.t('detalhesAtividade.dataInicio') + ' ' + moment(atividade.dataInicio).format('DD/MM/yyyy') + ' ' + moment(atividade.dataInicio).format('HH:mm')}</Text>
                         </View>
-                        <Text style={styles.textoDetalhes}>{moment(route.params.atividade.dataInicio).format('HH:mm')}</Text>
-                        <Text style={styles.textoDetalhes}>{route.params.atividade.endereco}</Text>
+                        <View style={styles.containerDataStatus}>
+                            <Text style={styles.textoDetalhes}>{i18n.t('detalhesAtividade.dataFim') + ' ' + moment(atividade.dataFim).format('DD/MM/yyyy') + ' ' + moment(atividade.dataFim).format('HH:mm')}</Text>
+                        </View>
+                        <Text style={styles.textoDetalhes}>{atividade.endereco}</Text>
                         <Text style={[styles.textoDetalhes, { color: corDoStatus }]}>{status}</Text>
                     </View>
                     {idPermissao != 4
