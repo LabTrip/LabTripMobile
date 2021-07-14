@@ -155,9 +155,9 @@ export default function EditarRoteiro({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.containerTop}>
-                <Text style={styles.tituloTop}>Detalhes do roteiro</Text>
+                <Text style={styles.tituloTop}>{i18n.t('detalhesRoteiro.titulo')}</Text>
             </View>
-            <TextInput placeholder={"Apelido do roteiro"} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
+            <TextInput placeholder={i18n.t('detalhesRoteiro.apelidoPlaceholder')} value={apelido} style={styles.input} onChangeText={(texto) => onChangeApelido(texto)} />
             <Picker
                 prompt="Status do roteiro"
                 mode="dropdown"

@@ -309,14 +309,6 @@ export default function DetalhesAtividade({ route }) {
                 })
             });
             const json = await response.json();
-            console.log({
-                usuarioId: userId,
-                roteiroAtividadeId: atividade.id,
-                nomeArquivo: arquivo.name,
-                chaveArquivo: null,
-                urlArquivo: null,
-                privado: false
-            })
             if (response.status == 201) {
                 const form = new FormData();
                 form.append('file', arquivo);
@@ -415,17 +407,17 @@ export default function DetalhesAtividade({ route }) {
                             <TouchableOpacity style={styles.botaoEditar} onPress={() => {
                                 navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade });
                             }}>
-                                <Text style={styles.botaoTexto}>Editar</Text>
+                                <Text style={styles.botaoTexto}>{i18n.t('botoes.editar')}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.botaoExcluir} onPress={async () => {
                                 confirmaExcluir();
                             }} >
-                                <Text style={styles.botaoTexto}>Excluir</Text>
+                                <Text style={styles.botaoTexto}>{i18n.t('botoes.deletar')}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
                     }
-                    <Text style={styles.tituloDetalhes}>Custo: R$ {valorFormatado}</Text>
+                    <Text style={styles.tituloDetalhes}>{i18n.t('detalhesAtividade.custo')}: R$ {valorFormatado}</Text>
                     {route.params.planejamento == true && (
                         <View style={styles.containerVotos}>
                             <TouchableOpacity style={styles.botaoVoto} onPress={() => {
@@ -447,7 +439,7 @@ export default function DetalhesAtividade({ route }) {
                     <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '3%' }]}>
                         <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={styles.tituloDetalhes}>
-                                Midias
+                            {i18n.t('detalhesAtividade.midias')}
                             </Text>
                             <TouchableOpacity onPress={() => UploadFile()}>
                                 <AntDesign name="pluscircleo" size={30} color="black" />

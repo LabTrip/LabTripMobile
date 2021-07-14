@@ -27,7 +27,7 @@ const messages  = {
             botoes:{
                 salvar: 'Salvar',
                 cancelar: 'Cancelar',
-                deletar:'Deletar',
+                deletar:'Excluir',
                 editar:'Editar',
                 sim:'Sim',
                 nao:'Não',
@@ -37,7 +37,7 @@ const messages  = {
                 sairDaConta: 'Sair da conta',
                 alterarSenha: 'Alterar senha',
                 versionar: 'Versionar',
-                criar: 'Criar'
+                criar: 'Criar',
             },
             modais:{
                 aguarde: 'Aguarde...',
@@ -92,7 +92,7 @@ const messages  = {
                 despesasAdicionais: 'Despesas adicionais'
             },
             status: {
-                planejamento: 'Planejamento',
+                planejamento: 'Em planejamento',
                 planejado: 'Planejado',
                 emAndamento: 'Em andamento',
                 concluido: 'Concluído',
@@ -110,6 +110,8 @@ const messages  = {
                 erroSalvarArquivo: 'Erro ao salvar arquivo: ',
                 dataInicio: 'Data início: ',
                 dataFim: 'Data fim: ',
+                midias: 'Mídias',
+                custo: 'Custo'
             },
             convidarParticipante: {
                 sucessoConvite: 'Convite enviado com sucesso.',
@@ -128,7 +130,7 @@ const messages  = {
             editarViagem: {
                 sucessoSalvar: 'Viagem salva com sucesso.',
                 erroSalvar: 'Erro ao salvar viagem.',
-                nomeViagem: 'Nomw da viagem',
+                nomeViagem: 'Nome da viagem',
                 salvarViagem: 'Salvar viagem',
                 adicionarProprietarioLabel: 'Adicionar proprietário da viagem',
                 adicionarProprietario: 'A viagem deve ter um proprietário.',
@@ -136,7 +138,8 @@ const messages  = {
                 digiteEmailCompleto: 'Insira o e-mail completo.',
                 dataInicio: 'Data de início',
                 dataFim: 'Data fim',
-                deveTerApelido: 'A vaigem deve ter um nome.'
+                deveTerApelido: 'A viagem deve ter um nome.',
+                emailDoProprietario: 'E-mail do proprietário'
             },
             editarUsuario: {
                 sucessoSalvar: 'Usuário salvo com sucesso.',
@@ -196,6 +199,24 @@ const messages  = {
             },
             chat: {
                 digiteAqui: 'Digite algo...'
+            },
+            detalhesRoteiro:{
+                titulo: 'Detalhes do roteiro',
+                apelidoPlaceholder: 'Apelido do roteiro',
+                data: 'Data'
+            },
+            cardParticipante:{
+                permissaoLabel: 'Permissão do usuário'
+            },
+            cardViagem:{
+                inicio: 'Início',
+                fim: 'Fim',
+                dono: 'Dono',
+                erro: 'Erro ao buscar informações da viagem',
+                verifiqueConexao: 'Verifique a sua conexão com a internet, reinicie o aplicativo e tente novamente!'
+            },
+            cardRoteiro:{
+                versao: 'Versão'
             }
             
 

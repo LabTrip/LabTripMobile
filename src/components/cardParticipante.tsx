@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { black } from 'react-native-paper/lib/typescript/styles/colors';
+import i18n from '../translate/i18n';
 
 interface Permissoes {
   id: string,
@@ -145,7 +146,7 @@ export default function CardParticipante(props) {
 
         </Text>
         <View style={styles.containerProprietarioSwitch}>
-          <Text style={styles.label}>Permissão do usuário:</Text>
+          <Text style={styles.label}>{i18n.t('cardParticipante.permissaoLabel')}</Text>
           {
             editar == true
               ? (<Picker style={styles.pickerComponente}

@@ -182,7 +182,7 @@ export default function CriarViagem() {
             </View>
             <Text style={styles.labelData}>{i18n.t('editarViagem.adicionarProprietarioLabel')}</Text>
             <View style={styles.containerAddFuncionarios}>
-                <TextInput placeholder={"Email do proprietário"} value={email} onChangeText={texto => onChangeTextEmail(texto)}
+                <TextInput placeholder={i18n.t('editarViagem.emailDoProprietario')} value={email} onChangeText={texto => onChangeTextEmail(texto)}
                     style={styles.inputAddParticipante} />
                 <BotaoLupa onPress={() => adicionaUsuarioParticipante()} />
             </View>

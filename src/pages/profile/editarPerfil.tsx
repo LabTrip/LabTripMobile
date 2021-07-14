@@ -290,7 +290,7 @@ export default function EditarPerfil() {
                                 : (<Image source={require('../../imgs/perfil.png')} style={styles.fotoPerfil} />)
                         }
                     </TouchableOpacity>
-                    <TextInput placeholder={"Nome"} value={nome} style={styles.input}
+                    <TextInput placeholder={i18n.t('cadastroUsuarios.nome')} value={nome} style={styles.input}
                         onChangeText={text => onChangeTextNome(text)} />
                     <TextInput placeholder={"Email"} value={email} style={styles.input}
                         onChangeText={text => onChangeTextEmail(text)} />
