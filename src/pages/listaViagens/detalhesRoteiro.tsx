@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../../translate/i18n';
+import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 
 interface Atividade {
     id: number,
@@ -170,7 +171,7 @@ export default function DetalhesRoteiro({ route }) {
             >
                 {
                     atividades?.map((a) => {
-                        return <CardAtividade callback={setRefreshing} key={a.id} nome={a.local} local={a.endereco} horario={'18h'} item={a} viagem={viagem} data={selectedValue} />
+                        return <CardAtividade callback={setRefreshing} key={a.id} nome={a.local} local={a.endereco} horario={moment(a.dataInicio).format('HH:mm')} item={a} viagem={viagem} data={selectedValue} />
                     })
                 }
             </ScrollView>

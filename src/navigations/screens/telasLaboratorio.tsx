@@ -22,6 +22,7 @@ import AdicionarAtividadeRoteiro from '../../pages/laboratorio/adicionarAtividad
 import CriarAtividade from '../../pages/laboratorio/criarAtividadeCallBack'
 import EditarAtividadeRoteiro from '../../pages/laboratorio/editarAtividadeRoteiro'
 import AdicionarMidias from '../../pages/listaViagens/adicionarMidias';
+import i18n from '../../translate/i18n';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -29,27 +30,27 @@ export default function TelasLaboratorio() {
   return (
     <Navigator>
       <Screen name="Laboratorio" options={{ headerShown: false }} component={MenuLaboratorio} />
-      <Screen name="CriarViagem" options={{ title: 'Criar viagem' }} component={CriarViagem} />
-      <Screen name="EditarViagem" options={{ title: 'Editar viagem' }} component={EditarViagem} />
-      <Screen name="EditarRoteiro" options={{ title: 'Editar roteiro' }} component={MenuDetalhesRoteiroAgencia} />
+      <Screen name="CriarViagem" options={{ title: i18n.t('telasLaboratorio.criarViagem') }} component={CriarViagem} />
+      <Screen name="EditarViagem" options={{ title: i18n.t('telasLaboratorio.editarViagem') }} component={EditarViagem} />
+      <Screen name="EditarRoteiro" options={{ title: i18n.t('telasLaboratorio.editarRoteiro') }} component={MenuDetalhesRoteiroAgencia} />
       <Screen name="CadastrarAgencia" component={CadastroAgencias} />
       <Screen name="CadastrarUsuario" component={CadastroUsuarios} />
-      <Screen name="CriarAgencia" options={{ title: 'Criar agência' }} component={CriarAgencia} />
-      <Screen name="CriarUsuario" options={{ title: 'Criar usuário' }} component={CriarUsuario} />
-      <Screen name="EditarAgencia" options={{ title: 'Editar agencia' }} component={EditarAgencia} />
-      <Screen name="EditarUsuario" options={{ title: 'Editar usuário' }} component={EditarUsuario} />
-      <Screen name="MenuDetalhesViagemAgencia" options={{ title: 'Editar viagem' }} component={MenuDetalhesViagemAgencia} />
-      <Screen name="EditarOrcamentoPlanejado" options={{ title: "Editar orçamento planejado" }} component={EditarOrcamentoPlanejado} />
-      <Screen name="EditarDespesaAdicional" options={{ title: "Editar despesa adicional" }} component={EditarDespesaAdicional} />
-      <Screen name="AdicionarDespesa" options={{ title: "Adicionar despesa" }} component={AdicionarDespesa} />
-      <Screen name="ConvidarParticipantes" options={{ title: "Convidar participante" }} component={ConvidarParticipantes} />
-      <Screen name="CriarRoteiro" options={{ title: "Criar roteiro" }} component={CriarRoteiro} />
-      <Screen name="DetalhesAtividade" options={{ title: "Detalhes da atividade" }} component={DetalhesAtividade} />
+      <Screen name="CriarAgencia" options={{ title: i18n.t('telasLaboratorio.criarAgencia') }} component={CriarAgencia} />
+      <Screen name="CriarUsuario" options={{ title: i18n.t('telasLaboratorio.criarUsuario') }} component={CriarUsuario} />
+      <Screen name="EditarAgencia" options={{ title: i18n.t('telasLaboratorio.editarAgencia') }} component={EditarAgencia} />
+      <Screen name="EditarUsuario" options={{ title: i18n.t('telasLaboratorio.editarUsuario') }} component={EditarUsuario} />
+      <Screen name="MenuDetalhesViagemAgencia" options={{ title: i18n.t('telasLaboratorio.editarViagem') }} component={MenuDetalhesViagemAgencia} />
+      <Screen name="EditarOrcamentoPlanejado" options={{ title: i18n.t('telasLaboratorio.editarOrcamentoPlanejado') }} component={EditarOrcamentoPlanejado} />
+      <Screen name="EditarDespesaAdicional" options={{ title: i18n.t('telasLaboratorio.editarDespesaAdicional') }} component={EditarDespesaAdicional} />
+      <Screen name="AdicionarDespesa" options={{ title: i18n.t('telasLaboratorio.adicionarDespesa') }} component={AdicionarDespesa} />
+      <Screen name="ConvidarParticipantes" options={{ title: i18n.t('telasLaboratorio.convidarParticipantes') }} component={ConvidarParticipantes} />
+      <Screen name="CriarRoteiro" options={{ title: i18n.t('telasLaboratorio.criarRoteiro') }} component={CriarRoteiro} />
+      <Screen name="DetalhesAtividade" options={{ title: i18n.t('telasEditarAgencia.detalhesAtividade') }} component={DetalhesAtividade} />
       <Screen name="Chat" options={{ title: "Chat" }} component={Chat} />
-      <Screen name="AdicionarAtividadeRoteiro" options={{ title: "Adicionar atividades ao roteiro" }} component={AdicionarAtividadeRoteiro} />
-      <Screen name="CriarAtividade" options={{ title: "Criar atividades" }} component={CriarAtividade} />
-      <Screen name="EditarAtividadeRoteiro" options={{ title: "Editar atividades" }} component={EditarAtividadeRoteiro} />
-      <Screen name="AdicionarMidias" options={{ title: "Adicionar midias" }} component={AdicionarMidias} />
+      <Screen name="AdicionarAtividadeRoteiro" options={{ title: i18n.t('telasLaboratorio.adicionarAtividadesNoRoteiro') }} component={AdicionarAtividadeRoteiro} />
+      <Screen name="CriarAtividade" options={{ title: i18n.t('telasLaboratorio.criarAtividades') }} component={CriarAtividade} />
+      <Screen name="EditarAtividadeRoteiro" options={{ title: i18n.t('telasLaboratorio.editarAtividades') }} component={EditarAtividadeRoteiro} />
+      <Screen name="AdicionarMidias" options={{ title: i18n.t('telasLaboratorio.adicionarMidias') }} component={AdicionarMidias} />
     </Navigator>
   );
 }

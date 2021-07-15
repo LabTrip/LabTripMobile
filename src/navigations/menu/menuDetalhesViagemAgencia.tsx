@@ -4,6 +4,7 @@ import DetalhesParticipantes from '../../pages/listaViagens/detalhesParticipante
 import EditarViagem from '../../pages/laboratorio/editarViagem'
 import ListaPropostaDeRoteiro from '../../pages/laboratorio/listaPropostaDeRoteiro'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 const Tab = createMaterialTopTabNavigator();
 let token;
@@ -29,18 +30,18 @@ export default function MenuDetalhesViagemAgencia({ route }) {
             if (response.status == 200) {
                 route.params.viagem.alterar = json.alterar;
             }else{
-                alert("Erro ao buscar informações da viagem: " + json.mensagem + "\n Reinicie o aplicativo e tente novamente!");
+                alert( i18n.t('cardViagem.erro') + ": " + json.mensagem + "\n" + i18n.t('cardViagem.verifiqueConexao'));
             }
         }
     }
 
     request();
-
+    
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Viagem" initialParams={route.params} component={EditarViagem} />
-            <Tab.Screen name="Roteiros" initialParams={route.params} component={ListaPropostaDeRoteiro} />
-            <Tab.Screen name="Participantes" initialParams={route.params} component={DetalhesParticipantes} />
+            <Tab.Screen name={i18n.t('menuDetalhesViagemAgencia.viagem')} initialParams={route.params} component={EditarViagem} />
+            <Tab.Screen name={i18n.t('menuDetalhesViagemAgencia.roteiros')} initialParams={route.params} component={ListaPropostaDeRoteiro} />
+            <Tab.Screen name={i18n.t('menuDetalhesViagem.participantes')} initialParams={route.params} component={DetalhesParticipantes} />
         </Tab.Navigator>
     );
 }

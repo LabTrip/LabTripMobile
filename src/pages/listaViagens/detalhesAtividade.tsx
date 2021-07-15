@@ -70,7 +70,7 @@ export default function DetalhesAtividade({ route }) {
             corDoStatus = '#0FD06F';
             break;
         default:
-            status = i18n.t('status.Canceled')
+            status = i18n.t('status.cancelado')
             corDoStatus = '#333333';
             break;
     }

@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import i18n from '../translate/i18n';
 
 
 export default function CardOrcamento(props) {
@@ -10,7 +11,7 @@ export default function CardOrcamento(props) {
     return (
         <View style={styles.cardOrcamento}>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>Orçamento planejado: R$ {props.planejado.toFixed(2)}</Text>
+                <Text style={styles.texto}>{i18n.t('cardOrcamento.orcamentoPlanejado')}: R$ {props.planejado.toFixed(2)}</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('EditarOrcamentoPlanejado', {orcamento:props.planejado.toFixed(2), roteiro: props.roteiro, tipoOrcamento: props.tipoOrcamento, atualizarEstado: props.atualizarEstado})} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
                 </TouchableOpacity>
@@ -18,7 +19,7 @@ export default function CardOrcamento(props) {
             <View>
             </View>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>Saldo atual: R$ {props.saldoAtual.toFixed(2)}</Text>
+                <Text style={styles.texto}>{i18n.t('cardOrcamento.saldoAtual')}: R$ {props.saldoAtual.toFixed(2)}</Text>
             </View>
         </View>
 

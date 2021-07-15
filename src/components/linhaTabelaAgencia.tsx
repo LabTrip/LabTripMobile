@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DataTable } from 'react-native-paper';
+import i18n from '../translate/i18n';
 
 export default function LinhaTabelaAgencia(props) {
   const navigation = useNavigation();
@@ -10,7 +11,7 @@ export default function LinhaTabelaAgencia(props) {
     <TouchableOpacity onPress={() => navigation.navigate(props.navigate, { agencia: props.item })}>
       <DataTable.Row style={styles.corpoTabela}>
         <DataTable.Cell>{props.nome}</DataTable.Cell>
-        <DataTable.Cell>Ativo</DataTable.Cell>
+        <DataTable.Cell>{i18n.t('linhaAgencia.ativo')}</DataTable.Cell>
       </DataTable.Row>
     </TouchableOpacity>
   )

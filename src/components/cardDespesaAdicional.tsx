@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, ActivityIndicator } fr
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../translate/i18n';
 
 export default function CardDespesaAdicional(props) {
     const [showLoaderDelete, setShowLoaderDelete] = React.useState(false);
@@ -31,10 +32,10 @@ export default function CardDespesaAdicional(props) {
 
         const json = await response.json();
         if (response.status == 200) {
-            alert('Despesa deletada com sucesso!');
+            alert(i18n.t('cardDespesa.sucessoExcluir'));
         }
         else{
-            alert('Não foi possível deletar despesa: ' + json.mensagem);
+            alert(i18n.t('cardDespesa.falhaExcluir') + ': ' + json.mensagem);
         }
     }
 
@@ -52,7 +53,7 @@ export default function CardDespesaAdicional(props) {
                     <View style={styles.modalView}>
                         <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                         <Text style={styles.textStyle}>
-                            Aguarde...
+                            {i18n.t('modais.aguarde')}
                     </Text>
                     </View>
                 </View>
@@ -69,7 +70,7 @@ export default function CardDespesaAdicional(props) {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.textStyle}>
-                            Deseja mesmo excluir a despesa "{props.descricao}"
+                            {i18n.t('cardDespesa.confirmacaoExcluir')} "{props.descricao}"
                         </Text>
                         <View style={styles.containerRow}>
                             <TouchableOpacity style={styles.botaoSim} onPress={async () => {
@@ -78,14 +79,14 @@ export default function CardDespesaAdicional(props) {
                                 deletaDespesa();
                                 setShowLoader(false);
                             }}>
-                                <Text style={styles.botaoSalvarTexto}>Sim</Text>
+                                <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.sim')}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.botaoNao} onPress={async () => {
                                 
                                 setShowLoaderDelete(false);
             
                             }} >
-                                <Text style={styles.botaoSalvarTexto}>Não</Text>
+                                <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.nao')}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -108,7 +109,7 @@ export default function CardDespesaAdicional(props) {
                 <Text style={styles.texto}>{props.descricao}</Text>
             </View>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>Valor: R$ {props.valor.toFixed(2)}</Text>
+                <Text style={styles.texto}>{i18n.t('cardDespesa.valor')}: R$ {props.valor.toFixed(2)}</Text>
                 <TouchableOpacity disabled={!props.editar} onPress={() =>{
                     setShowLoaderDelete(true);
                 }}>
@@ -116,7 +117,7 @@ export default function CardDespesaAdicional(props) {
                 </TouchableOpacity>
             </View>
             {props.modificadoPor != "" && (<View style={styles.containerRow}>
-                                        <Text style={styles.texto}>Última modificação: {props.modificadoPor}</Text>
+                                        <Text style={styles.texto}>{i18n.t('cardDespesa.ultimaModificacao')}: {props.modificadoPor}</Text>
                                     </View>)
             }
         </View>

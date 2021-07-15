@@ -227,7 +227,77 @@ const messages = {
             },
             cardRoteiro: {
                 versao: 'Version'
+            },
+            cardOrcamento: {
+                orcamentoPlanejado: 'Planned budget',
+                saldoAtual: 'Current balance'
+            },
+            cardDespesa: {
+                valor: 'Value',
+                ultimaModificacao: 'Last modification',
+                confirmacaoExcluir: 'Do you really want to delete the expense',
+                sucessoExcluir: 'Expense deleted successfully!',
+                falhaExcluir: 'could not delete the expense'
+            },
+            cardAtividadeAgencia:{
+                local: 'Location',
+                horario: 'Schedule'
+            },
+            cardAtividade:{
+                local: 'Location',
+                horario: 'Schedule',
+                erroInfoUsuario: 'Error capturing user information. Please restart the application.',
+                atividadeAtualizada: 'Updated activity!'
+            },
+            linhaAgencia:{
+                ativo: 'Active'
+            },
+            menuDetalhesRoteiroAgencia:{
+                roteiro: 'Itinerary',
+                atividades: 'Activities',
+                orcamento: 'Budget'
+            },
+            menuDetalhesViagem:{
+                participantes: 'Participants'
+            },
+            menuDetalhesViagemAgencia:{
+                roteiros: 'Itineraries',
+                viagem: 'Travel'
+            },
+            menuLaboratorio:{
+                viagens: 'Travels',
+                cadastros: 'Registrations'
+            },
+            menuLaboratorioCadastro:{
+                agencia: 'Agency',
+                usuario: 'User'
+            },
+            menuOrcamento:{
+                geral: 'General',
+                individual: 'Personal'
+            },
+            telasEditarAgencia:{
+                detalhesAtividade:'Activity Details'
+            },
+            telasLaboratorio:{
+                criarViagem: 'Create travel',
+                editarViagem: 'Edit travel',
+                editarRoteiro: 'Edit itinerary',
+                criarAgencia: 'Create agency',
+                criarUsuario: 'Create user',
+                editarAgencia: 'Edit agency',
+                editarUsuario: 'Edit user',
+                editarOrcamentoPlanejado: 'Edit planned budget',
+                editarDespesaAdicional: 'Edit additional expense',
+                adicionarDespesa: 'Edit expense',
+                convidarParticipantes: 'Invite participants',
+                criarRoteiro: 'Create itinerary',
+                adicionarAtividadesNoRoteiro: 'Add activities to the itinerary',
+                criarAtividades: 'Create activities',
+                editarAtividades: 'Edit activities',
+                adicionarMidias: 'Add media'
             }
+            
         }
     }
 }

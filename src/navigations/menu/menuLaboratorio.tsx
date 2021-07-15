@@ -3,6 +3,7 @@ import React, { Component, useEffect, useState } from 'react'
 import ListaEditarViagens from '../../pages/laboratorio/listaEditarViagens';
 import MenuLaboratorioCadastro from './menuLaboratorioCadastro';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../../translate/i18n';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -33,9 +34,9 @@ export default function MenuLaboratorio() {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Viagens" component={ListaEditarViagens} />
+      <Tab.Screen name={i18n.t('menuLaboratorio.viagens')} component={ListaEditarViagens} />
       {/* mostra aba de cadastro se o usuario tiver permissão diferente de cliente */}
-      {idPermissao != 4 ? <Tab.Screen name="Cadastros" component={MenuLaboratorioCadastro} /> : null}
+      {idPermissao != 4 ? <Tab.Screen name={i18n.t('menuLaboratorio.cadastros')} component={MenuLaboratorioCadastro} /> : null}
     </Tab.Navigator>
   );
 }

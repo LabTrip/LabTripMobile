@@ -1,4 +1,4 @@
-const messages  = {
+const messages = {
     pt: {
         translations: {
             login: {
@@ -8,9 +8,9 @@ const messages  = {
                 redefinir: 'Esqueceu sua senha?',
                 primeiroAcesso: 'Primeiro acesso?'
             },
-            redefinirSenha:{
+            redefinirSenha: {
                 titulo: 'Vamos redefinir sua senha.',
-                inserirCodigo:'Insira o código recebido por e-mail.',
+                inserirCodigo: 'Insira o código recebido por e-mail.',
                 inserirEmail: 'Insira o e-mail cadastrado.',
                 InserirNovaSenha: 'Insira sua nova senha e a confirmação.',
                 sucesso: 'A senha foi redefinida com sucesso .',
@@ -24,22 +24,22 @@ const messages  = {
                 digiteSenha: 'Digite a nova senha',
                 confirmeSenha: 'Confirme a nova senha',
             },
-            botoes:{
+            botoes: {
                 salvar: 'Salvar',
                 cancelar: 'Cancelar',
-                deletar:'Excluir',
-                editar:'Editar',
-                sim:'Sim',
-                nao:'Não',
+                deletar: 'Excluir',
+                editar: 'Editar',
+                sim: 'Sim',
+                nao: 'Não',
                 entrar: 'Entrar',
                 confirmar: 'Confirmar',
                 redefinir: 'Redefinir',
                 sairDaConta: 'Sair da conta',
-                alterarSenha: 'Alterar senha',
+                alterarSenha: 'Alterar a senha',
                 versionar: 'Versionar',
                 criar: 'Criar',
             },
-            modais:{
+            modais: {
                 aguarde: 'Aguarde...',
                 loginInvalido: 'E-mail e/ou senha inválidos',
                 emailInvalido: 'Email inválido',
@@ -200,28 +200,97 @@ const messages  = {
             chat: {
                 digiteAqui: 'Digite algo...'
             },
-            detalhesRoteiro:{
+            detalhesRoteiro: {
                 titulo: 'Detalhes do roteiro',
                 apelidoPlaceholder: 'Apelido do roteiro',
                 data: 'Data'
             },
-            cardParticipante:{
+            cardParticipante: {
                 permissaoLabel: 'Permissão do usuário'
             },
-            cardViagem:{
+            cardViagem: {
                 inicio: 'Início',
                 fim: 'Fim',
                 dono: 'Dono',
                 erro: 'Erro ao buscar informações da viagem',
                 verifiqueConexao: 'Verifique a sua conexão com a internet, reinicie o aplicativo e tente novamente!'
             },
-            cardRoteiro:{
+            cardRoteiro: {
                 versao: 'Versão'
+            },
+            cardOrcamento: {
+                orcamentoPlanejado: 'Orçamento planejado',
+                saldoAtual: 'Saldo atual'
+            },
+            cardDespesa: {
+                valor: 'Valor',
+                ultimaModificacao: 'última modificação',
+                confirmacaoExcluir: 'Deseja mesmo excluir a despesa',
+                sucessoExcluir: 'Despesa deletada com sucesso!',
+                falhaExcluir: 'Não foi possível deletar despesa'
+            },
+            cardAtividadeAgencia: {
+                local: 'Local',
+                horario: 'Horário'
+            },
+            cardAtividade: {
+                local: 'Location',
+                horario: 'Schedule',
+                erroInfoUsuario: 'Erro ao capturar informações do usuário. Por favor reinicie a aplicação.',
+                atividadeAtualizada: 'Atividade atualizada!'
+            },
+            linhaAgencia:{
+                ativo: 'Ativo'
+            },
+            menuDetalhesRoteiroAgencia:{
+                roteiro: 'Roteiro',
+                atividades: 'Atividades',
+                orcamento: 'Orçamento'
+            },
+            menuDetalhesViagem:{
+                participantes: 'Participantes'
+            },
+            menuDetalhesViagemAgencia:{
+                roteiros: 'Roteiros',
+                viagem: 'Viagem',
+            },
+            menuLaboratorio:{
+                viagens: 'Viagens',
+                cadastros: 'Cadastros'
+            },
+            menuLaboratorioCadastro:{
+                agencia: 'Agência',
+                cadastros: 'Usuário'
+            },
+            menuOrcamento:{
+                geral: 'Geral',
+                individual: 'Individual'
+            },
+            telasEditarAgencia:{
+                detalhesAtividade:'Detalhes da atividade'
+            },
+            telasLaboratorio:{
+                criarViagem: 'Criar viagem',
+                editarViagem: 'Editar viagem',
+                editarRoteiro: 'Editar roteiro',
+                criarAgencia: 'Criar agência',
+                criarUsuario: 'Criar usuário',
+                editarAgencia: 'Editar agencia',
+                editarUsuario: 'Editar usuário',
+                editarOrcamentoPlanejado: 'Editar orçamento planejado',
+                editarDespesaAdicional: 'Editar despesa adicional',
+                adicionarDespesa: 'Adicionar despesa',
+                convidarParticipantes: 'Convidar participante',
+                criarRoteiro: 'Criar roteiro',
+                adicionarAtividadesNoRoteiro: 'Adicionar atividades ao roteiro',
+                criarAtividades: 'Criar atividades',
+                editarAtividades: 'Editar atividades',
+                adicionarMidias: 'Adicionar midias'
             }
-            
+
 
         }
     }
 }
 
-export{messages}
+export { messages }

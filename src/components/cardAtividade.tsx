@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../translate/i18n';
 
 export default function CardAtividade(props) {
     const navigation = useNavigation();
@@ -13,7 +14,7 @@ export default function CardAtividade(props) {
         //captura o id do usuário armazenado no dispositivo
         const id = await AsyncStorage.getItem('USER_ID') || "";
         if (id == "") {
-            alert("Erro ao capturar informações do usuário. Por favor reinicie a aplicação.")
+            alert(i18n.t('cardAtividade.erroInfoUsuario'))
         }
         else {
             //remove aspas
@@ -57,8 +58,11 @@ export default function CardAtividade(props) {
         //seta lista de atividades se o status da resposta for 200
         if (response.status == 200) {
             props.callback(true);
-            alert('Atividade atualizada!');
-            props.callback(false);
+            alert(i18n.t('cardAtividade.atividadeAtualizada'));
+            setTimeout(() => {
+                props.callback(false);
+            }, 300);
+
         }
         else {
             alert(json.mensagem);
@@ -83,7 +87,7 @@ export default function CardAtividade(props) {
         <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.item, data: props.data })}>
             <Text style={styles.textoTitulo}>{props.nome} </Text>
             <View style={styles.detalhes}>
-                <Text style={styles.textoDetalhes}>Local: {props.local}{"\n"}Horário: {props.horario}</Text>
+                <Text style={styles.textoDetalhes}>{i18n.t('cardAtividadeAgencia.local')}: {props.local}{"\n"}{i18n.t('cardAtividadeAgencia.horario')}: {props.horario}</Text>
                 <TouchableOpacity onPress={() => atualizaAtividade(5)} disabled={disabled}>
                     <MaterialCommunityIcons name="check-bold" color={corBotaoConfimar} size={29} />
                 </TouchableOpacity>

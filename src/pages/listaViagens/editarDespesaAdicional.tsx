@@ -48,11 +48,11 @@ export default function EditarDespesaAdicional({ route }) {
         console.log()
         const json = await response.json();
         if (response.status == 200) {
-            alert(i18n.t('boeditarDespesaAdicionaltoes.sucesso'))
+            alert(i18n.t('editarDespesaAdicional.sucesso'))
             navigation.goBack()
         }
         else {
-            alert(i18n.t('boeditarDespesaAdicionaltoes.erro') + json.mensagem.toString());
+            alert(i18n.t('editarDespesaAdicional.erro') + json.mensagem.toString());
         }
     }
 

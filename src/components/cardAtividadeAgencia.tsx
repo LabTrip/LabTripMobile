@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import i18n from '../translate/i18n';
 
 export default function CardAtividadeAgencia(props) {
     const moment = require('moment');
@@ -12,7 +13,7 @@ export default function CardAtividadeAgencia(props) {
         <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.atividade, planejamento: true})}>
             <Text style={styles.textoTitulo}>{props.atividade.local} </Text>
             <View style={styles.detalhes}>
-                <Text style={styles.textoDetalhes}>Local: {props.atividade.endereco}{"\n"}Horário: {moment(props.atividade.dataInicio).local().format('HH:mm')}</Text>
+                <Text style={styles.textoDetalhes}>{i18n.t('cardAtividadeAgencia.local')}: {props.atividade.endereco}{"\n"}{i18n.t('cardAtividadeAgencia.horario')}: {moment(props.atividade.dataInicio).local().format('HH:mm')}</Text>
                 {/*<TouchableOpacity>
                     <MaterialCommunityIcons name="heart" color={'#FF2424'} size={29} />
                     <Text>1</Text>
