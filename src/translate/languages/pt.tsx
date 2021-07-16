@@ -260,7 +260,7 @@ const messages = {
             },
             menuLaboratorioCadastro:{
                 agencia: 'Agência',
-                cadastros: 'Usuário'
+                usuario: 'Usuário'
             },
             menuOrcamento:{
                 geral: 'Geral',
