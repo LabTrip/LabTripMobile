@@ -4,6 +4,8 @@ import { StyleSheet, Text, Image, TextInput, TouchableOpacity, View, ScrollView 
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import i18n from '../../translate/i18n';
+import * as Linking from 'expo-linking';
+
 
 export default function RedefinirInserirSenha({route}) {
   const {email, codigoVerificacao} = route.params;
@@ -64,6 +66,9 @@ export default function RedefinirInserirSenha({route}) {
       }
       <TextInput placeholder={i18n.t('redefinirSenha.confirmeSenha')} secureTextEntry={true} style={styles.input} 
       onChangeText={text => onChangeConfirmSenha(text)} value={confirmSenha}/>
+      <TouchableOpacity onPress={ () => Linking.openURL('https://labtrip-backend.herokuapp.com/public/termo-de-uso')}>
+        <Text style={styles.textoObs}>*Ao criar uma senha e concluir o cadastro, o usuário concorda com os termos de uso da aplicação</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.botaoRedefinir} onPress={async () => {
         if(verificaSenhas()){
           if(senhaForte){
@@ -113,7 +118,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontFamily: 'Roboto',
-    textAlign: 'center'
+    textAlign: 'center',
+    maxWidth: '90%'
+  },
+  textoObs: {
+    color: 'white',
+    fontSize: 13,
+    fontFamily: 'Roboto',
+    textAlign: 'center',
+    maxWidth: '90%',
+    marginTop: '2%',
+    textDecorationLine: 'underline'
   },
   logo: {
     width: 192,
