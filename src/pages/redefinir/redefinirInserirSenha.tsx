@@ -67,7 +67,7 @@ export default function RedefinirInserirSenha({route}) {
       <TextInput placeholder={i18n.t('redefinirSenha.confirmeSenha')} secureTextEntry={true} style={styles.input} 
       onChangeText={text => onChangeConfirmSenha(text)} value={confirmSenha}/>
       <TouchableOpacity onPress={ () => Linking.openURL('https://labtrip-backend.herokuapp.com/public/termo-de-uso')}>
-        <Text style={styles.textoObs}>*Ao criar uma senha e concluir o cadastro, o usuário concorda com os termos de uso da aplicação</Text>
+        <Text style={styles.textoObs}>*{i18n.t('redefinirSenha.termoTexto')}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.botaoRedefinir} onPress={async () => {
         if(verificaSenhas()){
@@ -82,7 +82,7 @@ export default function RedefinirInserirSenha({route}) {
             }
           }
           else{
-            alert('A senha deve conter ao menos sete caracteres e um número.')
+            alert(i18n.t('redefinirSenha.erroCriterios'))
           }
           
         }

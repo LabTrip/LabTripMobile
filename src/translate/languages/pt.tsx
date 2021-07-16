@@ -23,6 +23,7 @@ const messages = {
                 senhaAtual: 'Digite a senha atual',
                 digiteSenha: 'Digite a nova senha',
                 confirmeSenha: 'Confirme a nova senha',
+                termoTexto:'Ao criar uma senha e concluir o cadastro, o usuário concorda com os termos de uso da aplicação'
             },
             botoes: {
                 salvar: 'Salvar',
@@ -286,9 +287,14 @@ const messages = {
                 criarAtividades: 'Criar atividades',
                 editarAtividades: 'Editar atividades',
                 adicionarMidias: 'Adicionar midias'
-            }
-
-
+            },
+            criarRoteiro: {
+                sucesso: 'Roteiro criado com sucesso.',
+                erro: 'Erro ao criar roteiro.',
+                criacaoRoteiro: 'Criar proposta de roteiro',
+                descricaoRoteiro: 'Descrição do roteiro',
+                deveTerDescricao: 'O roteiro precisa ter uma descrição.'
+            },
         }
     }
 }

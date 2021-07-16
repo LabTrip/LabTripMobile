@@ -13,7 +13,7 @@ const messages = {
                 inserirCodigo: 'Enter the code which you received',
                 inserirEmail: 'Enter your e-mail',
                 InserirNovaSenha: 'Enter your new password and confirm it',
-                sucesso: 'your password has been reset successfully',
+                sucesso: 'Your password has been reset successfully',
                 erro: 'Error updating password.',
                 erroCriterios: 'The password must contain at least seven characters and one number.',
                 senha: 'password',
@@ -23,7 +23,8 @@ const messages = {
                 senhaAtual: 'Enter current password',
                 digiteSenha: 'Enter the new password',
                 confirmeSenha: 'Confirm the new password',
-                aguarde: 'Wait...'
+                aguarde: 'Wait...',
+                termoTexto:'When creating a password and conclude the registration, the user agrees to the terms of use of the application.'
             },
             botoes: {
                 salvar: 'Save',
