@@ -210,10 +210,7 @@ export default function EditarViagem({ route }) {
                 >
                     <Picker.Item label={i18n.t('status.planejamento')} value={1} color="#B7AF0B" />
                     <Picker.Item label={i18n.t('status.planejado')} value={2} color="#B7AF0B" />
-                    <Picker.Item label={i18n.t('status.emAndamento')} value={3} color="#00AEFF" />
-                    <Picker.Item label={i18n.t('status.cancelado')} value={3} color="#D12323" />
-                    <Picker.Item label={i18n.t('status.concluido')} value={3} color="#0FD06F" />
-
+                    <Picker.Item label={i18n.t('status.cancelado')} value={4} color="#D12323" />
                 </Picker>
                 {route.params.viagem.alterar ?
                     <TouchableOpacity style={styles.botaoCriar} onPress={onClickSalvaViagem}>
