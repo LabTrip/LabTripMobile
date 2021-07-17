@@ -151,7 +151,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>
                 {idPermissao != 4 ?
-                    <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', { roteiro: route.params.roteiro })}></BotaoMais>
+                    <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', { roteiro: route.params.roteiro, callback: onRefresh })}></BotaoMais>
                     : null}
 
                 <Picker style={styles.pickerComponente}

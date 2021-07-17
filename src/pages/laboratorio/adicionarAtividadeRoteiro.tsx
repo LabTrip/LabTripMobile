@@ -1,6 +1,6 @@
 import React, { useState, Component, Fragment } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, SafeAreaView, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useLinkProps, useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import normalize from '../../components/fontSizeResponsive';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -179,7 +179,8 @@ export default function AdicionarAtividadeRoteiro({ route }) {
             const json = await response.json();
             //seta lista de atividades se o status da resposta for 200
             if (response.status == 201 || response.status == 304) {
-                alert(i18n.t('adicionarAtividadeRoteiro.sucessoAdicionar'))
+                alert(i18n.t('adicionarAtividadeRoteiro.sucessoAdicionar'));
+                route.params.callback()
                 setTimeout(() => navigation.goBack(), 1500)
             }
             else{

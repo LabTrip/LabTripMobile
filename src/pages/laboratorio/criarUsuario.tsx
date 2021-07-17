@@ -161,7 +161,7 @@ export default function CriarUsuario() {
       <Text style={styles.label}>{i18n.t('editarUsuario.nomeUsuario')}</Text>
       <TextInput placeholder={i18n.t('criarUsuario.nome')} style={styles.input}
         autoCompleteType={'name'}
-        onChangeText={text => onChangeTextnomeUsuario(text.trim())} value={nomeUsuario} autoCapitalize={'none'} />
+        onChangeText={text => onChangeTextnomeUsuario(text)} value={nomeUsuario} autoCapitalize={'none'} />
         <Text style={styles.label}>{i18n.t('editarUsuario.emailUsuario')}</Text>
       <TextInput placeholder={i18n.t('criarUsuario.email')} style={styles.input}
         keyboardType="email-address"

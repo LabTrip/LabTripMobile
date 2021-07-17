@@ -148,7 +148,7 @@ export default function ListaPropostaDeRoteiro({ route }) {
             </Modal>
             {idPermissao != 4 ?
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <BotaoMais onPress={() => navigation.navigate('CriarRoteiro', {viagem: viagem, atualizarEstado: setRefreshing})} />
+                    <BotaoMais onPress={() => navigation.navigate('CriarRoteiro', {viagem: viagem, atualizarEstado: onRefresh})} />
                 </View>
                 : null}
             <View style={styles.containerTop}>

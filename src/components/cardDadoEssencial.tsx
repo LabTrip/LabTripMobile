@@ -92,7 +92,7 @@ export default function CardParticipante(props) {
       </View>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={() => baixaArquivo()}>
-          <MaterialCommunityIcons name="file-download" color={'#848484'} size={30} />
+          <MaterialCommunityIcons name="share-variant" color={'#848484'} size={27} />
         </TouchableOpacity>
         <TouchableOpacity onPress={async () => excluiDocumento()}>
           <MaterialCommunityIcons name="close-thick" color={'red'} size={30} />
