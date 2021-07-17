@@ -44,7 +44,7 @@ export default function DetalhesOrcamento({ route }) {
     let alterar = true
     let tipoOrcamento = "Individual"
     //adicionando icone de chat quando usuario vier pelas rotas de orçamento geral.
-    if (rota == 'Geral' || rota == 'Orçamento') {
+    if (rota == 'Geral' || rota == 'Orçamento' || rota == 'General') {
         botaoChat = <TouchableOpacity style={{ marginTop: '2%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Orçamento'}})}>
                         <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
                     </TouchableOpacity>;
@@ -89,7 +89,7 @@ export default function DetalhesOrcamento({ route }) {
 
     const buscaOrcamento = async () => {
         let localToken = await retornaToken() || '';
-        const url = roteiro.id + '/' + roteiro.versao + '?tipoOrcamento=' + route.name;
+        const url = roteiro.id + '/' + roteiro.versao + '?tipoOrcamento=' + tipoOrcamento;
 
         const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos/' + url, {
             method: 'GET',
@@ -112,7 +112,7 @@ export default function DetalhesOrcamento({ route }) {
 
     const criaOrcamento = async () => {
         let localToken = await retornaToken() || '';
-        const url = roteiro.id + '/' + roteiro.versao + '?tipoOrcamento=' + route.name;
+        const url = roteiro.id + '/' + roteiro.versao + '?tipoOrcamento=' + tipoOrcamento;
 
         const response = await fetch('https://labtrip-backend.herokuapp.com/orcamentos', {
             method: 'POST',
@@ -125,7 +125,7 @@ export default function DetalhesOrcamento({ route }) {
                 {
                     roteiroId: roteiro.id,
                     versaoRoteiro: roteiro.versao,
-                    tipo: route.name
+                    tipo: tipoOrcamento
                 }
             )
         });
@@ -171,7 +171,7 @@ export default function DetalhesOrcamento({ route }) {
                     {
                         orcamento?.despesasExtras.map((d, index) => {
                             let modificadoPor = "";
-                            if(route.name == 'Geral'){
+                            if(tipoOrcamento == 'Geral'){
                                 modificadoPor = d.nomeUsuario
                              }
                             return (
