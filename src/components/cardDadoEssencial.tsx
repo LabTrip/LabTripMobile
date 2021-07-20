@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, Image, View, Switch, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Image, View, Switch, TouchableOpacity, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { black } from 'react-native-paper/lib/typescript/styles/colors';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import i18n from '../translate/i18n';
 
 
 interface Permissoes {
@@ -50,7 +51,7 @@ export default function CardParticipante(props) {
     const blob = await responseArquivo.blob();
 
     if (responseArquivo.status == 200) {
-      
+
       const fr = new FileReader();
       fr.onload = async () => {
         var base64data = fr.result?.toString() || "";
@@ -60,29 +61,46 @@ export default function CardParticipante(props) {
       };
       fr.readAsDataURL(blob);
 
-    }else{
+    } else {
       alert('Não foi possível baixar o arquivo!');
     }
   }
 
   const excluiDocumento = async () => {
-    let localToken = await retornaToken() || '';
-    const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + metaDados.id, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'x-access-token': localToken
-      }
-    });
+    Alert.alert(
+      i18n.t('dadoEssencial.desejaExcluir'),
+      i18n.t('dadoEssencial.desejaExcluirDado'),
+      [
+        {
+          text: i18n.t('botoes.sim'),
+          onPress: async () => {
+            let localToken = await retornaToken() || '';
+            const response = await fetch('https://labtrip-backend.herokuapp.com/dadosEssenciais/arquivoDadosEssenciais/' + metaDados.id, {
+              method: 'DELETE',
+              headers: {
+                Accept: 'application/json',
+                'x-access-token': localToken
+              }
+            });
 
 
-    if (response.status == 204) {
-      alert('Arquivo deletado com sucesso!');
-      props.refresh();
-    }
-    else {
-      alert('Erro ao deletar arquivo!');
-    }
+            if (response.status == 204) {
+              alert(i18n.t('dadoEssencial.exclusaoSucesso'));
+              props.refresh();
+            }
+            else {
+              alert(i18n.t('dadoEssencial.exclusaoErro'));
+            }
+          }
+        },
+        {
+          text: i18n.t('botoes.nao'),
+          onPress: () => {
+
+          }
+        }
+      ]
+    )
   }
 
   return (

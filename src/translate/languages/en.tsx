@@ -24,7 +24,7 @@ const messages = {
                 digiteSenha: 'Enter the new password',
                 confirmeSenha: 'Confirm the new password',
                 aguarde: 'Wait...',
-                termoTexto:'When creating a password and conclude the registration, the user agrees to the terms of use of the application.'
+                termoTexto: 'When creating a password and conclude the registration, the user agrees to the terms of use of the application.'
             },
             botoes: {
                 salvar: 'Save',
@@ -240,47 +240,47 @@ const messages = {
                 sucessoExcluir: 'Expense deleted successfully!',
                 falhaExcluir: 'could not delete the expense'
             },
-            cardAtividadeAgencia:{
+            cardAtividadeAgencia: {
                 local: 'Location',
                 horario: 'Schedule'
             },
-            cardAtividade:{
+            cardAtividade: {
                 local: 'Location',
                 horario: 'Schedule',
                 erroInfoUsuario: 'Error capturing user information. Please restart the application.',
                 atividadeAtualizada: 'Updated activity!'
             },
-            linhaAgencia:{
+            linhaAgencia: {
                 ativo: 'Active'
             },
-            menuDetalhesRoteiroAgencia:{
+            menuDetalhesRoteiroAgencia: {
                 roteiro: 'Itinerary',
                 atividades: 'Activities',
                 orcamento: 'Budget'
             },
-            menuDetalhesViagem:{
+            menuDetalhesViagem: {
                 participantes: 'Participants'
             },
-            menuDetalhesViagemAgencia:{
+            menuDetalhesViagemAgencia: {
                 roteiros: 'Itineraries',
                 viagem: 'Travel'
             },
-            menuLaboratorio:{
+            menuLaboratorio: {
                 viagens: 'Travels',
                 cadastros: 'Registrations'
             },
-            menuLaboratorioCadastro:{
+            menuLaboratorioCadastro: {
                 agencia: 'Agency',
                 usuario: 'User'
             },
-            menuOrcamento:{
+            menuOrcamento: {
                 geral: 'General',
                 individual: 'Personal'
             },
-            telasEditarAgencia:{
-                detalhesAtividade:'Activity Details'
+            telasEditarAgencia: {
+                detalhesAtividade: 'Activity Details'
             },
-            telasLaboratorio:{
+            telasLaboratorio: {
                 criarViagem: 'Create travel',
                 editarViagem: 'Edit travel',
                 editarRoteiro: 'Edit itinerary',
@@ -297,8 +297,14 @@ const messages = {
                 criarAtividades: 'Create activities',
                 editarAtividades: 'Edit activities',
                 adicionarMidias: 'Add media'
+            },
+            dadoEssencial: {
+                desejaExcluir: 'Want to delete?',
+                desejaExcluirDado: 'Do you really want to delete this file?',
+                exclusaoSucesso: 'File deleted sucessfuly!',
+                exclusaoErro: 'Error deleting file!'
             }
-            
+
         }
     }
 }

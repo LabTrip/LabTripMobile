@@ -295,6 +295,12 @@ const messages = {
                 descricaoRoteiro: 'Descrição do roteiro',
                 deveTerDescricao: 'O roteiro precisa ter uma descrição.'
             },
+            dadoEssencial:{
+                desejaExcluir: 'Deseja excluir?',
+                desejaExcluirDado: 'Deseja realmente excluir o arquivo desta atividade?',
+                exclusaoSucesso: 'Arquivo deletado com sucesso!',
+                exclusaoErro: 'Erro ao deletar arquivo!'
+            }
         }
     }
 }

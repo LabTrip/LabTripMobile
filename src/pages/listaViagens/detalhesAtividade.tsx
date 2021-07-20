@@ -28,7 +28,7 @@ export default function DetalhesAtividade({ route }) {
     const [showLoader, setShowLoader] = React.useState(false);
     const [dadosEssenciais, setDadosEssenciais] = useState<DadoEssencial[]>([]);
     const [refreshing, setRefreshing] = useState(false);
-    let valorFormatado = route.params.atividade.custo.toFixed(2)
+    const [valorFormatado, setValorFormatado] = useState(route.params.atividade.custo.toFixed(2));
     const [idPermissao, setIdPermissao] = useState(4);
     const navigation = useNavigation();
     let token, userId, status, corDoStatus;
@@ -91,6 +91,9 @@ export default function DetalhesAtividade({ route }) {
             if (response.status == 200) {
                 const json = await response.json();
                 console.log(json)
+                setGostei(json.votoPositivo || 0);
+                setNaoGostei(json.votoNegativo || 0);
+                setValorFormatado(json.custo.toFixed(2));
                 setAtividade(json);
             }
         }
@@ -262,7 +265,6 @@ export default function DetalhesAtividade({ route }) {
             setShowLoader(true)
             await getAtividade();
             await getDadosEssenciais();
-            console.log(dadosEssenciais)
         }
         catch (e) {
             console.log(e)
@@ -321,8 +323,8 @@ export default function DetalhesAtividade({ route }) {
                     },
                     body: form
                 });
-                
-                if(responseArquivo.status == 200){
+
+                if (responseArquivo.status == 200) {
                     alert(i18n.t('detalhesAtividade.sucessoSalvarArquivo'));
                     onRefresh()
                 }
@@ -439,7 +441,7 @@ export default function DetalhesAtividade({ route }) {
                     <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '3%' }]}>
                         <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={styles.tituloDetalhes}>
-                            {i18n.t('detalhesAtividade.midias')}
+                                {i18n.t('detalhesAtividade.midias')}
                             </Text>
                             <TouchableOpacity onPress={() => UploadFile()}>
                                 <AntDesign name="pluscircleo" size={30} color="black" />
@@ -449,7 +451,6 @@ export default function DetalhesAtividade({ route }) {
                             <ScrollView horizontal={true} style={{ flexDirection: 'row' }} contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', padding: 5 }}>
                                 {
                                     dadosEssenciais.map((d) => {
-                                        console.log(d)
                                         return (<CardDadoEssencial key={d.id.toString()}
                                             metaDados={d} refresh={onRefresh}
                                         />)
