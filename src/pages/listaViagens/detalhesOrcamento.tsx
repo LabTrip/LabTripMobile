@@ -166,7 +166,7 @@ export default function DetalhesOrcamento({ route }) {
                             : null}
                         {botaoChat}
                     </View>
-                    <CardOrcamento roteiro={roteiro} atualizarEstado={onRefresh} tipoOrcamento={tipoOrcamento} planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} />
+                    <CardOrcamento roteiro={roteiro} atualizarEstado={onRefresh} tipoOrcamento={tipoOrcamento} editar={viagem.alterar} planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} />
                     <Text style={styles.label}>{i18n.t('detalhesOrcamento.despesasAdicionais')}</Text>
                     {
                         orcamento?.despesasExtras.map((d, index) => {
@@ -175,7 +175,7 @@ export default function DetalhesOrcamento({ route }) {
                                 modificadoPor = d.nomeUsuario
                              }
                             return (
-                                <CardDespesasAdicionais key={d.id} id={d.id} data={moment(d.data).format('DD/MM/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} modificadoPor={modificadoPor}/>
+                                <CardDespesasAdicionais key={d.id} id={d.id} tipoOrcamento={tipoOrcamento} data={i18n.locale == 'pt-BR' ? moment(d.data).format('DD/MM/YYYY') : moment(d.data).format('MM/DD/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} modificadoPor={modificadoPor}/>
                             )
                         })
                         

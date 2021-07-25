@@ -13,7 +13,7 @@ export default function CardDespesaAdicional(props) {
     const retornaToken = async () => {
         let localToken = await AsyncStorage.getItem('AUTH');
         if (localToken != null) {
-          localToken = JSON.parse(localToken)
+            localToken = JSON.parse(localToken)
         }
         return localToken;
     }
@@ -34,7 +34,7 @@ export default function CardDespesaAdicional(props) {
         if (response.status == 200) {
             alert(i18n.t('cardDespesa.sucessoExcluir'));
         }
-        else{
+        else {
             alert(i18n.t('cardDespesa.falhaExcluir') + ': ' + json.mensagem);
         }
     }
@@ -54,7 +54,7 @@ export default function CardDespesaAdicional(props) {
                         <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
                         <Text style={styles.textStyle}>
                             {i18n.t('modais.aguarde')}
-                    </Text>
+                        </Text>
                     </View>
                 </View>
 
@@ -82,9 +82,9 @@ export default function CardDespesaAdicional(props) {
                                 <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.sim')}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.botaoNao} onPress={async () => {
-                                
+
                                 setShowLoaderDelete(false);
-            
+
                             }} >
                                 <Text style={styles.botaoSalvarTexto}>{i18n.t('botoes.nao')}</Text>
                             </TouchableOpacity>
@@ -94,14 +94,14 @@ export default function CardDespesaAdicional(props) {
             </Modal>
             <View style={styles.containerRow}>
                 <Text style={styles.texto}>{props.data}</Text>
-                <TouchableOpacity disabled={!props.editar} onPress={() =>
-                    navigation.navigate('EditarDespesaAdicional', 
-                    { 
-                        data: props.data,
-                        descricao: props.descricao,
-                        valor: props.valor.toFixed(2),
-                        despesasExtras: props.item
-                    })} >
+                <TouchableOpacity disabled={props.editar == false && props.tipoOrcamento == 'Geral' ? true : false} onPress={() =>
+                    navigation.navigate('EditarDespesaAdicional',
+                        {
+                            data: props.data,
+                            descricao: props.descricao,
+                            valor: props.valor.toFixed(2),
+                            despesasExtras: props.item
+                        })} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
                 </TouchableOpacity>
             </View>
@@ -110,15 +110,15 @@ export default function CardDespesaAdicional(props) {
             </View>
             <View style={styles.containerRow}>
                 <Text style={styles.texto}>{i18n.t('cardDespesa.valor')}: R$ {props.valor.toFixed(2)}</Text>
-                <TouchableOpacity disabled={!props.editar} onPress={() =>{
+                <TouchableOpacity disabled={props.editar == false && props.tipoOrcamento == 'Geral' ? true : false} onPress={() => {
                     setShowLoaderDelete(true);
                 }}>
                     <MaterialCommunityIcons name={'close-thick'} color={'black'} size={25} />
                 </TouchableOpacity>
             </View>
             {props.modificadoPor != "" && (<View style={styles.containerRow}>
-                                        <Text style={styles.texto}>{i18n.t('cardDespesa.ultimaModificacao')}: {props.modificadoPor}</Text>
-                                    </View>)
+                <Text style={styles.texto}>{i18n.t('cardDespesa.ultimaModificacao')}: {props.modificadoPor}</Text>
+            </View>)
             }
         </View>
 

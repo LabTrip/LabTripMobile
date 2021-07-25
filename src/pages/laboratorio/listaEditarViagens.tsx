@@ -121,8 +121,8 @@ export default function ListaEditarViagens({ route }) {
         data={viagens}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <CardViagem nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')}
-            dataFim={moment(item.dataFim).format('DD/MM/yyyy')} dono={item.dono} local={""} status={item.statusId}
+          <CardViagem nome={item.descricao} dataInicio={i18n.locale == 'pt-BR'? moment(item.dataInicio).format('DD/MM/yyyy') : moment(item.dataInicio).format('MM/DD/yyyy')}
+            dataFim={ i18n.locale == 'pt-BR'? moment(item.dataFim).format('DD/MM/yyyy') : moment(item.dataFim).format('MM/DD/yyyy') } dono={item.dono} local={""} status={item.statusId}
             navigate={"MenuDetalhesViagemAgencia"} viagem={item} />
         )}
       />

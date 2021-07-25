@@ -3,7 +3,7 @@ const messages = {
         translations: {
             login: {
                 titulo: 'Hello!',
-                saudacao: 'Welcome to Labtrip.',
+                saudacao: 'Welcome to LabTrip.',
                 senha: 'password',
                 redefinir: 'Forgot your password?',
                 primeiroAcesso: 'First access?'

@@ -157,7 +157,7 @@ export default function CriarViagem() {
             <View style={styles.containerData}>
                 <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
                     <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                        keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                        keyboardType="default" value={ i18n.locale == 'pt-BR' ? moment(dataInicio).format('DD/MM/yyyy') : moment(dataInicio).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
                     {showDataInicio && (
                         <DateTimePicker
                             testID="dateTimePicker"
@@ -169,7 +169,7 @@ export default function CriarViagem() {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataFim}>
                     <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                        keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                        keyboardType="default" value={ i18n.locale == 'pt-BR' ? moment(dataFim).format('DD/MM/yyyy') : moment(dataFim).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
                     {showDataFim && (
                         <DateTimePicker
                             testID="dateTimePicker"

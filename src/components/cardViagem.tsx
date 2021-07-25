@@ -101,7 +101,7 @@ export default function CardViagem(props) {
     return (
         <TouchableOpacity style={[styles.cardViagens,
         { backgroundColor: corDoCard, borderLeftColor: corBordaDoCard }]}
-            onPress={() => navigation.navigate(props.navigate, { viagem: props.viagem })}>
+            onPress={() =>  navigation.navigate(props.navigate, { viagem: props.viagem })}>
             <Text style={styles.nome}>{props.nome}</Text>
             <Text>
                 <Text style={styles.label}>{i18n.t('cardViagem.inicio')}:</Text> {props.dataInicio}

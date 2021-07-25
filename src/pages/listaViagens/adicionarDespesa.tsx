@@ -92,7 +92,7 @@ export default function AdicionarDespesa({ route }) {
             />
             <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
                 <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                    keyboardType="default" value={moment(data).format('DD/MM/yyyy')} editable={false} />
+                    keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(data).format('DD/MM/yyyy') : moment(data).format('MM/DD/yyyy')} editable={false} />
                 {show && (
                     <DateTimePicker
                         testID="dateTimePicker"

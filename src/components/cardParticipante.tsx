@@ -123,13 +123,15 @@ export default function CardParticipante(props) {
     }
   }
 
-
-
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   if (props.dono == true) {
     icon = 'crown';
     color = '#575757';
-  } else {
+  } else if (props.permissaoViagemId == 3) {
+    icon = 'account-hard-hat';
+    color = '#575757';
+  }
+  else {
     icon = 'close-thick';
     color = 'red';
 

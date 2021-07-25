@@ -164,7 +164,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
                     }}>
                     {
                         filtroDatas?.map((a) => {
-                            return <Picker.Item key={a} label={a} value={a} />
+                            return <Picker.Item key={a} label={i18n.locale == 'pt-BR'? a : moment(a, 'DD/MM/yyyy').format('MM/DD/yyyy')} value={a} />
                         })
                     }
                 </Picker>

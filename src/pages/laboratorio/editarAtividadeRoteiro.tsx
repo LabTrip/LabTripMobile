@@ -22,9 +22,9 @@ const atividadesDropdownModel = (atividade, index) => ({
     id: atividade.id,
     atividadeId: atividade.id,
     name: atividade.descricao
-  });
+});
 
-interface Atividades{
+interface Atividades {
     id: string,
     name: string,
     atividadeId: string
@@ -33,7 +33,7 @@ interface Atividades{
 export default function EditarAtividadeRoteiro({ route }) {
     const navigation = useNavigation();
     const [roteiroAtividade, setRoteiroAtividade] = useState(route.params.atividade);
-    const [atividade, setAtividade] = useState({id: route.params.atividade.atividadeId, descricao: route.params.atividade.local});
+    const [atividade, setAtividade] = useState({ id: route.params.atividade.atividadeId, descricao: route.params.atividade.local });
     const [valor, setValor] = useState('0')
     const [descAtividade, setDescAtividade] = useState(route.params.atividade.local);
     const [dataInicio, onChangeTextDataInicio] = useState(new Date());
@@ -53,13 +53,13 @@ export default function EditarAtividadeRoteiro({ route }) {
     var itemsExample = [];
 
     const [items, setItems] = useState<Atividades[]>(itemsExample);
-    
+
     const retornaToken = async () => {
-      let localToken = await AsyncStorage.getItem('AUTH');
-      if (localToken != null) {
-          localToken = JSON.parse(localToken)
-      }
-      return localToken;
+        let localToken = await AsyncStorage.getItem('AUTH');
+        if (localToken != null) {
+            localToken = JSON.parse(localToken)
+        }
+        return localToken;
     }
 
     const buscaAtividades = async (descricaoAtividade) => {
@@ -76,17 +76,17 @@ export default function EditarAtividadeRoteiro({ route }) {
         const json = await response.json();
         //seta lista de atividades se o status da resposta for 200
         if (response.status == 200 || response.status == 304) {
-            if(json.length == 0){
+            if (json.length == 0) {
                 console.log('aqui')
-                const i = [{id: 1, descricao: 'Nenhuma atividade encontrada'}]
+                const i = [{ id: 1, descricao: 'Nenhuma atividade encontrada' }]
                 setItems(i.map((a, i) => atividadesDropdownModel(a, i)))
             }
-            else{
+            else {
                 setItems(json.map((a, i) => atividadesDropdownModel(a, i)))
             }
             //setAtividades(json);
         }
-        else{
+        else {
             console.log(response)
         }
     }
@@ -108,7 +108,7 @@ export default function EditarAtividadeRoteiro({ route }) {
             setAtividade(json)
             setDescAtividade(json.descricao);
         }
-        else{
+        else {
             console.log(response)
         }
     }
@@ -135,23 +135,23 @@ export default function EditarAtividadeRoteiro({ route }) {
             onChangeTextHoraFim(new Date(json.dataFim))
             setObservacoesAgente(json.observacaoAgente)
         }
-        else{
+        else {
             console.log(response)
         }
     }
 
     useEffect(() => {
         const buscaDados = async () => {
-            try{
+            try {
                 setShowLoader(true)
                 await buscaAtividadePorId();
                 await buscaRoteiroAtividadePorId();
                 console.log('buscou')
             }
-            catch(e){
+            catch (e) {
 
             }
-            finally{
+            finally {
                 setShowLoader(false)
             }
         }
@@ -166,7 +166,7 @@ export default function EditarAtividadeRoteiro({ route }) {
     const onChangeDataInicio = (event, selectedDate) => {
         const currentDate = selectedDate || new Date();
         let date = new Date(currentDate)
-        date.setHours(horaInicio.getHours(),horaInicio.getMinutes(),0)
+        date.setHours(horaInicio.getHours(), horaInicio.getMinutes(), 0)
         setShowDataInicio(Platform.OS === 'ios');
         onChangeTextDataInicio(date);
     };
@@ -200,7 +200,7 @@ export default function EditarAtividadeRoteiro({ route }) {
     const onChangeDataFim = (event, selectedDate) => {
         const currentDate = selectedDate || new Date();
         let date = new Date(currentDate)
-        date.setHours(horaFim.getHours(),horaFim.getMinutes(),0)
+        date.setHours(horaFim.getHours(), horaFim.getMinutes(), 0)
         setShowDataFim(Platform.OS === 'ios');
         onChangeTextDataFim(date);
     };
@@ -217,10 +217,10 @@ export default function EditarAtividadeRoteiro({ route }) {
     };
 
     const salvarAtividadeRoteiro = async () => {
-        try{
+        try {
             let localToken = await retornaToken() || '';
 
-            const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/'+ roteiroAtividade.id, {
+            const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades/' + roteiroAtividade.id, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',
@@ -233,7 +233,7 @@ export default function EditarAtividadeRoteiro({ route }) {
                     "roteiroId": roteiroAtividade.roteiroId,
                     "versaoRoteiro": roteiroAtividade.versaoRoteiro,
                     "dataInicio": dataInicio.toString(),
-                    "dataFim":  dataFim.toString(),
+                    "dataFim": dataFim.toString(),
                     "custo": custoRefField.getRawValue(),
                     "statusId": 1,
                     "observacaoCliente": "",
@@ -247,11 +247,11 @@ export default function EditarAtividadeRoteiro({ route }) {
                 alert(i18n.t('adicionarAtividadeRoteiro.sucessoAlterar'))
                 setTimeout(() => navigation.goBack(), 1500)
             }
-            else{
+            else {
                 alert(i18n.t('adicionarAtividadeRoteiro.erroAlterar') + json)
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e)
             alert(i18n.t('adicionarAtividadeRoteiro.erroAlterar'))
         }
@@ -263,171 +263,171 @@ export default function EditarAtividadeRoteiro({ route }) {
     }
 
     return (
-            <SafeAreaView style={styles.container}>
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={showLoader}
-                    onRequestClose={() => {
-                        setShowLoader(!showLoader)
-                    }}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
-                            <Text style={styles.textStyle}>
-                                {i18n.t('modais.aguarde')}
-                            </Text>
-                        </View>
+        <SafeAreaView style={styles.container}>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={showLoader}
+                onRequestClose={() => {
+                    setShowLoader(!showLoader)
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
+                        <Text style={styles.textStyle}>
+                            {i18n.t('modais.aguarde')}
+                        </Text>
                     </View>
+                </View>
 
-                </Modal>
-                <View style={styles.centeredContainer}>
-                    <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.atividade')}</Text>
-                    <View style={styles.containerRow}>
-                        <SearchableDropdown
-                            multi={false}
-                            onItemSelect={(item) => {
-                                setAtividade(item);
-                                setDescAtividade(item.name);
-                            }}
-                            containerStyle={{ padding: 5 , width: '92%', alignItems: 'center', justifyContent: 'center'}}
-                            itemStyle={{
-                                padding: 10,
-                                marginTop: 2,
-                                backgroundColor: '#EBEBEB',
-                                borderColor: '#bbb',
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                width: '100%',
-                                flexGrow: 1
-                            }}
-                            itemTextStyle={{ color: '#222' }}
-                            itemsContainerStyle={{ maxHeight: 140, width: '90%'}}
-                            items={items}
-                            resetValue={false}
-                            textInputProps={
-                                {
-                                    placeholder: "Pesquisar atividades",
-                                    underlineColorAndroid: "transparent",
-                                    style: styles.input,
-                                    value: descAtividade,
-                                    onTextChange: async (text) => {
-                                        setDescAtividade(text);
-                                        buscaAtividades(text) 
-                                    }
+            </Modal>
+            <View style={styles.centeredContainer}>
+                <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.atividade')}</Text>
+                <View style={styles.containerRow}>
+                    <SearchableDropdown
+                        multi={false}
+                        onItemSelect={(item) => {
+                            setAtividade(item);
+                            setDescAtividade(item.name);
+                        }}
+                        containerStyle={{ padding: 5, width: '92%', alignItems: 'center', justifyContent: 'center' }}
+                        itemStyle={{
+                            padding: 10,
+                            marginTop: 2,
+                            backgroundColor: '#EBEBEB',
+                            borderColor: '#bbb',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            width: '100%',
+                            flexGrow: 1
+                        }}
+                        itemTextStyle={{ color: '#222' }}
+                        itemsContainerStyle={{ maxHeight: 140, width: '90%' }}
+                        items={items}
+                        resetValue={false}
+                        textInputProps={
+                            {
+                                placeholder: "Pesquisar atividades",
+                                underlineColorAndroid: "transparent",
+                                style: styles.input,
+                                value: descAtividade,
+                                onTextChange: async (text) => {
+                                    setDescAtividade(text);
+                                    buscaAtividades(text)
                                 }
                             }
-                            listProps={
+                        }
+                        listProps={
                             {
                                 nestedScrollEnabled: true,
                             }
-                            }
-                        />
-                        <BotaoMais style={{width: '100%', alignitems: 'center', justifyContent: 'center', marginHorizontal: '1%'}} onPress={() => navigation.navigate('CriarAtividade', {callBackCriaAtividade: callbackAtividade})}></BotaoMais>
-                    </View>
+                        }
+                    />
+                    <BotaoMais style={{ width: '100%', alignitems: 'center', justifyContent: 'center', marginHorizontal: '1%' }} onPress={() => navigation.navigate('CriarAtividade', { callBackCriaAtividade: callbackAtividade })}></BotaoMais>
                 </View>
-                <ScrollView>
-                    <View style={{alignItems: 'center'}}>
-                        <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.custo')}</Text>
-                        <TextInputMask
-                            type={'money'}
-                            options={{
-                                maskType: 'INTERNATIONAL',
+            </View>
+            <ScrollView>
+                <View style={{ alignItems: 'center' }}>
+                    <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.custo')}</Text>
+                    <TextInputMask
+                        type={'money'}
+                        options={{
+                            maskType: 'INTERNATIONAL',
 
-                            }}
-                            value={valor}
-                            style={styles.input}
-                            onChangeText={(valor) => {
-                                setValor(valor);
-                            }}
-                            placeholder="Valor da atividade"
-                            ref={(ref) => {custoRefField = ref}}
-                        />
-                        <View style={styles.containerData}>
-                            <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.dataInicio')}</Text>
-                        </View>
-                        <View style={styles.containerData}>
-                            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
-                                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                                    keyboardType="default" value={moment(dataInicio).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                                {showDataInicio && (
-                                    <DateTimePicker
-                                        testID="dateTimePicker"
-                                        value={dataFim}
-                                        display="default"
-                                        onChange={onChangeDataInicio}
-                                    />
-                                )}
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarHoraInicio}>
-                                <TextInput placeholder={"HH:mm"} style={styles.inputDate}
-                                    keyboardType="default" value={moment(horaInicio).format('HH:mm')} autoCapitalize={'none'} editable={false} />
-                                {showHoraInicio && (
-                                    <DateTimePicker
-                                        is24Hour={true}
-                                        mode='time'
-                                        testID="dateTimePicker"
-                                        value={horaInicio}
-                                        display="default"
-                                        onChange={onChangeHoraInicio}
-                                    />
-                                )}
-                            </TouchableOpacity>
-                        </View>
-                        
-                        <View style={styles.containerData}>
-                            <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.dataFim')}</Text>
-                        </View>
-                        <View style={styles.containerData}>
-                            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataFim}>
-                                <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                                    keyboardType="default" value={moment(dataFim).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
-                                {showDataFim && (
-                                    <DateTimePicker
-                                        testID="dateTimePicker"
-                                        value={dataFim}
-                                        display="default"
-                                        onChange={onChangeDataFim}
-                                    />
-                                )}
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarHoraFim}>
-                                <TextInput placeholder={"HH:mm"} style={styles.inputDate}
-                                    keyboardType="default" value={moment(horaFim).format('HH:mm')} autoCapitalize={'none'} editable={false} />
-                                {showHoraFim && (
-                                    <DateTimePicker
-                                        is24Hour={true}
-                                        mode='time'
-                                        testID="dateTimePicker"
-                                        value={horaFim}
-                                        display="default"
-                                        onChange={onChangeHoraFim}
-                                    />
-                                )}
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.observacoes')}</Text>
-                        <TextInput  style={styles.input} multiline={true} numberOfLines={4}
-                            value={observacoesAgente} onChangeText={(texto) => setObservacoesAgente(texto)} />
-                        <TouchableOpacity style={styles.botaoCriar} onPress={async () => {
-                            const res = await salvarAtividadeRoteiro();
-                        }}>
-                            <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.salvar')}</Text>
+                        }}
+                        value={valor}
+                        style={styles.input}
+                        onChangeText={(valor) => {
+                            setValor(valor);
+                        }}
+                        placeholder="Valor da atividade"
+                        ref={(ref) => { custoRefField = ref }}
+                    />
+                    <View style={styles.containerData}>
+                        <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.dataInicio')}</Text>
+                    </View>
+                    <View style={styles.containerData}>
+                        <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
+                            <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                                keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(dataInicio).format('DD/MM/yyyy') : moment(dataInicio).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
+                            {showDataInicio && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={dataFim}
+                                    display="default"
+                                    onChange={onChangeDataInicio}
+                                />
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarHoraInicio}>
+                            <TextInput placeholder={"HH:mm"} style={styles.inputDate}
+                                keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(horaInicio).format('HH:mm') : moment(horaInicio).format('hh:mm A')} autoCapitalize={'none'} editable={false} />
+                            {showHoraInicio && (
+                                <DateTimePicker
+                                    is24Hour={i18n.locale == 'pt-BR' ? true : false}
+                                    mode='time'
+                                    testID="dateTimePicker"
+                                    value={horaInicio}
+                                    display="default"
+                                    onChange={onChangeHoraInicio}
+                                />
+                            )}
                         </TouchableOpacity>
                     </View>
-                </ScrollView>
-            </SafeAreaView>
+
+                    <View style={styles.containerData}>
+                        <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.dataFim')}</Text>
+                    </View>
+                    <View style={styles.containerData}>
+                        <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataFim}>
+                            <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
+                                keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(dataFim).format('DD/MM/yyyy') : moment(dataFim).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
+                            {showDataFim && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={dataFim}
+                                    display="default"
+                                    onChange={onChangeDataFim}
+                                />
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarHoraFim}>
+                            <TextInput placeholder={"HH:mm"} style={styles.inputDate}
+                                keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(horaFim).format('HH:mm') : moment(horaFim).format('hh:mm A')} autoCapitalize={'none'} editable={false} />
+                            {showHoraFim && (
+                                <DateTimePicker
+                                    is24Hour={i18n.locale == 'pt-BR' ? true : false}
+                                    mode='time'
+                                    testID="dateTimePicker"
+                                    value={horaFim}
+                                    display="default"
+                                    onChange={onChangeHoraFim}
+                                />
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={styles.labelData}>{i18n.t('adicionarAtividadeRoteiro.observacoes')}</Text>
+                    <TextInput style={styles.input} multiline={true} numberOfLines={4}
+                        value={observacoesAgente} onChangeText={(texto) => setObservacoesAgente(texto)} />
+                    <TouchableOpacity style={styles.botaoCriar} onPress={async () => {
+                        const res = await salvarAtividadeRoteiro();
+                    }}>
+                        <Text style={styles.botaoCriarTexto}>{i18n.t('botoes.salvar')}</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    containerRow:{
+    containerRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    centeredContainer:{
+    centeredContainer: {
         width: '92%',
         flexDirection: 'column',
         alignItems: 'center',

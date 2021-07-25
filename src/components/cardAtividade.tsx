@@ -74,14 +74,23 @@ export default function CardAtividade(props) {
     let corBotaoCancelar = '#FF2424';
     let disabled = false;
 
-    getUserId();
-
-    //muda cor e desativa botões se o usuário não for o dono da viagem.
-    if (props.viagem.usuarioDonoId != idUsuario) {
+    if (props.item.statusId == 4) {
+        corBotaoCancelar = '#FF2424';
+        corBotaoConfimar = '#d3d3d3';
+        disabled = true;
+    }
+    else if (props.item.statusId == 5) {
+        corBotaoCancelar = '#d3d3d3';
+        corBotaoConfimar = '#0FD06F';
+        disabled = true;
+    } //muda cor e desativa botões se o usuário não for o dono da viagem.
+    else if (props.viagem.usuarioDonoId != idUsuario) {
         corBotaoConfimar = '#d3d3d3';
         corBotaoCancelar = '#d3d3d3';
         disabled = true;
     }
+    
+    getUserId();
 
     return (
         <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.item, data: props.data })}>

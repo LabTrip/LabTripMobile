@@ -396,10 +396,10 @@ export default function DetalhesAtividade({ route }) {
                     <View style={styles.containerDetalhes}>
                         <Text style={styles.tituloDetalhes}>{route.params.atividade.local}</Text>
                         <View style={styles.containerDataStatus}>
-                            <Text style={styles.textoDetalhes}>{i18n.t('detalhesAtividade.dataInicio') + ' ' + moment(atividade.dataInicio).format('DD/MM/yyyy') + ' ' + moment(atividade.dataInicio).format('HH:mm')}</Text>
+                            <Text style={styles.textoDetalhes}>{i18n.t('detalhesAtividade.dataInicio') + ' ' + (i18n.locale == 'pt-BR' ? moment(atividade.dataInicio).format('DD/MM/yyyy') :moment(atividade.dataInicio).format('MM/DD/yyyy')) + ' ' + (i18n.locale == 'pt-BR' ? moment(atividade.dataInicio).format('HH:mm') : moment(atividade.dataInicio).format('hh:mm A'))}</Text>
                         </View>
                         <View style={styles.containerDataStatus}>
-                            <Text style={styles.textoDetalhes}>{i18n.t('detalhesAtividade.dataFim') + ' ' + moment(atividade.dataFim).format('DD/MM/yyyy') + ' ' + moment(atividade.dataFim).format('HH:mm')}</Text>
+                            <Text style={styles.textoDetalhes}>{i18n.t('detalhesAtividade.dataFim') + ' ' + (i18n.locale == 'pt-BR' ? moment(atividade.dataFim).format('DD/MM/yyyy') : moment(atividade.dataFim).format('MM/DD/yyyy')) + ' ' + (i18n.locale == 'pt-BR' ? moment(atividade.dataFim).format('HH:mm') : moment(atividade.dataFim).format('hh:mm A'))}</Text>
                         </View>
                         <Text style={styles.textoDetalhes}>{atividade.endereco}</Text>
                         <Text style={[styles.textoDetalhes, { color: corDoStatus }]}>{status}</Text>

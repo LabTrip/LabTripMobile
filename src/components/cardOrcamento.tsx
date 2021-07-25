@@ -12,7 +12,7 @@ export default function CardOrcamento(props) {
         <View style={styles.cardOrcamento}>
             <View style={styles.containerRow}>
                 <Text style={styles.texto}>{i18n.t('cardOrcamento.orcamentoPlanejado')}: R$ {props.planejado.toFixed(2)}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('EditarOrcamentoPlanejado', {orcamento:props.planejado.toFixed(2), roteiro: props.roteiro, tipoOrcamento: props.tipoOrcamento, atualizarEstado: props.atualizarEstado})} >
+                <TouchableOpacity disabled={props.editar == false && props.tipoOrcamento == 'Geral' ? true : false} onPress={() => navigation.navigate('EditarOrcamentoPlanejado', {orcamento:props.planejado.toFixed(2), roteiro: props.roteiro, tipoOrcamento: props.tipoOrcamento, atualizarEstado: props.atualizarEstado})} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
                 </TouchableOpacity>
             </View>

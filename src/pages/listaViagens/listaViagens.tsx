@@ -83,8 +83,8 @@ export default function ListaViagens() {
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         renderItem={({ item }) => (
-          <CardViagem nome={item.descricao} dataInicio={moment(item.dataInicio).format('DD/MM/yyyy')}
-            dataFim={moment(item.dataFim).format('DD/MM/yyyy')} viagem={item} dono={item.dono}
+          <CardViagem nome={item.descricao} dataInicio={ i18n.locale == 'pt-BR'? moment(item.dataInicio).format('DD/MM/yyyy') : moment(item.dataFim).format('MM/DD/yyyy')}
+            dataFim={i18n.locale == 'pt-BR'? moment(item.dataFim).format('DD/MM/yyyy') : moment(item.dataFim).format('MM/DD/yyyy')} viagem={item} dono={item.dono}
             local={""} status={item.statusId} navigate={"MenuDetalhesViagem"} item={item} />
         )}
       />

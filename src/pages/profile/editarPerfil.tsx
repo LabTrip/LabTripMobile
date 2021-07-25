@@ -297,7 +297,7 @@ export default function EditarPerfil() {
 
                     <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
                         <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                            keyboardType="default" value={moment(date).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+                            keyboardType="default" value={i18n.locale == 'pt-BR'? moment(date).format('DD/MM/yyyy') : moment(date).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
                         {show && (
                             <DateTimePicker
                                 testID="dateTimePicker"

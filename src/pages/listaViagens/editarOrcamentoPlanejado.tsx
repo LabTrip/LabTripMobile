@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { TextInputMask } from 'react-native-masked-text';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../../translate/i18n';
+import { documentDirectory } from 'expo-file-system';
 
 export default function EditarOrcamentoPlanejado({ route }) {
     const [orcPlanejado, setOrcPlanejado] = useState(route.params.orcamento.toString());
@@ -52,8 +53,11 @@ export default function EditarOrcamentoPlanejado({ route }) {
             <TextInputMask
                 type={'money'}
                 options={{
-                    maskType: 'INTERNATIONAL',
-
+                    precision: 2,
+                    separator: ',',
+                    delimiter: '.',
+                    unit: 'R$',
+                    suffixUnit: ''
                 }}
                 value={orcPlanejado}
                 style={styles.input}

@@ -171,7 +171,7 @@ export default function CriarUsuario() {
 
       <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
           <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-              keyboardType="default" value={moment(dataNasc).format('DD/MM/yyyy')} autoCapitalize={'none'} editable={false} />
+              keyboardType="default" value={i18n.locale == 'pt-BR'? moment(dataNasc).format('DD/MM/yyyy') : moment(dataNasc).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
           {show && (
               <DateTimePicker
                   testID="dateTimePicker"
@@ -233,7 +233,7 @@ export default function CriarUsuario() {
               let response = await criaUsuario({
                 nome: nomeUsuario,
                 email: email,
-                dataNascimento: moment(dataNasc, 'DD/MM/YYYY').format("YYYY-MM-DD"),
+                dataNascimento: moment(dataNasc, 'DD/MM/YYYY'),
                 telefone: telefone.replace('(','').replace(')','').replace('-',''),
                 perfilId: selectedValue
               }, Token);
