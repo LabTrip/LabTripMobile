@@ -137,10 +137,11 @@ const messages = {
                 adicionarProprietario: 'A viagem deve ter um proprietário.',
                 buscarNovamente: 'Nenhum usuário encontrado. Digite o e-mail completo.',
                 digiteEmailCompleto: 'Insira o e-mail completo.',
-                dataInicio: 'Data de início',
-                dataFim: 'Data fim',
+                dataInicio: 'Data do início',
+                dataFim: 'Data do fim',
                 deveTerApelido: 'A viagem deve ter um nome.',
-                emailDoProprietario: 'E-mail do proprietário'
+                emailDoProprietario: 'E-mail do proprietário',
+                moedaUtilizada: 'Moeda utilizada'
             },
             editarUsuario: {
                 sucessoSalvar: 'Usuário salvo com sucesso.',

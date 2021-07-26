@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useLinkProps, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInputMask } from 'react-native-masked-text';
@@ -79,8 +79,11 @@ export default function AdicionarDespesa({ route }) {
             <TextInputMask
                 type={'money'}
                 options={{
-                    maskType: 'INTERNATIONAL',
-
+                    precision: 2,
+                    separator: ',',
+                    delimiter: '.',
+                    unit: route.params.moeda+' ',
+                    suffixUnit: ''
                 }}
                 value={valor}
                 style={styles.input}

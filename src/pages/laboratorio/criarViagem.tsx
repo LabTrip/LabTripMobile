@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CardProprietario from '../../components/cardProprietario';
@@ -6,6 +6,7 @@ import BotaoLupa from '../../components/botaoLupa';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../../translate/i18n';
+import { Picker } from '@react-native-picker/picker';
 
 
 const moment = require('moment');
@@ -16,6 +17,11 @@ interface Participante {
     viagemId: string,
     permissaoViagemId: string,
     descricao: string
+}
+
+interface Moeda {
+    id: number,
+    descricaoMoeda: string
 }
 
 export default function CriarViagem() {
@@ -30,6 +36,8 @@ export default function CriarViagem() {
     const [showDataInicio, setShowDataInicio] = useState(false);
     const [showDataFim, setShowDataFim] = useState(false);
     const [mode, setMode] = useState('date');
+    const [selectedValue, setSelectedValue] = useState();
+    const [moedas, setMoedas] = useState<Moeda[]>([]);
 
     const buscaUsuario = async (email) => {
         return await fetch('https://labtrip-backend.herokuapp.com/usuarios/email/' + email, {
@@ -57,6 +65,7 @@ export default function CriarViagem() {
                 usuarioDonoId: participantes[0].id,
                 criadoPorId: userId,
                 statusId: 1,
+                moedaId: selectedValue,
                 participantes: [
                     {
                         usuarioId: participantes[0].id,
@@ -146,6 +155,38 @@ export default function CriarViagem() {
         onChangeTextDataFim(currentDate);
     };
 
+    const buscaMoedas = async () => {
+        return await fetch('https://labtrip-backend.herokuapp.com/viagens/moedas', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
+        });
+    }
+
+    //seta as moedas disponíveis na viagem
+    const setItemsPickerMoeda = async () => {
+        const value = await AsyncStorage.getItem('AUTH');
+        if (value !== null) {
+            token = JSON.parse(value)
+            const response = await buscaMoedas();
+            const json = await response.json();
+            if (response.status == 200) {
+                setMoedas(json);
+            }
+            else {
+                alert(json.mensagem);
+            }
+        }
+    }
+
+    useEffect(() => {
+        setItemsPickerMoeda();
+    }, []);
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.labelData}>{i18n.t('editarViagem.nomeViagem')}</Text>
@@ -157,7 +198,7 @@ export default function CriarViagem() {
             <View style={styles.containerData}>
                 <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataInicio}>
                     <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                        keyboardType="default" value={ i18n.locale == 'pt-BR' ? moment(dataInicio).format('DD/MM/yyyy') : moment(dataInicio).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
+                        keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(dataInicio).format('DD/MM/yyyy') : moment(dataInicio).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
                     {showDataInicio && (
                         <DateTimePicker
                             testID="dateTimePicker"
@@ -169,7 +210,7 @@ export default function CriarViagem() {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.containerDataCelular} onPress={mostrarDataFim}>
                     <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                        keyboardType="default" value={ i18n.locale == 'pt-BR' ? moment(dataFim).format('DD/MM/yyyy') : moment(dataFim).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
+                        keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(dataFim).format('DD/MM/yyyy') : moment(dataFim).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
                     {showDataFim && (
                         <DateTimePicker
                             testID="dateTimePicker"
@@ -180,6 +221,21 @@ export default function CriarViagem() {
                     )}
                 </TouchableOpacity>
             </View>
+            <Text style={styles.labelData}>{i18n.t('editarViagem.moedaUtilizada')}</Text>
+            <Picker
+                prompt="Moeda utilizada"
+                mode="dropdown"
+                selectedValue={selectedValue}
+                style={{ height: 50, width: '30%' }}
+                onValueChange={(itemValue) => setSelectedValue(itemValue)}
+            >
+                {moedas.map(moeda => {
+                    return (
+                        <Picker.Item key={moeda.id} label={moeda.descricaoMoeda} value={moeda.id} />
+                    )
+                })}
+            </Picker>
+
             <Text style={styles.labelData}>{i18n.t('editarViagem.adicionarProprietarioLabel')}</Text>
             <View style={styles.containerAddFuncionarios}>
                 <TextInput placeholder={i18n.t('editarViagem.emailDoProprietario')} value={email} onChangeText={texto => onChangeTextEmail(texto)}
@@ -219,7 +275,7 @@ const styles = StyleSheet.create({
     },
     containerData: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         alignItems: 'center',
         width: '100%'
     },

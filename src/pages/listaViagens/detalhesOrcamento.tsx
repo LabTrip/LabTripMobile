@@ -45,9 +45,9 @@ export default function DetalhesOrcamento({ route }) {
     let tipoOrcamento = "Individual"
     //adicionando icone de chat quando usuario vier pelas rotas de orçamento geral.
     if (rota == 'Geral' || rota == 'Orçamento' || rota == 'General') {
-        botaoChat = <TouchableOpacity style={{ marginTop: '2%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem , topico: {id: 0, descricao: 'Orçamento'}})}>
-                        <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
-                    </TouchableOpacity>;
+        botaoChat = <TouchableOpacity style={{ marginTop: '2%' }} onPress={() => navigation.navigate('Chat', { viagem: viagem, topico: { id: 0, descricao: 'Orçamento' } })}>
+            <MaterialCommunityIcons name={'chat-processing'} color={'#575757'} size={42} />
+        </TouchableOpacity>;
         //mostrando botão de criar despesa adicional caso o usuário tenha permissão de membro na viagem
         alterar = route.params.viagem.alterar;
         tipoOrcamento = "Geral"
@@ -162,23 +162,23 @@ export default function DetalhesOrcamento({ route }) {
                     <View style={styles.containerTop}>
                         {alterar
                             ? < BotaoMais onPress={() =>
-                                navigation.navigate('AdicionarDespesa', { orcamento: orcamento })} />
+                                navigation.navigate('AdicionarDespesa', { orcamento: orcamento, moeda: route.params.viagem.descricaoMoeda })} />
                             : null}
                         {botaoChat}
                     </View>
-                    <CardOrcamento roteiro={roteiro} atualizarEstado={onRefresh} tipoOrcamento={tipoOrcamento} editar={viagem.alterar} planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} />
+                    <CardOrcamento roteiro={roteiro} atualizarEstado={onRefresh} tipoOrcamento={tipoOrcamento} editar={viagem.alterar} planejado={orcamento?.valorTotal || 0} saldoAtual={orcamento?.valorConsumido || 0} moeda={route.params.viagem.descricaoMoeda} />
                     <Text style={styles.label}>{i18n.t('detalhesOrcamento.despesasAdicionais')}</Text>
                     {
                         orcamento?.despesasExtras.map((d, index) => {
                             let modificadoPor = "";
-                            if(tipoOrcamento == 'Geral'){
+                            if (tipoOrcamento == 'Geral') {
                                 modificadoPor = d.nomeUsuario
-                             }
+                            }
                             return (
-                                <CardDespesasAdicionais key={d.id} id={d.id} tipoOrcamento={tipoOrcamento} data={i18n.locale == 'pt-BR' ? moment(d.data).format('DD/MM/YYYY') : moment(d.data).format('MM/DD/YYYY')} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} modificadoPor={modificadoPor}/>
+                                <CardDespesasAdicionais key={d.id} id={d.id} tipoOrcamento={tipoOrcamento} data={i18n.locale == 'pt-BR' ? moment(d.data).format('DD/MM/YYYY') : moment(d.data).format('MM/DD/YYYY')} moeda={route.params.viagem.descricaoMoeda} editar={viagem.alterar} descricao={d.descricao} valor={d.custo} item={d} modificadoPor={modificadoPor} />
                             )
                         })
-                        
+
                     }
                 </View>
             )}

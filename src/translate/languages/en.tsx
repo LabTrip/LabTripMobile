@@ -143,7 +143,8 @@ const messages = {
                 dataInicio: 'Start date',
                 dataFim: 'End date',
                 deveTerApelido: 'The travel must have a name.',
-                emailDoProprietario: "Owner's email"
+                emailDoProprietario: "Owner's email",
+                moedaUtilizada: 'Currency used'
             },
             editarUsuario: {
                 sucessoSalvar: 'User saved sucessful.',

@@ -78,8 +78,11 @@ export default function EditarDespesaAdicional({ route }) {
             <TextInputMask
                 type={'money'}
                 options={{
-                    maskType: 'INTERNATIONAL',
-
+                    precision: 2,
+                    separator: ',',
+                    delimiter: '.',
+                    unit: route.params.moeda + ' ',
+                    suffixUnit: ''
                 }}
                 value={valor}
                 style={styles.input}
@@ -91,7 +94,7 @@ export default function EditarDespesaAdicional({ route }) {
             />
             <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepicker}>
                 <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                    keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(data).format('DD/MM/yyyy') : moment(data).format('MM/DD/yyyy') } editable={false} />
+                    keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(data).format('DD/MM/yyyy') : moment(data).format('MM/DD/yyyy')} editable={false} />
                 {show && (
                     <DateTimePicker
                         testID="dateTimePicker"

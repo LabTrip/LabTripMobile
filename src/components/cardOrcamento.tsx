@@ -11,15 +11,15 @@ export default function CardOrcamento(props) {
     return (
         <View style={styles.cardOrcamento}>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>{i18n.t('cardOrcamento.orcamentoPlanejado')}: R$ {props.planejado.toFixed(2)}</Text>
-                <TouchableOpacity disabled={props.editar == false && props.tipoOrcamento == 'Geral' ? true : false} onPress={() => navigation.navigate('EditarOrcamentoPlanejado', {orcamento:props.planejado.toFixed(2), roteiro: props.roteiro, tipoOrcamento: props.tipoOrcamento, atualizarEstado: props.atualizarEstado})} >
+                <Text style={styles.texto}>{i18n.t('cardOrcamento.orcamentoPlanejado')}: {props.moeda} {props.planejado.toFixed(2)}</Text>
+                <TouchableOpacity disabled={props.editar == false && props.tipoOrcamento == 'Geral' ? true : false} onPress={() => navigation.navigate('EditarOrcamentoPlanejado', {orcamento:props.planejado.toFixed(2), roteiro: props.roteiro, tipoOrcamento: props.tipoOrcamento, atualizarEstado: props.atualizarEstado, moeda: props.moeda})} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
                 </TouchableOpacity>
             </View>
             <View>
             </View>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>{i18n.t('cardOrcamento.saldoAtual')}: R$ {props.saldoAtual.toFixed(2)}</Text>
+                <Text style={styles.texto}>{i18n.t('cardOrcamento.saldoAtual')}: {props.moeda} {props.saldoAtual.toFixed(2)}</Text>
             </View>
         </View>
 

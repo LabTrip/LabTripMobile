@@ -100,7 +100,8 @@ export default function CardDespesaAdicional(props) {
                             data: props.data,
                             descricao: props.descricao,
                             valor: props.valor.toFixed(2),
-                            despesasExtras: props.item
+                            despesasExtras: props.item,
+                            moeda: props.moeda
                         })} >
                     <MaterialCommunityIcons name={'pencil'} color={'black'} size={25} />
                 </TouchableOpacity>
@@ -109,7 +110,7 @@ export default function CardDespesaAdicional(props) {
                 <Text style={styles.texto}>{props.descricao}</Text>
             </View>
             <View style={styles.containerRow}>
-                <Text style={styles.texto}>{i18n.t('cardDespesa.valor')}: R$ {props.valor.toFixed(2)}</Text>
+                <Text style={styles.texto}>{i18n.t('cardDespesa.valor')}: {props.moeda} {props.valor.toFixed(2)}</Text>
                 <TouchableOpacity disabled={props.editar == false && props.tipoOrcamento == 'Geral' ? true : false} onPress={() => {
                     setShowLoaderDelete(true);
                 }}>

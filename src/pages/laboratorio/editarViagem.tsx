@@ -18,6 +18,11 @@ interface Status {
     descricao: string
 }
 
+interface Moeda {
+    id: number,
+    descricaoMoeda: string
+}
+
 export default function EditarViagem({ route }) {
     let token;
     const navigation = useNavigation();
@@ -33,6 +38,8 @@ export default function EditarViagem({ route }) {
     const [Token, setToken] = useState('');
     const [refreshing, setRefreshing] = React.useState(false);
     const [selectedValue, setSelectedValue] = useState(route.params.viagem.statusId);
+    const [selectedValueMoeda, setSelectedValueMoeda] = useState(route.params.viagem.moedaId);
+    const [moedas, setMoedas] = useState<Moeda[]>([]);
 
 
     useEffect(() => {
@@ -62,6 +69,7 @@ export default function EditarViagem({ route }) {
                 setShowLoader(false);
             }
         }
+        setItemsPickerMoeda();
         request()
 
     }, [refreshing]);
@@ -119,6 +127,7 @@ export default function EditarViagem({ route }) {
                     dataInicio: dataInicio,
                     dataFim: dataFim,
                     statusId: selectedValue,
+                    moedaId: selectedValueMoeda,
                     agenciaId: viagem.agenciaId,
                     usuarioDonoId: viagem.usuarioDonoId,
                     criadoPorId: viagem.criadoPorId
@@ -126,6 +135,8 @@ export default function EditarViagem({ route }) {
             });
             let json = await response.json();
             if (response.status >= 200 && response.status <= 299) {
+                route.params.viagem.moedaId = json.moedaId;
+                route.params.viagem.descricaoMoeda = json.descricaoMoeda;
                 alert(i18n.t('editarViagem.sucessoSalvar'))
             } else {
                 alert(json.mensagem);
@@ -136,6 +147,33 @@ export default function EditarViagem({ route }) {
         }
         finally {
             setShowLoader(false);
+        }
+    }
+
+    const buscaMoedas = async () => {
+        return await fetch('https://labtrip-backend.herokuapp.com/viagens/moedas', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            }
+        });
+    }
+
+    //seta as moedas disponíveis na viagem
+    const setItemsPickerMoeda = async () => {
+        const value = await AsyncStorage.getItem('AUTH');
+        if (value !== null) {
+            token = JSON.parse(value)
+            const response = await buscaMoedas();
+            const json = await response.json();
+            if (response.status == 200) {
+                setMoedas(json);
+            }
+            else {
+                alert(json.mensagem);
+            }
         }
     }
 
@@ -178,7 +216,7 @@ export default function EditarViagem({ route }) {
                 <View style={styles.containerData}>
                     <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataInicio}>
                         <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                            keyboardType="default" value={ i18n.locale == 'pt-BR' ? moment(dataInicio).format('DD/MM/yyyy') : moment(dataInicio).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
+                            keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(dataInicio).format('DD/MM/yyyy') : moment(dataInicio).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
                         {showDataInicio && (
                             <DateTimePicker
                                 testID="dateTimePickerInicio"
@@ -190,7 +228,7 @@ export default function EditarViagem({ route }) {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.containerDataCelular} onPress={showDatepickerDataFim}>
                         <TextInput placeholder={"DD/MM/YYYY"} style={styles.inputDate}
-                            keyboardType="default" value={ i18n.locale == 'pt-BR' ? moment(dataFim).format('DD/MM/yyyy') :  moment(dataFim).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
+                            keyboardType="default" value={i18n.locale == 'pt-BR' ? moment(dataFim).format('DD/MM/yyyy') : moment(dataFim).format('MM/DD/yyyy')} autoCapitalize={'none'} editable={false} />
                         {showDataFim && (
                             <DateTimePicker
                                 testID="dateTimePickerFim"
@@ -201,6 +239,20 @@ export default function EditarViagem({ route }) {
                         )}
                     </TouchableOpacity>
                 </View>
+                <Text style={styles.labelData}>{i18n.t('editarViagem.moedaUtilizada')}</Text>
+                <Picker
+                    prompt="Moeda utilizada"
+                    mode="dropdown"
+                    selectedValue={selectedValueMoeda}
+                    style={{ height: 50, width: '50%' }}
+                    onValueChange={(itemValue) => setSelectedValueMoeda(itemValue)}
+                >
+                    {moedas.map(moeda => {
+                        return (
+                            <Picker.Item key={moeda.id} label={moeda.descricaoMoeda} value={moeda.id} />
+                        )
+                    })}
+                </Picker>
                 <Picker
                     prompt="Status do roteiro"
                     mode="dropdown"

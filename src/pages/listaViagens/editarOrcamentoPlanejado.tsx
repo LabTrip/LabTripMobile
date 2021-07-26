@@ -56,7 +56,7 @@ export default function EditarOrcamentoPlanejado({ route }) {
                     precision: 2,
                     separator: ',',
                     delimiter: '.',
-                    unit: 'R$',
+                    unit: route.params.moeda + ' ',
                     suffixUnit: ''
                 }}
                 value={orcPlanejado}
