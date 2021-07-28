@@ -1,5 +1,5 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, Text, StyleSheet, Modal, View, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../translate/i18n'
@@ -19,6 +19,7 @@ interface Viagem {
 
 export default function CardViagem(props) {
 
+    const [showLoader, setShowLoader] = useState(false);
     const navigation = useNavigation();
 
     //busca informações da viagem.
@@ -45,25 +46,31 @@ export default function CardViagem(props) {
         });
     }
 
-    const request = async () => {
-        const value = await AsyncStorage.getItem('AUTH')
 
-        if (value != null) {
-            token = JSON.parse(value)
-            const response = await getViagem();
-            const json = await response.json();
-            const responseRoteiros = await getRoteiros();
-            const jsonRoteiros = await responseRoteiros.json();
-            if (response.status == 200 && responseRoteiros.status == 200) {
-                props.viagem.alterar = json.alterar;
-                props.viagem.roteiro = jsonRoteiros[0];
-            } else {
-                alert(i18n.t('cardViagem.erro') + ": " + json.mensagem + "\n" + i18n.t('cardViagem.verifiqueConexao'));
+    useEffect(() => {
+        const request = async () => {
+            setShowLoader(true);
+            const value = await AsyncStorage.getItem('AUTH')
+
+            if (value != null) {
+                token = JSON.parse(value)
+                const response = await getViagem();
+                const json = await response.json();
+                const responseRoteiros = await getRoteiros();
+                const jsonRoteiros = await responseRoteiros.json();
+                if (response.status == 200 && responseRoteiros.status == 200) {
+                    props.viagem.alterar = json.alterar;
+                    props.viagem.roteiro = jsonRoteiros[0];
+                } else {
+                    alert(i18n.t('cardViagem.erro') + ": " + json.mensagem + "\n" + i18n.t('cardViagem.verifiqueConexao'));
+                }
             }
+            setShowLoader(false);
         }
-    }
 
-    request();
+        request();
+
+    }, []);
 
     switch (props.status) {
         case 1:
@@ -101,7 +108,25 @@ export default function CardViagem(props) {
     return (
         <TouchableOpacity style={[styles.cardViagens,
         { backgroundColor: corDoCard, borderLeftColor: corBordaDoCard }]}
-            onPress={() =>  navigation.navigate(props.navigate, { viagem: props.viagem })}>
+            onPress={() => navigation.navigate(props.navigate, { viagem: props.viagem })}>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={showLoader}
+                onRequestClose={() => {
+                    setShowLoader(!showLoader)
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <ActivityIndicator style={styles.loader} animating={showLoader} size="large" color="#0FD06F" />
+                        <Text style={styles.textStyle}>
+                            {i18n.t('modais.aguarde')}
+                        </Text>
+                    </View>
+                </View>
+
+            </Modal>
             <Text style={styles.nome}>{props.nome}</Text>
             <Text>
                 <Text style={styles.label}>{i18n.t('cardViagem.inicio')}:</Text> {props.dataInicio}
@@ -135,9 +160,41 @@ const styles = StyleSheet.create({
     label: {
         fontWeight: 'bold'
     },
-    nome:{
+    nome: {
         textAlign: 'center',
         flexWrap: 'wrap'
-    }
+    },
+    loader: {
+        flexDirection: 'column',
+        alignContent: 'center',
+        justifyContent: 'center',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        opacity: 0.9,
+        borderRadius: 20,
+        padding: '20%',
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    textStyle: {
+        color: "black",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
 });
 
