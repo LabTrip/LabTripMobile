@@ -93,7 +93,7 @@ export default function CardAtividade(props) {
     getUserId();
 
     return (
-        <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.item, data: props.data })}>
+        <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.item, data: props.data, moeda: props.viagem.descricaoMoeda })}>
             <Text style={styles.textoTitulo}>{props.nome} </Text>
             <View style={styles.detalhes}>
                 <Text style={styles.textoDetalhes}>{i18n.t('cardAtividadeAgencia.local')}: {props.local}{"\n"}{i18n.t('cardAtividadeAgencia.horario')}: {props.horario}</Text>

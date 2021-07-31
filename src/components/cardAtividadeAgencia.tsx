@@ -10,10 +10,10 @@ export default function CardAtividadeAgencia(props) {
 
     
     return (
-        <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.atividade, planejamento: true})}>
-            <Text style={styles.textoTitulo}>{props.atividade.local} </Text>
+        <TouchableOpacity style={styles.cardRoteiro} onPress={() => navigation.navigate('DetalhesAtividade', { atividade: props.atividade, planejamento: true, moeda: props.moeda})}>
+            <Text style={styles.textoTitulo}>{props.atividade.descricao} </Text>
             <View style={styles.detalhes}>
-                <Text style={styles.textoDetalhes}>{i18n.t('cardAtividadeAgencia.local')}: {props.atividade.endereco}{"\n"}{i18n.t('cardAtividadeAgencia.horario')}: {moment(props.atividade.dataInicio).local().format('HH:mm')}</Text>
+                <Text style={styles.textoDetalhes}>{i18n.t('cardAtividadeAgencia.local')}: {props.atividade.endereco}{"\n"}{i18n.t('cardAtividadeAgencia.horario')}: { i18n.locale == 'pt-BR' ? moment(props.atividade.dataInicio).local().format('HH:mm') : moment(props.atividade.dataInicio).local().format('hh:mm A')}</Text>
                 {/*<TouchableOpacity>
                     <MaterialCommunityIcons name="heart" color={'#FF2424'} size={29} />
                     <Text>1</Text>

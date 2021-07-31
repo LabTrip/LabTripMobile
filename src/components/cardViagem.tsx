@@ -47,30 +47,29 @@ export default function CardViagem(props) {
     }
 
 
-    useEffect(() => {
-        const request = async () => {
-            setShowLoader(true);
-            const value = await AsyncStorage.getItem('AUTH')
 
-            if (value != null) {
-                token = JSON.parse(value)
-                const response = await getViagem();
-                const json = await response.json();
-                const responseRoteiros = await getRoteiros();
-                const jsonRoteiros = await responseRoteiros.json();
-                if (response.status == 200 && responseRoteiros.status == 200) {
-                    props.viagem.alterar = json.alterar;
-                    props.viagem.roteiro = jsonRoteiros[0];
-                } else {
-                    alert(i18n.t('cardViagem.erro') + ": " + json.mensagem + "\n" + i18n.t('cardViagem.verifiqueConexao'));
-                }
+    const request = async () => {
+        setShowLoader(true);
+        const value = await AsyncStorage.getItem('AUTH')
+
+        if (value != null) {
+            token = JSON.parse(value);
+            const response = await getViagem();
+            const json = await response.json();
+            const responseRoteiros = await getRoteiros();
+            const jsonRoteiros = await responseRoteiros.json();
+            if (response.status == 200 && responseRoteiros.status == 200) {
+                props.viagem.alterar = json.alterar;
+                props.viagem.roteiro = jsonRoteiros[0];
+                navigation.navigate(props.navigate, { viagem: props.viagem });
+            } else {
+                alert(i18n.t('cardViagem.erro') + ": " + json.mensagem + "\n" + i18n.t('cardViagem.verifiqueConexao'));
             }
-            setShowLoader(false);
         }
+        setShowLoader(false);
+    }
 
-        request();
 
-    }, []);
 
     switch (props.status) {
         case 1:
@@ -108,7 +107,9 @@ export default function CardViagem(props) {
     return (
         <TouchableOpacity style={[styles.cardViagens,
         { backgroundColor: corDoCard, borderLeftColor: corBordaDoCard }]}
-            onPress={() => navigation.navigate(props.navigate, { viagem: props.viagem })}>
+            onPress={() => {
+                request();
+            }}>
             <Modal
                 animationType="fade"
                 transparent={true}

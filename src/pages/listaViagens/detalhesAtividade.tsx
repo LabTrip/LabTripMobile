@@ -407,7 +407,7 @@ export default function DetalhesAtividade({ route }) {
                     {idPermissao != 4
                         ? <View style={styles.containerBotoes}>
                             <TouchableOpacity style={styles.botaoEditar} onPress={() => {
-                                navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade });
+                                navigation.navigate('EditarAtividadeRoteiro', { atividade: atividade, moeda: route.params.moeda });
                             }}>
                                 <Text style={styles.botaoTexto}>{i18n.t('botoes.editar')}</Text>
                             </TouchableOpacity>
@@ -419,7 +419,7 @@ export default function DetalhesAtividade({ route }) {
                         </View>
                         : null
                     }
-                    <Text style={styles.tituloDetalhes}>{i18n.t('detalhesAtividade.custo')}: R$ {valorFormatado}</Text>
+                    <Text style={styles.tituloDetalhes}>{i18n.t('detalhesAtividade.custo')}: {route.params.moeda} {valorFormatado}</Text>
                     {route.params.planejamento == true && (
                         <View style={styles.containerVotos}>
                             <TouchableOpacity style={styles.botaoVoto} onPress={() => {
@@ -440,7 +440,7 @@ export default function DetalhesAtividade({ route }) {
                     )}
                     <View style={[styles.containerDetalhes, { height: 200, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '3%' }]}>
                         <View style={{ width: '100%', flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={styles.tituloDetalhes}>
+                            <Text style={styles.tituloMidias}>
                                 {i18n.t('detalhesAtividade.midias')}
                             </Text>
                             <TouchableOpacity onPress={() => UploadFile()}>
@@ -516,12 +516,12 @@ const styles = StyleSheet.create({
     },
     tituloDetalhes: {
         textAlign: 'center',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        width: '80%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
         color: '#999999',
         fontSize: 24,
-        margin: 5
+        margin:4
     },
     botaoVoto: {
         flexDirection: 'row',
@@ -586,5 +586,14 @@ const styles = StyleSheet.create({
         color: "black",
         fontWeight: "bold",
         textAlign: "center"
-    }
+    },
+    tituloMidias: {
+        textAlign: 'center',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        width: '80%',
+        color: '#999999',
+        fontSize: 24,
+        margin: 5
+    },
 })

@@ -69,7 +69,6 @@ export default function AdicionarAtividadeRoteiro({ route }) {
         //seta lista de atividades se o status da resposta for 200
         if (response.status == 200 || response.status == 304) {
             if (json.length == 0) {
-                console.log('aqui')
                 const i = [{ id: 1, descricao: 'Nenhuma atividade encontrada' }]
                 setItems(i.map((a, i) => atividadesDropdownModel(a, i)))
             }
@@ -143,6 +142,7 @@ export default function AdicionarAtividadeRoteiro({ route }) {
 
     const adicionarAtividadeRoteiro = async () => {
         try {
+            route.params.callback(true);
             let localToken = await retornaToken() || '';
 
             const response = await fetch('https://labtrip-backend.herokuapp.com/roteiroAtividades', {
@@ -164,32 +164,21 @@ export default function AdicionarAtividadeRoteiro({ route }) {
                     "observacaoAgente": observacoesAgente
                 })
             });
-
-            console.log({
-                "atividadeId": atividade?.atividadeId,
-                "roteiroId": roteiro.id,
-                "versaoRoteiro": roteiro.versao,
-                "dataInicio": dataInicio.toString(),
-                "dataFim": dataFim.toString(),
-                "custo": custoRefField.getRawValue(),
-                "statusId": 1,
-                "observacaoCliente": "",
-                "observacaoAgente": observacoesAgente
-            })
             const json = await response.json();
             //seta lista de atividades se o status da resposta for 200
             if (response.status == 201 || response.status == 304) {
                 alert(i18n.t('adicionarAtividadeRoteiro.sucessoAdicionar'));
-                route.params.callback()
-                setTimeout(() => navigation.goBack(), 1500)
+                route.params.callback(false);
             }
             else {
-                alert(i18n.t('adicionarAtividadeRoteiro.erroAdicionar') + json)
+                alert(i18n.t('adicionarAtividadeRoteiro.erroAdicionar') + json);
+                route.params.callback(false);
             }
         }
         catch (e) {
             console.log(e)
-            alert(i18n.t('adicionarAtividadeRoteiro.erroAdicionar'))
+            alert(i18n.t('adicionarAtividadeRoteiro.erroAdicionar'));
+            route.params.callback(false);
         }
     }
 
@@ -251,8 +240,11 @@ export default function AdicionarAtividadeRoteiro({ route }) {
                     <TextInputMask
                         type={'money'}
                         options={{
-                            maskType: 'INTERNATIONAL',
-
+                            precision: 2,
+                            separator: ',',
+                            delimiter: '.',
+                            unit: route.params.moeda + ' ',
+                            suffixUnit: ''
                         }}
                         value={valor}
                         style={styles.input}
@@ -329,7 +321,7 @@ export default function AdicionarAtividadeRoteiro({ route }) {
                     <TextInput style={styles.input} multiline={true} numberOfLines={4}
                         value={observacoesAgente} onChangeText={(texto) => setObservacoesAgente(texto)} />
                     <TouchableOpacity style={styles.botaoCriar} onPress={async () => {
-                        const res = await adicionarAtividadeRoteiro();
+                        const res = await adicionarAtividadeRoteiro().then(function () { navigation.goBack() }, null);
                     }}>
                         <Text style={styles.botaoCriarTexto}>{i18n.t('adicionarAtividadeRoteiro.adicionar')}</Text>
                     </TouchableOpacity>

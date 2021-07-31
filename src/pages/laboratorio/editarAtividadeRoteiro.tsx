@@ -333,8 +333,11 @@ export default function EditarAtividadeRoteiro({ route }) {
                     <TextInputMask
                         type={'money'}
                         options={{
-                            maskType: 'INTERNATIONAL',
-
+                            precision: 2,
+                            separator: ',',
+                            delimiter: '.',
+                            unit: route.params.moeda+' ',
+                            suffixUnit: ''
                         }}
                         value={valor}
                         style={styles.input}

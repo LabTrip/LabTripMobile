@@ -36,7 +36,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
     const [atividades, setAtividades] = useState<Atividade[]>([]);
     //variavel auxiliar de atividades
     const [atividadesAux, setAtividadesAux] = useState<Atividade[]>([])
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
     const [idPermissao, setIdPermissao] = useState(4);
 
@@ -146,12 +146,11 @@ export default function ListaAtividadesDoRoteiro({ route }) {
         setIdPermissao(json.perfilId);
     }
 
-
     return (
         <View style={styles.conteudo}>
             <View style={styles.containerTop}>
                 {idPermissao != 4 ?
-                    <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', { roteiro: route.params.roteiro, callback: onRefresh })}></BotaoMais>
+                    <BotaoMais onPress={() => navigation.navigate('AdicionarAtividadeRoteiro', { roteiro: route.params.roteiro, callback: setRefreshing, moeda: route.params.viagem.descricaoMoeda })}></BotaoMais>
                     : null}
 
                 <Picker style={styles.pickerComponente}
@@ -179,7 +178,7 @@ export default function ListaAtividadesDoRoteiro({ route }) {
                 }>
                 {
                     atividades?.map((a) => {
-                        return <CardAtividadeAgencia key={a.id} atividade={a} />
+                        return <CardAtividadeAgencia key={a.id} atividade={a} moeda={route.params.viagem.descricaoMoeda} />
                     })
                 }
             </ScrollView>

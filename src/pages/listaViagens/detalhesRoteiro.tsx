@@ -26,7 +26,8 @@ interface Atividade {
     votoPositivo: string,
     votoNegativo: string,
     observacaoCliente: string,
-    observacaoAgente: string
+    observacaoAgente: string,
+    descricao: string
 }
 
 export default function DetalhesRoteiro({ route }) {
@@ -66,10 +67,6 @@ export default function DetalhesRoteiro({ route }) {
         const json = await response.json();
         //seta lista de atividades se o status da resposta for 200
         if (response.status == 200) {
-            console.log(viagem.roteiro.id);
-            console.log(viagem.roteiro.versao)
-
-            console.log(json)
             setAtividadesAux(json);
             //setAtividades(json);
         }
@@ -152,7 +149,7 @@ export default function DetalhesRoteiro({ route }) {
                 >
                     {
                         filtroDatas?.map((a) => {
-                            return <Picker.Item key={a} label={a} value={a} />
+                            return <Picker.Item key={a} label={i18n.locale == 'pt-BR'? a : moment(a, 'DD/MM/yyyy').format('MM/DD/yyyy')} value={a} />
                         })
                     }
                 </Picker>
@@ -171,7 +168,7 @@ export default function DetalhesRoteiro({ route }) {
             >
                 {
                     atividades?.map((a) => {
-                        return <CardAtividade callback={setRefreshing} key={a.id} nome={a.local} local={a.endereco} horario={moment(a.dataInicio).format('HH:mm')} item={a} viagem={viagem} data={selectedValue} />
+                        return <CardAtividade callback={setRefreshing} key={a.id} nome={a.descricao} local={a.endereco} horario={i18n.locale == 'pt-BR'? moment(a.dataInicio).format('HH:mm') : moment(a.dataInicio).format('hh:mm A')} item={a} viagem={viagem} data={selectedValue} />
                     })
                 }
             </ScrollView>
